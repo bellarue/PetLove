@@ -2,6 +2,8 @@ const dbConnection = require('../../database/mySQLconnect');
 const dateFormat = require('dateformat');
 const buildStudentViewFromCourses = require('../Schema/buildStudentViewFromCourses');
 
+//test comment
+
 function now() {
     return dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
 }
