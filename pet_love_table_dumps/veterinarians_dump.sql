@@ -12,6 +12,7 @@ CREATE TABLE `veterinarians` (
 
 LOCK TABLES `veterinarians` WRITE;
 
-INSERT INTO `veterinarians` VALUE ('vet@gmail.com', 'Mary Johnson', '8881234567');
+INSERT INTO `veterinarians` VALUE ('MJ@gmail.com', 'Mary Johnson', '8881234567');
+
 
 UNLOCK TABLES;

@@ -13,6 +13,10 @@ CREATE TABLE `pet_on_appt` (
 
 LOCK TABLES `pet_on_appt` WRITE;
 
-INSERT INTO `pet_on_appt` VALUE (2, 1);
+INSERT INTO `pet_on_appt` VALUE (1, 1);
+INSERT INTO `pet_on_appt` VALUE (2, 2);
+INSERT INTO `pet_on_appt` VALUE (3, 3);
+INSERT INTO `pet_on_appt` VALUE (4, 4);
+
 
 UNLOCK TABLES;

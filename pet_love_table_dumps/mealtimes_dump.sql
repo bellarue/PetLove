@@ -15,6 +15,10 @@ CREATE TABLE `mealtimes` (
 
 LOCK TABLES `mealtimes` WRITE;
 
-INSERT INTO `mealtimes` VALUES ('07:30', 2, 'dry food', '1 scoop', NULL), ('18:00', 2, 'wet/dry combo', '1 can wet mixed with a half scoop dry', NULL);
+INSERT INTO `mealtimes` VALUES ('07:30', 1, 'dry food', '1 scoop', NULL), ('18:00', 1, 'wet/dry combo', '1 can wet mixed with a half scoop dry', NULL),
+('07:45', 2, 'dry food', '1.5 scoops', NULL), ('17:00', 2, 'wet/dry combo', '1 can wet mixed with a half scoop dry', NULL),
+('06:30', 3, 'dry food', '2 scoops', NULL), ('16:00', 3, 'wet/dry combo', '1 scoop wet mixed with a 1 scoop dry', NULL),
+('07:30', 4, 'wet food', '1 scoop', NULL), ('16:00', 4, 'wet/dry combo', '1 scoop wet mixed with a 1 scoop dry', NULL);
+
 
 UNLOCK TABLES;

@@ -13,6 +13,7 @@ CREATE TABLE `friendships` (
 
 LOCK TABLES `friendships` WRITE;
 
-INSERT INTO `friendships` VALUE ('email@gmail.com', 'ahhh@gmail.com');
+INSERT INTO `friendships` VALUE ('Johnnysmith@gmail.com', 'Asmith@gmail.com');
+
 
 UNLOCK TABLES;

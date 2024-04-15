@@ -15,6 +15,10 @@ CREATE TABLE `pets` (
 
 LOCK TABLES `pets` WRITE;
 
-INSERT INTO `pets` VALUES (NULL, 'Gus', 'lizard', NULL, NULL), (NULL, 'Dave', 'cat', NULL, 'vet@gmail.com');
+INSERT INTO `pets` VALUES (NULL, 'Gus', 'lizard', NULL, 'MJ@gmail.com'), 
+INSERT INTO `pets` VALUES (NULL, 'Dave', 'cat', NULL, 'MJ@gmail.com'),
+INSERT INTO `pets` VALUES (NULL, 'Walter', 'snake', NULL, 'MJ@gmail.com'),
+INSERT INTO `pets` VALUES (NULL, 'Jesse', 'hamster', NULL, 'MJ@gmail.com');
+
 
 UNLOCK TABLES;

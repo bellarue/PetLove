@@ -19,6 +19,12 @@ CREATE TABLE `medications` (
 
 LOCK TABLES `medications` WRITE;
 
-INSERT INTO `medications` VALUE ('A med', '2024-03-28', 2, 'vet@gmail.com', 'anxiety', '1 pill daily', 'orally', NULL);
+INSERT INTO `medications` VALUE ('Frontline Plus', '2023-03-28', 1, 'MJ@gmail.com', 'flea meds', '1 pill daily', 'orally', NULL),
+INSERT INTO `medications` VALUE ('Trazodone', '2024-05-28', 2, 'MJ@gmail.com', 'anxiety', '1 pill daily', 'orally', NULL),
+INSERT INTO `medications` VALUE ('Drontal', '2024-02-28', 3, 'MJ@gmail.com', 'worm', '2 pills daily', 'orally', NULL),
+INSERT INTO `medications` VALUE ('Drontal', '2024-06-28', 4, 'MJ@gmail.com', 'worm', '2 pills daily', 'orally', NULL);
+
+
+
 
 UNLOCK TABLES;

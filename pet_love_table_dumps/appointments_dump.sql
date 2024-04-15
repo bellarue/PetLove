@@ -16,6 +16,13 @@ CREATE TABLE `appointments` (
 
 LOCK TABLES `appointments` WRITE;
 
-INSERT INTO `appointments` VALUE (NULL, '2024-03-20', 'email@gmail.com', 'groomer', 'cut nails, hygiene trim');
+INSERT INTO `appointments` VALUE (NULL, '2024-03-20', 'Johnnysmith@gmail.com', 'groomer', 'cut nails, hygiene trim');
+INSERT INTO `appointments` VALUE (NULL, '2024-03-22', 'Johnnysmith@gmail.com', 'groomer', 'cut nails, brush hair');
+INSERT INTO `appointments` VALUE (NULL, '2024-03-22', 'Asmith@gmail.com', 'groomer', 'express glands, teeth cleaning');
+INSERT INTO `appointments` VALUE (NULL, '2024-04-10', 'JJ@gmail.com', 'groomer', 'hair trim');
+
+
+
+
 
 UNLOCK TABLES;

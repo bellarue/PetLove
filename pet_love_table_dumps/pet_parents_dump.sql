@@ -13,6 +13,9 @@ CREATE TABLE `pet_parents` (
 
 LOCK TABLES `pet_parents` WRITE;
 
-INSERT INTO `pet_parents` VALUE ('email@gmail.com', 2);
+INSERT INTO `pet_parents` VALUE ('Johnnysmith@gmail.com', 1);
+INSERT INTO `pet_parents` VALUE ('Johnnysmith@gmail.com', 2);
+INSERT INTO `pet_parents` VALUE ('smith@gmail.com', 3);
+INSERT INTO `pet_parents` VALUE ('JJ@gmail.com', 4);
 
 UNLOCK TABLES;

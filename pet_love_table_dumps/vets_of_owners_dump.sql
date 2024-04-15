@@ -13,6 +13,8 @@ CREATE TABLE `vets_of_owners` (
 
 LOCK TABLES `vets_of_owners` WRITE;
 
-INSERT INTO `vets_of_owners` VALUE ('email@gmail.com', 'vet@gmail.com');
+INSERT INTO `vets_of_owners` VALUE ('Johnnysmith@gmail.com', 'MJ@gmail.com');
+INSERT INTO `vets_of_owners` VALUE ('Asmith@gmail.com', 'MJ@gmail.com');
+INSERT INTO `vets_of_owners` VALUE ('JJ@gmail.com', 'MJ@gmail.com');
 
 UNLOCK TABLES;

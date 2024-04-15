@@ -12,6 +12,8 @@ CREATE TABLE `user_roles` (
 
 LOCK TABLES `user_roles` WRITE;
 
-INSERT INTO `user_roles` VALUES ('email@gmail.com', 'Owner'), ('email@gmail.com', 'Sitter');
+INSERT INTO `user_roles` VALUES ('Asmith@gmail.com', 'Owner'), ('Johnnysmith@gmail.com', 'Owner');
+INSERT INTO `user_roles` VALUES ('JJ@gmail.com', 'Owner'), ('Andreasmith@gmail.com', 'Sitter');
+
 
 UNLOCK TABLES;

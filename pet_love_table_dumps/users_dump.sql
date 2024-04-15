@@ -16,6 +16,9 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 
-INSERT INTO `users` VALUES ('email@gmail.com', 'u_name24', 'John', 'Smith', NULL, NULL), ('ahhh@gmail.com', 'usernaaaame', 'Amy', 'Smith', NULL, NULL), ('x@gmail.com', 'myProfile', 'Jacob', 'Johnson', NULL, NULL);
+INSERT INTO `users` VALUES ('Johnnysmith@gmail.com', 'u_name24', 'John', 'Smith', NULL, NULL), 
+('Asmith@gmail.com', 'usernaaaame', 'Amy', 'Smith', NULL, NULL),
+('Andreasmith@gmail.com', 'testname', 'Andrea', 'Smith', NULL, NULL),  
+('JJ@gmail.com', 'JaJohn', 'Jacob', 'Johnson', NULL, NULL);
 
 UNLOCK TABLES;

@@ -12,6 +12,10 @@ CREATE TABLE `allergies` (
 
 LOCK TABLES `allergies` WRITE;
 
-INSERT INTO `allergies` VALUE (1, 'Coconut');
+INSERT INTO `allergies` VALUE (1, 'Eggs'),
+(2, 'Fleas'),
+(3, 'Wheat'),
+(4, 'Soy');
+
 
 UNLOCK TABLES;

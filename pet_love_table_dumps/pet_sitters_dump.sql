@@ -13,6 +13,6 @@ CREATE TABLE `pet_sitters` (
 
 LOCK TABLES `pet_sitters` WRITE;
 
-INSERT INTO `pet_sitters` VALUE ('email@gmail.com', 1);
+INSERT INTO `pet_sitters` VALUE ('Andreasmith@gmail.com', 1);
 
 UNLOCK TABLES;

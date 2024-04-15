@@ -14,6 +14,10 @@ CREATE TABLE `preferred_brands` (
 
 LOCK TABLES `preferred_brands` WRITE;
 
-INSERT INTO `preferred_brands` VALUE ('07:30', 2, 'Purina');
+INSERT INTO `preferred_brands` VALUE ('07:30', 1, 'Purina');
+INSERT INTO `preferred_brands` VALUE ('07:45', 2, 'Purina');
+INSERT INTO `preferred_brands` VALUE ('06:30', 3, 'Purina');
+INSERT INTO `preferred_brands` VALUE ('07:30', 4, 'Purina');
+
 
 UNLOCK TABLES;
