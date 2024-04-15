@@ -45,8 +45,8 @@ const routesRouter = require('koa-router')({
 });
 
 routesRouter.use(VerifyJWT);
-routesRouter.get('/all-routes', Authorize('admin'), RoutesController.allRoutes, err => console.log(`allRoutes ran into an error: ${err}`));
-routesRouter.get('/:routeID/', Authorize('admin'), RoutesController.routeWithRouteID);
+routesRouter.get('/all-routes', RoutesController.allRoutes, err => console.log(`allRoutes ran into an error: ${err}`));
+routesRouter.get('/:routeID/', RoutesController.routeWithRouteID);
 
 // Users router configuration.
 
@@ -56,13 +56,13 @@ const usersRouter = require('koa-router')({
 });
 
 usersRouter.use(VerifyJWT);
-usersRouter.get('/all-users', Authorize('admin'), UsersController.allUsers, err => console.log(`allUsers ran into an error: ${err}`));
-usersRouter.get('/:email/email', Authorize('admin'), UsersController.userWithEmail, err => console.log(`userWithEmail ran into an error: ${err}`));
-usersRouter.get('/:email/roles', Authorize('admin'), UsersController.rolesWithEmail, err => console.log(`rolesWithEmail ran into an error: ${err}`));
-usersRouter.get('/:username/username', Authorize('admin'), UsersController.usersWithUsername, err => console.log(`usersWithUsername ran into an error: ${err}`));
-usersRouter.get('/:pet/pet-parent', Authorize('admin'), UsersController.usersByPet, err => console.log(`usersByPet ran into an error: ${err}`));
-usersRouter.get('/:pet/pet-sitter', Authorize('admin'), UsersController.usersByPetSitting, err => console.log(`usersByPetSitting ran into an error: ${err}`));
-usersRouter.get('/:user/friends', Authorize('admin'), UsersController.friendsByUser, err => console.log(`friendsByUser ran into an error: ${err}`));
+usersRouter.get('/all-users', UsersController.allUsers, err => console.log(`allUsers ran into an error: ${err}`));
+usersRouter.get('/:email/email', UsersController.userWithEmail, err => console.log(`userWithEmail ran into an error: ${err}`));
+usersRouter.get('/:email/roles', UsersController.rolesWithEmail, err => console.log(`rolesWithEmail ran into an error: ${err}`));
+usersRouter.get('/:username/username', UsersController.usersWithUsername, err => console.log(`usersWithUsername ran into an error: ${err}`));
+usersRouter.get('/:pet/pet-parent', UsersController.usersByPet, err => console.log(`usersByPet ran into an error: ${err}`));
+usersRouter.get('/:pet/pet-sitter', UsersController.usersByPetSitting, err => console.log(`usersByPetSitting ran into an error: ${err}`));
+usersRouter.get('/:user/friends', UsersController.friendsByUser, err => console.log(`friendsByUser ran into an error: ${err}`));
 
 // Pets router configuration.
 
@@ -72,11 +72,11 @@ const petsRouter = require('koa-router')({
 });
 
 petsRouter.use(VerifyJWT);
-petsRouter.get('/all-pets', Authorize('admin'), PetsController.allPets, err => console.log(`allPets ran into an error: ${err}`));
-petsRouter.get('/:petID/pet-with-id', Authorize('admin'), PetsController.petWithPetID, err => console.log(`petWithPetID ran into an error: ${err}`));
-petsRouter.get('/:user/pets-by-owner', Authorize('admin'), PetsController.petsByOwner, err => console.log(`petsByOwner ran into an error: ${err}`));
-petsRouter.get('/:user/pets-by-sitter', Authorize('admin'), PetsController.petsBySitter, err => console.log(`petsBySitter ran into an error: ${err}`));
-petsRouter.get('/:pet/allergies', Authorize('admin'), PetsController.allergiesByPetID, err => console.log(`allergiesByPetID ran into an error: ${err}`));
+petsRouter.get('/all-pets', PetsController.allPets, err => console.log(`allPets ran into an error: ${err}`));
+petsRouter.get('/:petID/pet-with-id', PetsController.petWithPetID, err => console.log(`petWithPetID ran into an error: ${err}`));
+petsRouter.get('/:user/pets-by-owner', PetsController.petsByOwner, err => console.log(`petsByOwner ran into an error: ${err}`));
+petsRouter.get('/:user/pets-by-sitter', PetsController.petsBySitter, err => console.log(`petsBySitter ran into an error: ${err}`));
+petsRouter.get('/:pet/allergies', PetsController.allergiesByPetID, err => console.log(`allergiesByPetID ran into an error: ${err}`));
 
 // Pets router configuration.
 
@@ -86,10 +86,10 @@ const veterinariansRouter = require('koa-router')({
 });
 
 veterinariansRouter.use(VerifyJWT);
-veterinariansRouter.get('/all-vets', Authorize('admin'), VeterinariansController.allVets, err => console.log(`allVets ran into an error: ${err}`));
-veterinariansRouter.get('/:email/email', Authorize('admin'), VeterinariansController.vetWithEmail, err => console.log(`vetWithEmail ran into an error: ${err}`));
-veterinariansRouter.get('/:user/user', Authorize('admin'), VeterinariansController.vetsByUser, err => console.log(`vetsByUser ran into an error: ${err}`));
-veterinariansRouter.get('/:petID/pet', Authorize('admin'), VeterinariansController.vetOfPet, err => console.log(`vetOfPet ran into an error: ${err}`));
+veterinariansRouter.get('/all-vets', VeterinariansController.allVets, err => console.log(`allVets ran into an error: ${err}`));
+veterinariansRouter.get('/:email/email', VeterinariansController.vetWithEmail, err => console.log(`vetWithEmail ran into an error: ${err}`));
+veterinariansRouter.get('/:user/user', VeterinariansController.vetsByUser, err => console.log(`vetsByUser ran into an error: ${err}`));
+veterinariansRouter.get('/:petID/pet', VeterinariansController.vetOfPet, err => console.log(`vetOfPet ran into an error: ${err}`));
 
 // Mealtimes router configuration.
 
@@ -99,12 +99,14 @@ const mealtimesRouter = require('koa-router')({
 });
 
 mealtimesRouter.use(VerifyJWT);
-mealtimesRouter.get('/all-mealtimes', Authorize('admin'), MealtimesController.allMealtimes, err => console.log(`allMealtimes ran into an error: ${err}`));
-mealtimesRouter.get('/:petID/pet', Authorize('admin'), MealtimesController.mealtimesWithPetID, err => console.log(`mealtimesWithPetID ran into an error: ${err}`));
-mealtimesRouter.get('/:user/owner', Authorize('admin'), MealtimesController.mealtimesWithUser, err => console.log(`mealtimesWithUser ran into an error: ${err}`));
-mealtimesRouter.get('/:user/sitter', Authorize('admin'), MealtimesController.mealtimesWithSitter, err => console.log(`mealtimesWithSitter ran into an error: ${err}`));
-mealtimesRouter.get('/:pet/num-meals', Authorize('admin'), MealtimesController.numMealsByPet, err => console.log(`numMealsByPet ran into an error: ${err}`));
-mealtimesRouter.get('/:time/:pet', Authorize('admin'), MealtimesController.brandsByMealtime, err => console.log(`brandsByMealtime ran into an error: ${err}`));
+mealtimesRouter.get('/all-mealtimes', MealtimesController.allMealtimes, err => console.log(`allMealtimes ran into an error: ${err}`));
+mealtimesRouter.get('/:petID/pet', MealtimesController.mealtimesWithPetID, err => console.log(`mealtimesWithPetID ran into an error: ${err}`));
+mealtimesRouter.get('/:user/owner', MealtimesController.mealtimesWithUser, err => console.log(`mealtimesWithUser ran into an error: ${err}`));
+mealtimesRouter.get('/:user/sitter', MealtimesController.mealtimesWithSitter, err => console.log(`mealtimesWithSitter ran into an error: ${err}`));
+mealtimesRouter.get('/:pet/num-meals', MealtimesController.numMealsByPet, err => console.log(`numMealsByPet ran into an error: ${err}`));
+mealtimesRouter.get('/:time/:pet/brands', MealtimesController.brandsByMealtime, err => console.log(`brandsByMealtime ran into an error: ${err}`));
+mealtimesRouter.get('/:time/:pet/:type/:amount/:notes', MealtimesController.addMealtime, err => console.log(`addMealtime ran into an error: ${err}`));
+mealtimesRouter.get('/:time/:pet/remove-mealtime', MealtimesController.removeMealtime, err => console.log(`removeMealtime ran into an error: ${err}`));
 
 // Medications router configuration.
 
@@ -114,10 +116,11 @@ const medicationsRouter = require('koa-router')({
 });
 
 medicationsRouter.use(VerifyJWT);
-medicationsRouter.get('/all-medications', Authorize('admin'), MedicationsController.allMedications, err => console.log(`allMedications ran into an error: ${err}`));
-medicationsRouter.get('/:name/name', Authorize('admin'), MedicationsController.medicationWithName, err => console.log(`medicationWithName ran into an error: ${err}`));
-medicationsRouter.get('/:pet/pet', Authorize('admin'), MedicationsController.medicationsByPet, err => console.log(`medicationsByPet ran into an error: ${err}`));
-medicationsRouter.get('/:name/:startDate', Authorize('admin'), MedicationsController.removeMedication, err => console.log(`removeMedication ran into an error: ${err}`));
+medicationsRouter.get('/all-medications', MedicationsController.allMedications, err => console.log(`allMedications ran into an error: ${err}`));
+medicationsRouter.get('/:name/name', MedicationsController.medicationWithName, err => console.log(`medicationWithName ran into an error: ${err}`));
+medicationsRouter.get('/:pet/pet', MedicationsController.medicationsByPet, err => console.log(`medicationsByPet ran into an error: ${err}`));
+medicationsRouter.get('/:name/:startDate', MedicationsController.removeMedication, err => console.log(`removeMedication ran into an error: ${err}`));
+medicationsRouter.get('/:name/:startDate/:pet/:veterinarian/:type/:dosage/:admin_method/:notes', MedicationsController.addMedication, err => console.log(`addMedication ran into an error: ${err}`));
 
 // Appointments router configuration.
 
@@ -127,12 +130,15 @@ const appointmentsRouter = require('koa-router')({
 });
 
 appointmentsRouter.use(VerifyJWT);
-appointmentsRouter.get('/all-appointments', Authorize('admin'), AppointmentsController.allAppointments, err => console.log(`allAppointments ran into an error: ${err}`));
-appointmentsRouter.get('/:apptID/apptID', Authorize('admin'), AppointmentsController.appointmentWithApptID, err => console.log(`appointmentWithApptID ran into an error: ${err}`));
-appointmentsRouter.get('/:user/user', Authorize('admin'), AppointmentsController.appointmentsWithUser, err => console.log(`appointmentsWithUser ran into an error: ${err}`));
-appointmentsRouter.get('/:user/:date/user-by-date', Authorize('admin'), AppointmentsController.appointmentsWithUserAndDate, err => console.log(`appointmentsWithUserAndDate ran into an error: ${err}`));
-appointmentsRouter.get('/:pet/pet', Authorize('admin'), AppointmentsController.appointmentsWithPet, err => console.log(`appointmentsWithPet ran into an error: ${err}`));
-appointmentsRouter.get('/:pet/:user/pet-by-user', Authorize('admin'), AppointmentsController.appointmentsWithPetAndUser, err => console.log(`appointmentsWithPetAndUser ran into an error: ${err}`));
+appointmentsRouter.get('/all-appointments', AppointmentsController.allAppointments, err => console.log(`allAppointments ran into an error: ${err}`));
+appointmentsRouter.get('/:apptID/apptID', AppointmentsController.appointmentWithApptID, err => console.log(`appointmentWithApptID ran into an error: ${err}`));
+appointmentsRouter.get('/:user/user', AppointmentsController.appointmentsWithUser, err => console.log(`appointmentsWithUser ran into an error: ${err}`));
+appointmentsRouter.get('/:user/:date/user-by-date', AppointmentsController.appointmentsWithUserAndDate, err => console.log(`appointmentsWithUserAndDate ran into an error: ${err}`));
+appointmentsRouter.get('/:pet/pet', AppointmentsController.appointmentsWithPet, err => console.log(`appointmentsWithPet ran into an error: ${err}`));
+appointmentsRouter.get('/:pet/:user/pet-by-user', AppointmentsController.appointmentsWithPetAndUser, err => console.log(`appointmentsWithPetAndUser ran into an error: ${err}`));
+appointmentsRouter.get('/:dateTime/:user/:type/:notes', AppointmentsController.addAppointment, err => console.log(`addAppointment ran into an error: ${err}`));
+appointmentsRouter.get('/:apptID/remove-appt', AppointmentsController.removeAppointment, err => console.log(`removeAppointment ran into an error: ${err}`));
+appointmentsRouter.get('/:pet/:appt/add-pet', AppointmentsController.addPetToAppt, err => console.log(`addPetToAppt ran into an error: ${err}`));
 
 
 /**
