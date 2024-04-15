@@ -191,7 +191,7 @@ const brandsByMealtime = (ctx) => {
             values: [ctx.params.time, ctx.params.pet]
         }, (error, tuples) => {
             if (error) {
-                console.log("Connection error in MealtimesController::mealtimesWithPetID", error);
+                console.log("Connection error in MealtimesController::brandsByMealtime", error);
                 ctx.body = [];
                 ctx.status = 200;
                 return reject(error);
@@ -201,7 +201,69 @@ const brandsByMealtime = (ctx) => {
             return resolve();
         });
     }).catch(err => {
-        console.log("Database connection error in mealtimesWithPetID.", err);
+        console.log("Database connection error in brandsByMealtime.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
+const removeMealtime = (ctx) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+                    DELETE FROM 
+                        mealtimes
+                    WHERE 
+                        time = ?
+                    AND
+                        pet = ?
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [ctx.params.time, ctx.params.pet]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in MealtimesController::removeMealtime", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in removeMealtime.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
+const addMealtime = (ctx) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+                   INSERT INTO mealtimes
+                    VALUE (?, ?, ?, ?, ?)
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [ctx.params.time, ctx.params.pet, ctx.params.type, ctx.params.amount, ctx.params.notes]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in MealtimesController::addMealtime", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in addMealtime.", err);
         // The UI side will have to look for the value of status and
         // if it is not 200, act appropriately.
         ctx.body = [];
@@ -215,5 +277,7 @@ module.exports = {
     mealtimesWithUser,
     mealtimesWithSitter,
     numMealsByPet,
-    brandsByMealtime
+    brandsByMealtime,
+    addMealtime,
+    removeMealtime
 };

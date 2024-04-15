@@ -209,11 +209,103 @@ const appointmentsWithPetAndUser = (ctx) => {
     });
 }
 
+const addAppointment = (ctx) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+                   INSERT INTO appointments
+                    VALUE (null, ?, ?, ?, ?)
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [ctx.params.dateTime, ctx.params.user, ctx.params.type, ctx.params.notes]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in AppointmentsController::addAppointment", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in addAppointment.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
+const removeAppointment = (ctx) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+                    DELETE FROM 
+                        appointments
+                    WHERE 
+                        apptID = ?
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [ctx.params.apptID]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in AppointmentsController::removeAppointment", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in removeAppointment.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
+const addPetToAppt = (ctx) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+                   INSERT INTO pet_on_appt
+                    VALUE (?, ?)
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [ctx.params.pet, ctx.params.appt]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in AppointmentsController::addPetToAppt", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in addPetToAppt.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
 module.exports = {
     allAppointments,
     appointmentWithApptID,
     appointmentsWithUser,
     appointmentsWithUserAndDate,
     appointmentsWithPet,
-    appointmentsWithPetAndUser
+    appointmentsWithPetAndUser,
+    addAppointment,
+    removeAppointment,
+    addPetToAppt
 };
