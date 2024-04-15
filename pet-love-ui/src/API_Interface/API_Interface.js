@@ -134,7 +134,15 @@ export default class APIInterface {
     }
 
     async brandsByMealtime(time, pet) {
-        return axiosAgent.get(`mealtimes/${time}/${pet}`);
+        return axiosAgent.get(`mealtimes/${time}/${pet}/brands`);
+    }
+
+    async addMealtime(time, pet, type, amount, notes) {
+        return axiosAgent.get(`mealtimes/${time}/${pet}/${type}/${amount}/${notes}`);
+    }
+
+    async removeMealtime(time, pet) {
+        return axiosAgent.get(`mealtimes/${time}/${pet}/remove-mealtime`);
     }
 
     //Medications routes
@@ -153,6 +161,10 @@ export default class APIInterface {
 
     async removeMedication(name, startDate) {
         return axiosAgent.get(`medications/${name}/${startDate}`);
+    }
+
+    async addMedication(name, startDate, pet, veterinarian, type, dosage, admin_method, notes) {
+        return axiosAgent.get(`medications/${name}/${startDate}/${pet}/${veterinarian}/${type}/${dosage}/${admin_method}/${notes}`)
     }
 
     //Appointments routes

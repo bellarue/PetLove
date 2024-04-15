@@ -18,13 +18,13 @@ import ListItemText from '@mui/material/ListItemText';
 
 import Button from "@mui/material/Button";
 import Profile from '../Components/Profile/Profile';
-//import Calendar from '../Components/Calendar/Calendar';
+import Calendar from '../Components/Calendar/Calendar';
 import Settings from '../Components/Settings/Settings';
 import Social from '../Components/Social/Social1';
 import Dashboard from '../Components/Dashboard/Dashboard';
 
 const drawerWidth = 240;
-const menuComponents = (username) => {
+const menuComponents = (username, logoutAction) => {
     console.log(`username is ${username}`);
     return [
         {
@@ -37,7 +37,7 @@ const menuComponents = (username) => {
         },
         {
             title: 'Calendar',
-            //component: <Calendar />
+            component: <Calendar username={username} />
         },
         {
             title: 'Social',
@@ -45,7 +45,7 @@ const menuComponents = (username) => {
         },
         {
             title: 'Settings',
-            component: <Settings />
+            component: <Settings username={username} logoutAction={logoutAction} />
         }
     ]
 }
@@ -147,8 +147,8 @@ const MenuListItems = (props) => {
     </div>;
 };
 
-const findSelectedComponent = (selectedItem, username) => {
-    const component = [...menuComponents(username)].filter(comp => comp.title === selectedItem);
+const findSelectedComponent = (selectedItem, username, logoutAction) => {
+    const component = [...menuComponents(username, logoutAction)].filter(comp => comp.title === selectedItem);
     if(component.length === 1)
         return component[0];
 
@@ -211,7 +211,7 @@ export default function MainDrawer({title, user, logoutAction}) {
             </Drawer>
             <Main open={open}>
                 <DrawerHeader />
-                {findSelectedComponent(selectedItem, user).component}
+                {findSelectedComponent(selectedItem, user, logoutAction).component}
             </Main>
         </Box>
     );

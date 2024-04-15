@@ -104,7 +104,9 @@ mealtimesRouter.get('/:petID/pet', MealtimesController.mealtimesWithPetID, err =
 mealtimesRouter.get('/:user/owner', MealtimesController.mealtimesWithUser, err => console.log(`mealtimesWithUser ran into an error: ${err}`));
 mealtimesRouter.get('/:user/sitter', MealtimesController.mealtimesWithSitter, err => console.log(`mealtimesWithSitter ran into an error: ${err}`));
 mealtimesRouter.get('/:pet/num-meals', MealtimesController.numMealsByPet, err => console.log(`numMealsByPet ran into an error: ${err}`));
-mealtimesRouter.get('/:time/:pet', MealtimesController.brandsByMealtime, err => console.log(`brandsByMealtime ran into an error: ${err}`));
+mealtimesRouter.get('/:time/:pet/brands', MealtimesController.brandsByMealtime, err => console.log(`brandsByMealtime ran into an error: ${err}`));
+mealtimesRouter.get('/:time/:pet/:type/:amount/:notes', MealtimesController.addMealtime, err => console.log(`addMealtime ran into an error: ${err}`));
+mealtimesRouter.get('/:time/:pet/remove-mealtime', MealtimesController.removeMealtime, err => console.log(`removeMealtime ran into an error: ${err}`));
 
 // Medications router configuration.
 
@@ -118,6 +120,7 @@ medicationsRouter.get('/all-medications', MedicationsController.allMedications, 
 medicationsRouter.get('/:name/name', MedicationsController.medicationWithName, err => console.log(`medicationWithName ran into an error: ${err}`));
 medicationsRouter.get('/:pet/pet', MedicationsController.medicationsByPet, err => console.log(`medicationsByPet ran into an error: ${err}`));
 medicationsRouter.get('/:name/:startDate', MedicationsController.removeMedication, err => console.log(`removeMedication ran into an error: ${err}`));
+medicationsRouter.get('/:name/:startDate/:pet/:veterinarian/:type/:dosage/:admin_method/:notes', MedicationsController.addMedication, err => console.log(`addMedication ran into an error: ${err}`));
 
 // Appointments router configuration.
 
@@ -133,6 +136,9 @@ appointmentsRouter.get('/:user/user', AppointmentsController.appointmentsWithUse
 appointmentsRouter.get('/:user/:date/user-by-date', AppointmentsController.appointmentsWithUserAndDate, err => console.log(`appointmentsWithUserAndDate ran into an error: ${err}`));
 appointmentsRouter.get('/:pet/pet', AppointmentsController.appointmentsWithPet, err => console.log(`appointmentsWithPet ran into an error: ${err}`));
 appointmentsRouter.get('/:pet/:user/pet-by-user', AppointmentsController.appointmentsWithPetAndUser, err => console.log(`appointmentsWithPetAndUser ran into an error: ${err}`));
+appointmentsRouter.get('/:dateTime/:user/:type/:notes', AppointmentsController.addAppointment, err => console.log(`addAppointment ran into an error: ${err}`));
+appointmentsRouter.get('/:apptID/remove-appt', AppointmentsController.removeAppointment, err => console.log(`removeAppointment ran into an error: ${err}`));
+appointmentsRouter.get('/:pet/:appt/add-pet', AppointmentsController.addPetToAppt, err => console.log(`addPetToAppt ran into an error: ${err}`));
 
 
 /**

@@ -82,7 +82,7 @@ const allergiesString = (allergies) => {
 }
 
 export default function PetProfile(props) {
-    const {pet} = props; //pet is a pet object
+    const {pet, vet} = props; //pet is a pet object
     console.log(`this is pet: ${JSON.stringify(pet)}`);
     const [mealtimes, setMealtimes] = React.useState([]);
     const [allergies, setAllergies] = React.useState([]);
@@ -193,10 +193,29 @@ export default function PetProfile(props) {
                 width: '100%',
                 height: 100,
                 alignItems: 'center',
-                border: 1
+                border: 1,
+                mb: 1
             }}>
                 <Typography>
                     Parents/sitters list
+                </Typography>
+            </Box>
+            <Box sx={{
+                width: '100%',
+                height: 50,
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                border: 1
+            }}>
+                <Typography>
+                    {vet['name']}
+                </Typography>
+                <Typography>
+                    {vet['email']}
+                </Typography>
+                <Typography>
+                    {vet['phone_num']}
                 </Typography>
             </Box>
         </Box>
