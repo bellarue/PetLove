@@ -61,6 +61,9 @@ export default function Profile(props) {
     const [vets, setVets] = React.useState([]);
 
     useEffect(() => {
+        if(email === ""){
+            return;
+        }
         const api = new API();
 
         async function getVets() {
@@ -118,6 +121,7 @@ export default function Profile(props) {
                 {
                     pets.map((pet,idx) =>
                         <ListItemButton 
+                            key={idx}
                             selected={selectedIndex === idx}
                             onClick={(event) => handleListItemClick(event, idx)}
                         >

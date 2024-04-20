@@ -20,7 +20,8 @@ const ApptsList = (props) => {
         <List>
             {
                 appts.map((appt, idx) =>
-                    <ListItem disablePadding>
+                    <ListItem disablePadding
+                        key={idx}>
                         <ListItemText primary={appt['type']} />
                     </ListItem>
                 )
@@ -30,15 +31,42 @@ const ApptsList = (props) => {
         
       </Box>
     );
-  }
+}
 
 export default function CalendarSummary(props) {
-    const {email} = props;
-    const [date, setDate] = useState(new Date());
+    const {username} = props;
+    const [email, setEmail] = React.useState("");
+    const [date, setDate] = useState("");
+    console.log(`date is ${date}`);
     const [appts, setAppts] = React.useState([]);
     //FIXME: need info from social
 
     useEffect(() => {
+        const api = new API();
+
+        async function getEmail() {
+            const userJSONString = await api.userWithUsername(username);
+            console.log(`user from the DB ${JSON.stringify(userJSONString)}`);
+            setEmail(userJSONString.data[0]['email']);
+        }
+
+        getEmail();
+    }, []);
+    useEffect(() => {
+        if( email === '' ){
+            return;
+        }
+        const temp = new Date();
+        let date = "";
+        let month = temp.getMonth()+1;
+        date = temp.getFullYear() + '-' + month + '-' + temp.getDate();
+       setDate(date);
+    }, [email]);
+
+    useEffect(() => {
+        if( date === '' ){
+            return;
+        }
         const api = new API();
 
         async function getAppts() {
@@ -55,7 +83,7 @@ export default function CalendarSummary(props) {
         }
 
         getAppts();
-    }, []);
+    }, [date]);
 
     return <Fragment>
         <Box sx={{
@@ -69,22 +97,35 @@ export default function CalendarSummary(props) {
             <Typography>
                 calendar preview
             </Typography>
-            {
-                appts.map((day, idx) => 
-                    <Box sx={{
-                        height: 50,
-                        width: 50,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        border: 1
-                    }}>
-                        <Typography variant='h1'>
-                            {idx}
-                        </Typography>
-                        <ApptsList appts={day} />
-                    </Box>
-                )
-            }
+            <Grid container columns={1}
+                sx={{
+                    height: '100%',
+                    width: '100%'
+            }}>
+                {
+                    appts.map((day, idx) => 
+                        <Grid item xs={1}
+                            key={idx}
+                            sx={{
+                                margin: 0,
+                                padding: 0
+                        }}>
+                            <Box sx={{
+                                height: '100%',
+                                width: 50,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                border: 1
+                            }}>
+                                <Typography variant='h1'>
+                                    {idx}
+                                </Typography>
+                                <ApptsList appts={day} />
+                            </Box>
+                        </Grid>
+                    )
+                }
+            </Grid>
         </Box>
     </Fragment>
 }

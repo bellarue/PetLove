@@ -18,7 +18,7 @@ import ListItemText from '@mui/material/ListItemText';
 
 import Button from "@mui/material/Button";
 import Profile from '../Components/Profile/Profile';
-import Calendar from '../Components/Calendar/Calendar';
+import Calendar from '../Components/Calendar/CalendarNew';
 import Settings from '../Components/Settings/Settings';
 import Social from '../Components/Social/Social1';
 import Dashboard from '../Components/Dashboard/Dashboard';
@@ -29,7 +29,7 @@ const menuComponents = (username, logoutAction) => {
     return [
         {
             title: 'Dashboard',
-            component: <Dashboard />
+            component: <Dashboard username={username} />
         },
         { //do we want to get to profile thru here or by clicking our profile pic
             title: 'Profile',
