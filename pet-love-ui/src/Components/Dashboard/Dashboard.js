@@ -30,24 +30,29 @@ export default function Dashboard(props) {
     }}>
         <Box sx={{
             width: '100%',
-            height: 30,
+            height: 50,
             alignItems: 'center'
         }}>
-            <Typography align="center">
+            <Typography align="center" fontSize={30}>
                 Dashboard
+            </Typography>
+        </Box>
+        <Box sx={{
+            width: '100%',
+            height: 20,
+            alignItems: 'center'
+        }}>
+            <Typography>
+                Appointments Next 7 Days:
             </Typography>
         </Box>
         <Box sx={{
             width: '100%',
             height: 70,
             alignItems: 'center',
-            border: 1,
             mb: 1
         }}>
-            {/* <CalendarSummary username={username} /> */}
-            <Typography>
-                calendar summary, need to fix
-            </Typography>
+            <CalendarSummary username={username} />
         </Box>
         <Box sx={{
             width: '100%',

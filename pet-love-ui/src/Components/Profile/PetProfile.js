@@ -103,6 +103,7 @@ export default function PetProfile(props) {
         const api = new API();
 
         async function getMealtimes() {
+            console.log(`petID is ${pet['petID']}`);
             const mealsJSONString = await api.mealtimesWithPetID(pet['petID']);
             console.log(`mealtimes from the DB ${JSON.stringify(mealsJSONString)}`);
             setMealtimes(mealsJSONString.data);

@@ -35,6 +35,35 @@ const allUsers = async (ctx) => {
     });
 }
 
+const allUsersEmails = async (ctx) => {
+    console.log('users all users called.');
+    return new Promise((resolve, reject) => {
+        const query = `
+                       SELECT email
+                        FROM 
+                            users
+                        ORDER BY email
+                        `;
+        dbConnection.query({
+            sql: query,
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in UsersController::allUsersEmails", error);
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in allUsersEmails.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
 const userWithEmail = (ctx) => {
         return new Promise((resolve, reject) => {
             const query = `
@@ -235,6 +264,7 @@ const friendsByUser = (ctx) => { //FIXME: idk how to do this query
 
 module.exports = {
     allUsers,
+    allUsersEmails,
     userWithEmail,
     usersWithUsername,
     usersByPet,
