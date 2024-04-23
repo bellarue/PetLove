@@ -6,6 +6,38 @@ function now() {
     return dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
 }
 
+
+const addPet = (ctx) => {
+        return new Promise((resolve, reject) => {
+            const query = `
+                       INSERT INTO 
+                       pets(petID, name, type, veterinarian)
+                       VALUES (?,?,?,?)
+                        `;
+            dbConnection.query({
+                sql: query,
+                values: [ctx.params.petID, ctx.params.name, ctx.params.type, ctx.params.vetrinarian]
+            }, (error, tuples) => {
+                if (error) {
+                    console.log("Connection error in PetsController::addPet", error);
+                    ctx.body = [];
+                    ctx.status = 200;
+                    return reject(error);
+                }
+                ctx.body = tuples;
+                ctx.status = 200;
+                return resolve();
+            });
+        }).catch(err => {
+            console.log("Database connection error in addPet.", err);
+            // The UI side will have to look for the value of status and
+            // if it is not 200, act appropriately.
+            ctx.body = [];
+            ctx.status = 500;
+        });
+}
+
+
 const allPets = async (ctx) => {
     console.log('pets all pets called.');
     return new Promise((resolve, reject) => {
