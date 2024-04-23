@@ -202,6 +202,7 @@ const allergiesByPetID = (ctx) => {
 
 module.exports = {
     allPets,
+    addPet,
     petWithPetID,
     petsByOwner,
     petsBySitter,
