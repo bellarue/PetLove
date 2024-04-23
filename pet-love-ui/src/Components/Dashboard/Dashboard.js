@@ -6,6 +6,20 @@ import {Box, Grid} from '@mui/material'
 import CalendarSummary from './CalenderSummary';
 
 export default function Dashboard(props) {
+    const {username} = props;
+    const [email, setEmail] = React.useState("");
+    useEffect(() => {
+        const api = new API();
+
+        async function getEmail() {
+            const userJSONString = await api.userWithUsername(username);
+            console.log(`user from the DB ${JSON.stringify(userJSONString)}`);
+            setEmail(userJSONString.data[0]['email']);
+        }
+
+        getEmail();
+    }, []);
+
     return <Fragment>
     <Box sx={{
         width: '100%',
@@ -16,21 +30,29 @@ export default function Dashboard(props) {
     }}>
         <Box sx={{
             width: '100%',
-            height: 30,
+            height: 50,
             alignItems: 'center'
         }}>
-            <Typography align="center">
+            <Typography align="center" fontSize={30}>
                 Dashboard
+            </Typography>
+        </Box>
+        <Box sx={{
+            width: '100%',
+            height: 20,
+            alignItems: 'center'
+        }}>
+            <Typography>
+                Appointments Next 7 Days:
             </Typography>
         </Box>
         <Box sx={{
             width: '100%',
             height: 70,
             alignItems: 'center',
-            border: 1,
             mb: 1
         }}>
-            <CalendarSummary />
+            <CalendarSummary username={username} />
         </Box>
         <Box sx={{
             width: '100%',

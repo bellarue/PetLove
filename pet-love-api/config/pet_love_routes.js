@@ -57,6 +57,7 @@ const usersRouter = require('koa-router')({
 
 usersRouter.use(VerifyJWT);
 usersRouter.get('/all-users', UsersController.allUsers, err => console.log(`allUsers ran into an error: ${err}`));
+usersRouter.get('/all-users-emails', UsersController.allUsersEmails, err => console.log(`allUsersEmails ran into an error: ${err}`));
 usersRouter.get('/:email/email', UsersController.userWithEmail, err => console.log(`userWithEmail ran into an error: ${err}`));
 usersRouter.get('/:email/roles', UsersController.rolesWithEmail, err => console.log(`rolesWithEmail ran into an error: ${err}`));
 usersRouter.get('/:username/username', UsersController.usersWithUsername, err => console.log(`usersWithUsername ran into an error: ${err}`));

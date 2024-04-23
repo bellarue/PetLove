@@ -1,15 +1,17 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import API from '../../API_Interface/API_Interface'
 import Typography from '@mui/material/Typography';
-import {Box, Grid} from '@mui/material'
+import {Box, Grid, Button, ButtonGroup} from '@mui/material'
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import Divider from '@mui/material/Divider';
 import ListItemButton from '@mui/material/ListItemButton';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import PetProfile from './PetProfile';
+import AddPet from './AddPet';
 
 const Vets = props => {
     const {vets} = props;
@@ -57,10 +59,15 @@ export default function Profile(props) {
     console.log(`idx is ${idx}`)
     const [selectedIndex, setSelectedIndex] = React.useState(idx);
     const [pets, setPets] = React.useState([]);
+    const [sittingPets, setSittingPets] = useState([]);
     const [email, setEmail] = React.useState("");
     const [vets, setVets] = React.useState([]);
+    const [chosenList, setChosenList] = useState(0);
 
     useEffect(() => {
+        if(email === ""){
+            return;
+        }
         const api = new API();
 
         async function getVets() {
@@ -85,10 +92,11 @@ export default function Profile(props) {
     }, []);
     console.log(`email in profile is ${email}`);
     useEffect(() => {
+        if( email === '' ){
+            return;
+        }
         const api = new API();
-        console.log(`email in getPets is ${email}`);
         async function getPets() {
-            console.log(`in getPets`);
             const petsJSONString = await api.petsByOwner(email);
             console.log(`pets from the DB ${JSON.stringify(petsJSONString)}`);
             setPets(petsJSONString.data);
@@ -97,8 +105,22 @@ export default function Profile(props) {
         getPets();
     }, [email]);
 
+    useEffect(() => {
+        if( email === '' ){
+            return;
+        }
+        const api = new API();
+        async function getSittingPets() {
+            const sitPetsJSONString = await api.petsBySitter(email);
+            console.log(`sitting pets from the DB ${JSON.stringify(sitPetsJSONString)}`);
+            setSittingPets(sitPetsJSONString.data);
+        }
+
+        getSittingPets();
+    }, [email]);
+
     const PetsList = props => {
-        const {pets} = props; //need to get this from api route
+        const {pets,name} = props; //need to get this from api route
         console.log(`rendering pets list, ${JSON.stringify(pets)}`);
         const handleListItemClick = (event, index) => {
             setSelectedIndex(index);
@@ -113,11 +135,14 @@ export default function Profile(props) {
                 overflow: 'auto',
                 mr: 2
             }}>
-                <ListSubheader>Pets</ListSubheader>
-                <Divider />
+                <ListSubheader>
+                    {name}
+                </ListSubheader>
+                <Divider/>
                 {
                     pets.map((pet,idx) =>
                         <ListItemButton 
+                            key={idx}
                             selected={selectedIndex === idx}
                             onClick={(event) => handleListItemClick(event, idx)}
                         >
@@ -145,12 +170,22 @@ export default function Profile(props) {
     }
 
     const display = () => {
+        if( selectedIndex === -2 ) {
+            return <AddPet />
+        }
         if( selectedIndex === -1 ){
             return <Typography>
                 summary?
             </Typography>
         }
         return <PetProfile pet={getPetProfile()} vet={getVet()} />
+    }
+
+    const chooseList = () => {
+        if( chosenList === 0 ){
+            return <PetsList pets={pets} name={'My Pets'} />
+        }
+        return <PetsList pets={sittingPets} name={'Sitting'} />
     }
 
     return (
@@ -163,12 +198,56 @@ export default function Profile(props) {
         }}>
             <Box sx={{
                 width: '100%',
+                height: 50,
+                display: 'flex',
+                flexDirection: 'row',
+                alignContent: 'center',
+                justifyContent: 'center'
+            }}>
+                <Typography fontSize={30} justifyContent={'center'}>
+                    My Profile
+                </Typography>
+                <Button
+                    onClick={() => {
+                    setSelectedIndex(-2);
+                }}>
+                    <AddCircleIcon/>
+                </Button>
+            </Box>
+            <Box sx={{
+                width: '100%',
                 height: 500,
                 display: 'flex',
                 flexDirection: 'row',
                 justifyContent: "start"
             }}>
-                <PetsList pets={pets} />
+                <Box sx={{
+                    width: 130,
+                    height: 500,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: "start",
+                    mr: 1
+                }}>
+                    <Box sx={{
+                        width: '100%',
+                        height: 10,
+                        justifyContent: 'start',
+                        mb: 6
+                    }}>
+                        <ButtonGroup variant="outlined" aria-label="Basic button group">
+                            <Button
+                                size="small"
+                                onClick={() => {setChosenList(0)}}
+                            >My Pets</Button>
+                            <Button
+                                size="small"
+                                onClick={() => {setChosenList(1)}}
+                            >Sitting</Button>
+                        </ButtonGroup>
+                    </Box>
+                    {chooseList()}
+                </Box>
                 {display()}
             </Box>
             <Box sx={{

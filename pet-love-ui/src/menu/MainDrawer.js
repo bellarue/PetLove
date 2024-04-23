@@ -29,7 +29,7 @@ const menuComponents = (username, logoutAction) => {
     return [
         {
             title: 'Dashboard',
-            component: <Dashboard />
+            component: <Dashboard username={username} />
         },
         { //do we want to get to profile thru here or by clicking our profile pic
             title: 'Profile',
