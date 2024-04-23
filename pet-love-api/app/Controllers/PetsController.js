@@ -6,7 +6,35 @@ function now() {
     return dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
 }
 
-
+const addParent = (ctx) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+                   INSERT INTO 
+                   pet_parents(user, pet)
+                   VALUES (?, ?)
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [ctx.params.user, pet]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in PetsController::addParent", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in addParent.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
 const addPet = (ctx) => {
         return new Promise((resolve, reject) => {
             const query = `
@@ -37,6 +65,35 @@ const addPet = (ctx) => {
         });
 }
 
+const addSitter = (ctx) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+                   INSERT INTO 
+                   pet_sitters(user, pet)
+                   VALUES (?, ?)
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [ctx.params.user, pet]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in PetsController::addSitter", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in addSitter.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
 
 const allPets = async (ctx) => {
     console.log('pets all pets called.');
@@ -201,6 +258,8 @@ const allergiesByPetID = (ctx) => {
 }
 
 module.exports = {
+    addParent,
+    addSitter,
     allPets,
     addPet,
     petWithPetID,
