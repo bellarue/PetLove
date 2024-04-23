@@ -78,7 +78,8 @@ petsRouter.get('/:user/pets-by-owner', PetsController.petsByOwner, err => consol
 petsRouter.get('/:user/pets-by-sitter', PetsController.petsBySitter, err => console.log(`petsBySitter ran into an error: ${err}`));
 petsRouter.get('/:pet/allergies', PetsController.allergiesByPetID, err => console.log(`allergiesByPetID ran into an error: ${err}`));
 petsRouter.post('/:petID/:name/:type/:veterinarian', PetsController.addPet, err=>console.log(`addPet ran into an error: ${err}`));
-petsRouter.post('/:user/pet', PetsController.addParent, err=> console.log(`addParent ran into an errpr: ${err}`));
+petsRouter.post('/:user/pet', PetsController.addParent, err=> console.log(`addParent ran into an error: ${err}`));
+petsRouter.post('/:user/pet', PetsController.addSitter, err=> console.log(`addSitter ran into an errr: ${err}`));
 // Pets router configuration.
 
 const VeterinariansController = require('../app/Controllers/VeterinariansController.js');
