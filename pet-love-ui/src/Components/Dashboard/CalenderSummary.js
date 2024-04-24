@@ -2,9 +2,6 @@ import React, {Fragment, useEffect, useState} from 'react';
 import API from '../../API_Interface/API_Interface'
 import Typography from '@mui/material/Typography';
 import {Box, Grid} from '@mui/material'
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
 
 const ApptsList = (props) => {
     const {appts} = props; //array of appointment objects
@@ -79,10 +76,8 @@ export default function CalendarSummary(props) {
             else{
                 tempDate = date.slice(0,date.length-2);
             }
-            console.log(`tempDate is ${tempDate}`);
             for( let i = today; i < today+7; i++ ){
                 const dateJSONString = await api.appointmentsWithUserAndDate(email, tempDate+i);
-                console.log(`appts from the DB ${JSON.stringify(dateJSONString)}`);
                 week.push(dateJSONString.data);
             }
             setAppts(week);

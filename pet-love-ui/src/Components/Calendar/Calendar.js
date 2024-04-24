@@ -1,7 +1,7 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import API from '../../API_Interface/API_Interface'
 import Typography from '@mui/material/Typography';
-import {Box, Grid} from '@mui/material'
+import {Box} from '@mui/material'
 import ReactCalendar from 'react-calendar';
 
 const ApptsView = props => {

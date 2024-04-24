@@ -47,10 +47,6 @@ export default class APIInterface {
         return axiosAgent.get(`users/all-users`);
     }
 
-    async allUsersEmails() {
-        return axiosAgent.get(`users/all-users-emails`);
-    }
-
     async userWithEmail(email) {
         return axiosAgent.get(`users/${email}/email`);
     }
