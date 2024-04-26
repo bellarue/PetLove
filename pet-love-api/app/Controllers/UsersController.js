@@ -233,6 +233,35 @@ const friendsByUser = (ctx) => { //FIXME: idk how to do this query
     });
 }
 
+const addUser = (ctx) => { 
+    return new Promise((resolve, reject) => {
+        const query = `
+                   INSERT INTO user(email, username, fname, lname)
+                   VALUE (?,?,?,?)
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [ctx.params.email, ctx.params.username, ctx.params.fname, ctx.params.lname]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in UsersController::addUser", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in addUser.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
 module.exports = {
     allUsers,
     userWithEmail,
@@ -240,5 +269,6 @@ module.exports = {
     usersByPet,
     usersByPetSitting,
     rolesWithEmail,
-    friendsByUser
+    friendsByUser,
+    addUser
 };

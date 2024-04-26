@@ -204,9 +204,18 @@ export default function Profile(props) {
             return <AddPet />
         }
         if( selectedIndex === -1 ){
-            return <Typography>
-                summary?
-            </Typography>
+            return <Box sx={{
+                width: '100%',
+                maxHeight: 200,
+                overflow: 'auto',
+                display: 'flex',
+                flexDirection: 'column'
+            }}>
+                <Typography>
+                    Veterinarians:
+                </Typography>
+                <Vets vets={vets} />
+            </Box>
         }
         return <PetProfile pet={getPetProfile()} vet={getVet()} />
     }
@@ -239,7 +248,7 @@ export default function Profile(props) {
         </Box>
         <Box sx={{
             width: '100%',
-            height: 500,
+            height: '100%',
             display: 'flex',
             flexDirection: 'row',
             justifyContent: "start"
@@ -273,10 +282,6 @@ export default function Profile(props) {
             </Box>
             {display()}
         </Box>
-        <Typography align='center'>
-            Veterinarians
-        </Typography>
-        <Vets vets={vets} />
 
     </Fragment>
 }

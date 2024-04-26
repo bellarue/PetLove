@@ -1,7 +1,7 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import API from '../../API_Interface/API_Interface'
 import Typography from '@mui/material/Typography';
-import {Box, Grid} from '@mui/material'
+import {Box, Grid, Button} from '@mui/material'
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,6 +9,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import CreateIcon from '@mui/icons-material/Create';
+
+import Edit from './Edit';
 
 const mealsTableAttributes = [
     {
@@ -47,6 +50,39 @@ const usersTableAttributes = [
     {
         title: 'Username',
         attributeDBName: 'username',
+        align: 'left'
+    }
+];
+
+const medsTableAttributes = [
+    {
+        title: 'Name',
+        attributeDBName: 'name',
+        align: 'left'
+    },
+    {
+        title: 'Start Date',
+        attributeDBName: 'startDate',
+        align: 'left'
+    },
+    {
+        title: 'Veterinarian',
+        attributeDBName: 'veterinarian',
+        align: 'left'
+    },
+    {
+        title: 'Type',
+        attributeDBName: 'type',
+        align: 'left'
+    },
+    {
+        title: 'Dosage',
+        attributeDBName: 'dosage',
+        align: 'left'
+    },
+    {
+        title: 'Admin Method',
+        attributeDBName: 'admin_method',
         align: 'left'
     }
 ];
@@ -143,6 +179,52 @@ const Mealtimes = props => {
     </Fragment>
 }
 
+const Medications = props => {
+    const {meds} = props;
+    const TRow = ({medicationObject}) => {
+        return <TableRow
+            sx={{'&:last-child td, &:last-child th': {border: 0}}}
+        >
+            {
+                medsTableAttributes.map((attr, idx) =>
+                    <TableCell key={idx}
+                               align={attr.align}>
+                        {
+                            medicationObject[attr.attributeDBName]
+                        }
+                    </TableCell>)
+            }
+        </TableRow>
+    }
+    return <Fragment>
+        {
+            meds.length > 0 &&
+                <TableContainer component={Paper}>
+                    <Table sx={{minWidth: 650}} aria-label="medication table">
+                        <TableHead>
+                            <TableRow>
+                                {
+                                    medsTableAttributes.map((attr, idx) =>
+                                        <TableCell  key={idx}
+                                                    align={attr.align}>
+                                            {attr.title}
+                                        </TableCell>)
+                                }
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {
+                                meds.map((med, idx) => (
+                                    <TRow medicationObject={med} key={idx}/>
+                                ))
+                            }
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+        }
+    </Fragment>
+}
+
 const allergiesString = (allergies) => {
     let a = "";
     for( let allergy of allergies ){
@@ -158,6 +240,24 @@ export default function PetProfile(props) {
     const [allergies, setAllergies] = React.useState([]);
     const [owners, setOwners] = useState([]);
     const [sitters, setSitters] = useState([]);
+    const [meds, setMeds] = useState([]);
+    const [notes, setNotes] = useState(pet['notes']);
+
+    //FIXME: what is different for posting vs getting
+    // useEffect(() => {
+    //     if( notes === '' ){
+    //         return;
+    //     }
+    //     const api = new API();
+
+    //     async function postNotes() {
+    //         const ownersJSONString = await api.usersByPet(pet['petID']);
+    //         console.log(`owners from the DB ${JSON.stringify(ownersJSONString)}`);
+    //         setOwners(ownersJSONString.data);
+    //     }
+
+    //     postOwners();
+    // }, [notes]);
 
     useEffect(() => {
         const api = new API();
@@ -208,6 +308,19 @@ export default function PetProfile(props) {
         getMealtimes();
     }, [pet]);
 
+    useEffect(() => {
+        const api = new API();
+
+        async function getMeds() {
+            console.log(`petID is ${pet['petID']}`);
+            const medsJSONString = await api.medicationsByPet(pet['petID']);
+            console.log(`medications from the DB ${JSON.stringify(medsJSONString)}`);
+            setMeds(medsJSONString.data);
+        }
+
+        getMeds();
+    }, [pet]);
+
     return <Fragment>
         <Box sx={{
             width: '100%',
@@ -217,10 +330,10 @@ export default function PetProfile(props) {
         }}>
             <Box sx={{
                 width: '100%',
-                height: 30,
+                height: 35,
                 alignItems: 'center' 
             }}>
-                <Typography align="center">
+                <Typography align="center" fontSize={25}>
                     {pet['name']}
                 </Typography>
             </Box>
@@ -228,40 +341,31 @@ export default function PetProfile(props) {
                 width: '100%',
                 height: 100,
                 display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'center',
+                flexDirection: 'column',
+                border: 1,
                 mb: 1
             }}>
                 <Box sx={{
-                    width: 100,
-                    height: 100,
-                    border: 1,
-                    borderColor: '#000000',
-                    mr: 1
-                }}>
-                    <Typography>
-                        pet profile pic?
-                    </Typography>
-                </Box>
-                <Box sx={{
                     width: '100%',
-                    height: 100,
+                    height: 21,
                     display: 'flex',
-                    flexDirection: 'column',
-                    border: 1,
-                    borderColor: '#000000'
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
                 }}>
                     <Typography>
                         Notes:
                     </Typography>
-                    <Typography>
-                        {pet['notes']}
-                    </Typography>
+                    <Edit label={"Notes"} value={notes} setValue={(notes)=>setNotes(notes)} />
                 </Box>
+                
+                <Typography>
+                    {pet['notes']}
+                </Typography>
             </Box>
+            
             <Box sx={{
                 width: '100%',
-                height: 50,
+                maxHeight: 50,
                 alignItems: 'center',
                 border: 1,
                 mb: 1
@@ -273,7 +377,7 @@ export default function PetProfile(props) {
             </Box>
             <Box sx={{
                 width: '100%',
-                height: 200,
+                maxHeight: 200,
                 display: 'flex',
                 flexDirection: 'column',
                 border: 1,
@@ -286,7 +390,21 @@ export default function PetProfile(props) {
             </Box>
             <Box sx={{
                 width: '100%',
-                height: 150,
+                height: 200,
+                display: 'flex',
+                flexDirection: 'column',
+                border: 1,
+                mb: 1,
+                overflow: 'auto'
+            }}>
+                <Typography>
+                    Medications:
+                </Typography>
+                <Medications meds={meds} />
+            </Box>
+            <Box sx={{
+                width: '100%',
+                maxHeight: 150,
                 display: 'flex',
                 flexDirection: 'column',
                 border: 1,
@@ -299,7 +417,7 @@ export default function PetProfile(props) {
             </Box>
             <Box sx={{
                 width: '100%',
-                height: 150,
+                maxHeight: 150,
                 display: 'flex',
                 flexDirection: 'column',
                 border: 1,
@@ -315,7 +433,7 @@ export default function PetProfile(props) {
             </Typography>
             <Box sx={{
                 width: '100%',
-                height: 50,
+                maxHeight: 50,
                 display: 'flex',
                 flexDirection: 'row',
                 justifyContent: 'space-around',
