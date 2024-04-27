@@ -244,20 +244,19 @@ export default function PetProfile(props) {
     const [notes, setNotes] = useState(pet['notes']);
 
     //FIXME: what is different for posting vs getting
-    // useEffect(() => {
-    //     if( notes === '' ){
-    //         return;
-    //     }
-    //     const api = new API();
+    useEffect(() => {
+        if( notes === '' ){
+            return;
+        }
+        const api = new API();
 
-    //     async function postNotes() {
-    //         const ownersJSONString = await api.usersByPet(pet['petID']);
-    //         console.log(`owners from the DB ${JSON.stringify(ownersJSONString)}`);
-    //         setOwners(ownersJSONString.data);
-    //     }
+        async function postNotes() {
+            const ownersJSONString = await api.changeNotes(notes, pet['petID']);
+            console.log(`testing post ${JSON.stringify(ownersJSONString)}`);
+        }
 
-    //     postOwners();
-    // }, [notes]);
+        postNotes();
+    }, [notes]);
 
     useEffect(() => {
         const api = new API();

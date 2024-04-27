@@ -20,7 +20,7 @@ import Button from "@mui/material/Button";
 import Profile from '../Components/Profile/Profile';
 import Calendar from '../Components/Calendar/Calendar';
 import Settings from '../Components/Settings/Settings';
-import Social from '../Components/Social/Social1';
+import Social from '../Components/Social/Social';
 import Dashboard from '../Components/Dashboard/Dashboard';
 
 const drawerWidth = 240;
@@ -41,7 +41,7 @@ const menuComponents = (username, logoutAction) => {
         },
         {
             title: 'Social',
-            component: <Social />
+            component: <Social username={username} />
         },
         {
             title: 'Settings',

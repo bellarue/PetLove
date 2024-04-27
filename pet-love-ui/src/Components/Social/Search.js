@@ -1,15 +1,24 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import API from '../../API_Interface/API_Interface'
 import Typography from '@mui/material/Typography';
-import {Box} from '@mui/material'
+import {Box, Button, ListItemButton} from '@mui/material'
 import TextField from '@mui/material/TextField';
 import List from '@mui/material/List';
 import ListItemText from '@mui/material/ListItemText';
+import Tooltip from '@mui/material/Tooltip';
 
 export default function Search() {
     const [input, setInput] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [showList, setShowList] = useState(false);
+    const [users, setUsers] = useState([]);
+    const [friendRequest, setFriendRequest] = useState('');
+
+    useEffect(() => {
+        if(friendRequest === ''){
+            return;
+        }
+    }, [friendRequest])
 
     useEffect(() => {
         if( input === '' || !showList ){
@@ -36,11 +45,12 @@ export default function Search() {
         console.log(`rendering users list, ${JSON.stringify(users)}`);
         const handleListItemClick = (event, index) => {
             setSelectedIndex(index);
+            setFriendRequest(users[index]);
         };
         return (
             <List component="nav"
                 aria-label="list of users" sx={{
-                width: 100,
+                width: 200,
                 maxHeight: 300,
                 bgcolor: 'background.paper',
                 position: 'relative',
@@ -49,17 +59,25 @@ export default function Search() {
             }}>
                 {
                     users.map((user,idx) =>
-                        <ListItemButton 
-                            key={idx}
-                            selected={selectedIndex === idx}
-                            onClick={(event) => handleListItemClick(event, idx)}
-                        >
-                            <ListItemText primary={user['username']} />
-                        </ListItemButton>
+                        <Tooltip title="Send friend request?">
+                            <ListItemButton 
+                                key={idx}
+                                selected={selectedIndex === idx}
+                                onClick={(event) => handleListItemClick(event, idx)}
+                            >
+                                <ListItemText primary={user['username']} />
+                            </ListItemButton>
+                        </Tooltip>
                     )
                 }
             </List>
         )
+    }
+
+    const display = () => {
+        if( showList ) {
+            return <UsersList users={users} />
+        }
     }
 
     return <Fragment>
@@ -67,12 +85,13 @@ export default function Search() {
             height: '100%',
             width: '100%',
             display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            alignItems: 'center'
         }}>
-            <Box display="flex" flexDirection="row" justifyContent="space-around" alignItems="center" width="100%" mb={0.75}>
+            <Box display="flex" flexDirection="row" alignItems="center" justifyContent='center' width="100%" mb={0.75}>
                 <TextField
                     id="outlined-error-helper-text"
-                    label="Veterinarian's Email"
+                    label="Search Users"
                     placeholder=""
                     value={input}
                     onChange={handleInputChange}
@@ -83,6 +102,7 @@ export default function Search() {
                 size="medium"
                 onClick={() => {setShowList(true)}}
             >Search</Button>
+            {display()}
         </Box>
         
     </Fragment>

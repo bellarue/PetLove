@@ -53,6 +53,10 @@ usersRouter.get('/:pet/pet-parent', UsersController.usersByPet, err => console.l
 usersRouter.get('/:pet/pet-sitter', UsersController.usersByPetSitting, err => console.log(`usersByPetSitting ran into an error: ${err}`));
 usersRouter.get('/:user/friends', UsersController.friendsByUser, err => console.log(`friendsByUser ran into an error: ${err}`));
 usersRouter.post('/:email/:username/:fname/:lname', UsersController.addUser, err => console.log(`addUser ran into an error: ${err}`));
+usersRouter.post('/:user1/:user2/add-friend', UsersController.addFriendship, err => console.log(`addFriendship ran into an error: ${err}`));
+usersRouter.post('/:user1/:user2/remove-friend', UsersController.removeFriendship, err => console.log(`removeFriendship ran into an error: ${err}`));
+usersRouter.post('/:sender/:recipient/send-friend-request', UsersController.addFriendRequest, err => console.log(`addFriendRequest ran into an error: ${err}`));
+usersRouter.post('/:sender/:recipient/remove-friend-request', UsersController.removeFriendRequest, err => console.log(`removeFriendRequest ran into an error: ${err}`));
 
 // Pets router configuration.
 
