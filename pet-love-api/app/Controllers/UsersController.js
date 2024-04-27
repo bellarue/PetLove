@@ -384,6 +384,36 @@ const removeFriendRequest = (ctx) => {
     });
 }
 
+const friendRequestsByRecipient = (ctx) => { 
+    return new Promise((resolve, reject) => {
+        const query = `
+                   SELECT * FROM friend_requests
+                    WHERE
+                        recipient = ?
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [ctx.params.recipient]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in UsersController::friendRequestsByRecipient", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in friendRequestsByRecipient.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
 module.exports = {
     allUsers,
     userWithEmail,
@@ -396,5 +426,6 @@ module.exports = {
     addFriendship,
     removeFriendship,
     addFriendRequest,
-    removeFriendRequest
+    removeFriendRequest,
+    friendRequestsByRecipient
 };

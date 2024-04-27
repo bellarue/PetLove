@@ -7,18 +7,46 @@ import List from '@mui/material/List';
 import ListItemText from '@mui/material/ListItemText';
 import Tooltip from '@mui/material/Tooltip';
 
-export default function Search() {
+export default function Search(props) {
+    const {email} = props;
     const [input, setInput] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [showList, setShowList] = useState(false);
     const [users, setUsers] = useState([]);
     const [friendRequest, setFriendRequest] = useState('');
+    const [FREmail, setFREmail] = useState('');
 
     useEffect(() => {
         if(friendRequest === ''){
             return;
         }
+        const api = new API();
+    
+        async function getFREmail() {
+            const userJSONString = await api.userWithUsername(friendRequest);
+            console.log(`user from the DB ${JSON.stringify(userJSONString)}`);
+            setFREmail(userJSONString.data[0]['email']);
+            setFriendRequest(''); //reset friend request
+        }
+
+        getFREmail();
     }, [friendRequest])
+
+    useEffect(() => {
+        if(FREmail === ''){
+            return;
+        }
+    
+        const api = new API();
+
+        async function postFriendRequest() {
+            const userJSONString = api.addFriendRequest(email, FREmail);
+            console.log(`FR result ${JSON.stringify(userJSONString)}`);
+            setFREmail(''); //reset FR email
+        }
+
+        postFriendRequest();
+    }, [FREmail]);
 
     useEffect(() => {
         if( input === '' || !showList ){

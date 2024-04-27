@@ -47,7 +47,7 @@ export default function Social(props) {
                     grid row, 2 items? profile picture (can change here?) and search username
                 </Typography>
             </Box>
-            <Search />
+            <Search email={email} />
         </Box>
         
     </Fragment>

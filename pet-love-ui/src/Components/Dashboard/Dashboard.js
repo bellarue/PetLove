@@ -10,6 +10,7 @@ export default function Dashboard(props) {
     const {username} = props;
     const [email, setEmail] = React.useState("");
     const [meals, setMeals] = useState([]);
+    const [numFriendRequests, setNumFriendRequests] = useState(0);
 
     useEffect(() => {
         const api = new API();
@@ -36,6 +37,21 @@ export default function Dashboard(props) {
         }
 
         getMeals();
+    }, [email]);
+
+    useEffect(() => {
+        if( email === "" ){
+            return;
+        }
+        const api = new API();
+
+        async function getNumFriendRequests() {
+            const frJSONString = await api.friendRequestsByRecipient(email);
+            console.log(`friend requests from the DB ${JSON.stringify(frJSONString)}`);
+            setNumFriendRequests(frJSONString.data.length);
+        }
+
+        getNumFriendRequests();
     }, [email]);
 
     return <Fragment>
@@ -80,15 +96,18 @@ export default function Dashboard(props) {
             alignItems: 'center'
         }}>
             <Box sx={{
-                width: 70,
+                width: 80,
                 height: '100%',
                 alignItems: 'center',
                 justifyContent: 'center',
                 border: 1,
                 mr: 1
             }}>
-                <Typography>
+                <Typography fontSize={12} align="center">
                     friend requests
+                </Typography>
+                <Typography align="center">
+                    {numFriendRequests}
                 </Typography>
             </Box>
             <Box sx={{

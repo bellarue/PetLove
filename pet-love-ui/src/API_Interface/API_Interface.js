@@ -91,6 +91,10 @@ export default class APIInterface {
         return axiosAgent.post(`user/${sender}/${recipient}/remove-friend-request`)
     }
 
+    async friendRequestsByRecipient(recipient) {
+        return axiosAgent.get(`user/${recipient}/get-friend-requests`);
+    }
+
     //Pets Routes
 
     async allPets() {
@@ -130,7 +134,7 @@ export default class APIInterface {
     }
 
     async changeNotes(notes, petID) {
-        return axiosAgent.post(`pets/${notes}/${petID}/change-notes`)
+        return axiosAgent.post(`pets/${notes}/${petID}/change-pet-notes`)
     }
 
     async addAllergy(pet, allergy) {
@@ -194,7 +198,7 @@ export default class APIInterface {
     }
 
     async changeNotes(notes, time, pet) {
-        return axiosAgent.post(`mealtimes/${notes}/${time}/${pet}/change-notes`);
+        return axiosAgent.post(`mealtimes/${notes}/${time}/${pet}/change-meal-notes`);
     }
 
     //Medications routes

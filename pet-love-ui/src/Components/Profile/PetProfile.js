@@ -245,14 +245,14 @@ export default function PetProfile(props) {
 
     //FIXME: what is different for posting vs getting
     useEffect(() => {
-        if( notes === '' ){
+        if( notes === '' || notes === pet['notes'] ){ //is empty or hasnt changed
             return;
         }
         const api = new API();
 
         async function postNotes() {
-            const ownersJSONString = await api.changeNotes(notes, pet['petID']);
-            console.log(`testing post ${JSON.stringify(ownersJSONString)}`);
+            const notesUpdateResults = api.changeNotes(notes, pet['petID']);
+            console.log(`changing notes ${JSON.stringify(notesUpdateResults)}`);
         }
 
         postNotes();

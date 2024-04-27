@@ -52,6 +52,7 @@ usersRouter.get('/:username/username', UsersController.usersWithUsername, err =>
 usersRouter.get('/:pet/pet-parent', UsersController.usersByPet, err => console.log(`usersByPet ran into an error: ${err}`));
 usersRouter.get('/:pet/pet-sitter', UsersController.usersByPetSitting, err => console.log(`usersByPetSitting ran into an error: ${err}`));
 usersRouter.get('/:user/friends', UsersController.friendsByUser, err => console.log(`friendsByUser ran into an error: ${err}`));
+usersRouter.get('/:recipient/get-friend-requests', UsersController.friendRequestsByRecipient, err => console.log(`friendRequestByRecipient ran into an error: ${err}`));
 usersRouter.post('/:email/:username/:fname/:lname', UsersController.addUser, err => console.log(`addUser ran into an error: ${err}`));
 usersRouter.post('/:user1/:user2/add-friend', UsersController.addFriendship, err => console.log(`addFriendship ran into an error: ${err}`));
 usersRouter.post('/:user1/:user2/remove-friend', UsersController.removeFriendship, err => console.log(`removeFriendship ran into an error: ${err}`));
@@ -75,7 +76,7 @@ petsRouter.post('/:name/:type/:veterinarian', PetsController.addPet, err=>consol
 petsRouter.post('/:user/:pet/add-parent', PetsController.addParent, err=> console.log(`addParent ran into an error: ${err}`));
 petsRouter.post('/:user/:pet/add-sitter', PetsController.addSitter, err=> console.log(`addSitter ran into an errr: ${err}`));
 petsRouter.post('/:veterinarian/:petID/change-vet', PetsController.changeVet, err=> console.log(`changeVet ran into an errr: ${err}`));
-petsRouter.post('/:notes/:petID/change-notes', PetsController.changeVet, err=> console.log(`changeNotes ran into an errr: ${err}`));
+petsRouter.post('/:notes/:petID/change-pet-notes', PetsController.changeVet, err=> console.log(`changeNotes ran into an errr: ${err}`));
 petsRouter.post('/:pet/:allergy/add-allergy', PetsController.changeVet, err=> console.log(`addAllergy ran into an errr: ${err}`));
 
 
@@ -109,7 +110,7 @@ mealtimesRouter.get('/:user/sitter', MealtimesController.mealtimesWithSitter, er
 mealtimesRouter.get('/:pet/num-meals', MealtimesController.numMealsByPet, err => console.log(`numMealsByPet ran into an error: ${err}`));
 mealtimesRouter.post('/:time/:pet/:type/:amount/:notes', MealtimesController.addMealtime, err => console.log(`addMealtime ran into an error: ${err}`));
 mealtimesRouter.post('/:time/:pet/remove-mealtime', MealtimesController.removeMealtime, err => console.log(`removeMealtime ran into an error: ${err}`));
-mealtimesRouter.post('/:notes/:time/:pet/change-notes', MealtimesController.changeNotes, err => console.log(`removeMealtime ran into an error: ${err}`));
+mealtimesRouter.post('/:notes/:time/:pet/change-meal-notes', MealtimesController.changeNotes, err => console.log(`removeMealtime ran into an error: ${err}`));
 
 // Medications router configuration.
 

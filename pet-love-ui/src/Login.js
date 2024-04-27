@@ -9,13 +9,12 @@ import {Typography} from '@mui/material'
 import Divider from '@mui/material/Divider';
 
 const CreateAccount = props => {
-    const {users, emails} = props;
+    const {users, emails, setShowForm} = props;
     const [emailInput, setEmailInput] = useState('');
     const [usernameInput, setUsernameInput] = useState('');
     const [fnameInput, setFNameInput] = useState('');
     const [lnameInput, setLNameInput] = useState('');
-    const [verifyEmail, setVerifyEmail] = useState(false);
-    const [verifyUsername, setVerifyUsername] = useState(false);
+    const [verifyInfo, setVerifyInfo] = useState(false);
     const [emailUsed, setEmailUsed] = useState(false);
     const [usernameUsed, setUsernameUsed] = useState(false);
     const handleEmailChange = event => {
@@ -38,22 +37,34 @@ const CreateAccount = props => {
     };
 
     useEffect(()=>{
-        if( !verifyEmail ){
+        let authFailed = false;
+        if( !verifyInfo ){
             return;
         }
         if( emails.includes(emailInput) ){
             setEmailUsed(true);
-        }
-    }, [verifyEmail]);
-
-    useEffect(()=>{
-        if( !verifyUsername ){
-            return;
+            authFailed = true;
         }
         if( users.includes(usernameInput) ){
             setUsernameUsed(true);
+            authFailed = true;
         }
-    }, [verifyUsername]);
+        if( authFailed || emailInput.length === 0 || usernameInput.length === 0
+            || fnameInput.length === 0 || lnameInput.length === 0 ){
+            return;
+        }
+
+        const api = new API();
+    
+        async function addUser() {
+            const userJSONString = api.addFriendRequest(emailInput, usernameInput, fnameInput, lnameInput);
+            console.log(`addUser result ${JSON.stringify(userJSONString)}`);
+        }
+
+        addUser();
+        setShowForm(false);
+
+    }, [verifyInfo]);
 
     return <Fragment>
         <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" width={400} mt={10}>
@@ -95,7 +106,7 @@ const CreateAccount = props => {
         <Button
             variant="outlined"
             size="medium"
-            onClick={() => {setVerifyEmail(true)}}
+            onClick={() => {setVerifyInfo(true)}}
         >Create</Button>
     </Fragment>
 }
@@ -163,7 +174,7 @@ export default function Login({setUser}) {
 
     const display = () => {
         if(showForm){
-            return <CreateAccount users={users} emails={emails} />;
+            return <CreateAccount users={users} emails={emails} setShowForm={(value)=>setShowForm(value)} />;
         }
         return;
     }
