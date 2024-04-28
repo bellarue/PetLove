@@ -140,11 +140,11 @@ const addMedication = (ctx) => {
                    INSERT INTO
                         medications
                     VALUE
-                        (?, ?, ?, ?, ?, ?, ?, ?)
+                        (?, ?, ?, ?, ?, ?, ?)
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.name, ctx.params.startDate, ctx.params.pet, ctx.params.veterinarian, ctx.params.type, ctx.params.dosage, ctx.params.admin_method, ctx.params.notes]
+            values: [ctx.params.name, ctx.params.startDate, ctx.params.pet, ctx.params.veterinarian, ctx.params.type, ctx.params.dosage, ctx.params.admin_method]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in MedicationsController::addMedication", error);

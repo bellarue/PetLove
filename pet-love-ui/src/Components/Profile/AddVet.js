@@ -4,16 +4,15 @@ import Typography from '@mui/material/Typography';
 import {Box} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import AddVet from './AddVet';
 
-export default function AddPet(props) {
+export default function AddVet(props) {
     const {email} = props;
     const [nameInput, setNameInput] = useState('');
-    const [typeInput, setTypeInput] = useState('');
-    const [vetInput, setVetInput] = useState('');
-    const [verifyVet, setVerifyVet] = useState(false);
+    const [emailInput, setEmailInput] = useState('');
+    const [phoneNumInput, setPhoneNumInput] = useState('');
+    const [verifyEmail, setVerifyEmail] = useState(false);
+    const [emailUsed, setEmailUsed] = useState(false);
     const [vets, setVets] = useState([]);
-    const [vetAvail, setVetAvail] = useState(true);
 
     useEffect(() => {
         const api = new API();
@@ -27,75 +26,64 @@ export default function AddPet(props) {
         getVets();
     }, []);
 
-    useEffect(() => {
-        if( !verifyVet ){
-            return;
-        }
-        if( vetInput.length > 0 && !vets.includes(vetInput) ){ //vet can be left empty
-            setVetAvail(false);
-        }
-        //otherwise, create pet
-    }, [verifyVet]);
-
     const handleNameChange = event => {
         console.log("handleInputChange called.");
         setNameInput(event.target.value);
     };
-    const handleTypeChange = event => {
+    const handleEmailChange = event => {
         console.log("handleInputChange called.");
-        setTypeInput(event.target.value);
+        setEmailInput(event.target.value);
+        setEmailUsed(false);
     };
 
-    const handleVetChange = event => {
+    const handlePhoneNumChange = event => {
         console.log("handleInputChange called.");
-        setVetInput(event.target.value);
+        setPhoneNumInput(event.target.value);
     };
 
-    const display = () => {
-        if( !vetAvail ){
-            return <Fragment>
-                <Typography>
-                    New Vet, please add information
-                </Typography>
-                <AddVet email={email} />
-            </Fragment>
+    useEffect(() => {
+        if( !verifyEmail ){
+            return;
         }
-        return;
-    }
+        if( vets.includes(emailInput) ){
+            setEmailUsed(true);
+        }
+        //otherwise, create vet
+    }, [verifyEmail]);
 
     return <Fragment>
-        <Box display="flex" flexDirection="column" alignItems="center" width={400} >
+        <Box display="flex" flexDirection="column" alignItems="center" width={400} mt={10}>
             <Box display="flex" flexDirection="row" justifyContent="space-around" alignItems="center" width="100%" mb={0.75}>
                 <TextField
                     id="outlined-error-helper-text"
-                    label="Pet Name"
+                    label="Name"
                     placeholder=""
                     value={nameInput}
                     onChange={handleNameChange}
                 />
                 <TextField
+                    error={emailUsed}
                     id="outlined-error-helper-text"
-                    label="Type"
+                    label="Email"
                     placeholder=""
-                    value={typeInput}
-                    onChange={handleTypeChange}
+                    value={emailInput}
+                    onChange={handleEmailChange}
                 />
             </Box>
             <Box display="flex" flexDirection="row" justifyContent="space-around" alignItems="center" width="100%" mb={0.75}>
                 <TextField
                     id="outlined-error-helper-text"
-                    label="Veterinarian's Email"
+                    label="Phone Number"
                     placeholder=""
-                    value={vetInput}
-                    onChange={handleVetChange}
+                    value={phoneNumInput}
+                    onChange={handlePhoneNumChange}
                 />
             </Box>
             <Button
                 variant="outlined"
                 size="medium"
-                onClick={() => {setVerifyVet(true)}}
+                onClick={() => {setVerifyEmail(true)}}
             >Create</Button>
-            {display()}
         </Box>
     </Fragment>
 }

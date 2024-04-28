@@ -170,45 +170,6 @@ const numMealsByPet = (ctx) => {
     });
 }
 
-const brandsByMealtime = (ctx) => {
-    return new Promise((resolve, reject) => {
-        const query = `
-                   SELECT *
-                    FROM 
-                        preferred_brands b, mealtimes m
-                    WHERE 
-                        b.mealtime = m.time
-                    AND
-                        b.pet = m.pet
-                    AND
-                        b.mealtime = ?
-                    AND
-                        b.pet = ?
-                    ORDER BY time
-                    `;
-        dbConnection.query({
-            sql: query,
-            values: [ctx.params.time, ctx.params.pet]
-        }, (error, tuples) => {
-            if (error) {
-                console.log("Connection error in MealtimesController::brandsByMealtime", error);
-                ctx.body = [];
-                ctx.status = 200;
-                return reject(error);
-            }
-            ctx.body = tuples;
-            ctx.status = 200;
-            return resolve();
-        });
-    }).catch(err => {
-        console.log("Database connection error in brandsByMealtime.", err);
-        // The UI side will have to look for the value of status and
-        // if it is not 200, act appropriately.
-        ctx.body = [];
-        ctx.status = 500;
-    });
-}
-
 const removeMealtime = (ctx) => {
     return new Promise((resolve, reject) => {
         const query = `
@@ -271,13 +232,47 @@ const addMealtime = (ctx) => {
     });
 }
 
+const changeNotes = (ctx) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+                   UPDATE mealtimes
+                    SET
+                        notes = ?
+                    WHERE
+                        time = ?
+                    AND
+                        pet = ?
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [ctx.params.notes, ctx.params.time, ctx.params.pet]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in MealtimesController::changeNotes", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in changeNotes.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
 module.exports = {
     allMealtimes,
     mealtimesWithPetID,
     mealtimesWithUser,
     mealtimesWithSitter,
     numMealsByPet,
-    brandsByMealtime,
     addMealtime,
-    removeMealtime
+    removeMealtime,
+    changeNotes
 };

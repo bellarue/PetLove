@@ -3,53 +3,83 @@ import API from '../../API_Interface/API_Interface'
 import Typography from '@mui/material/Typography';
 import {Box, Grid, Button, ButtonGroup} from '@mui/material'
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import Divider from '@mui/material/Divider';
 import ListItemButton from '@mui/material/ListItemButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 import PetProfile from './PetProfile';
 import AddPet from './AddPet';
 
+const vetsTableAttributes = [
+    {
+        title: 'Name',
+        attributeDBName: 'name',
+        align: 'left'
+    },
+    {
+        title: 'Email',
+        attributeDBName: 'email',
+        align: 'left'
+    },
+    {
+        title: 'Phone Number',
+        attributeDBName: 'phone_num',
+        align: 'left'
+    }
+];
+
 const Vets = props => {
     const {vets} = props;
-
-    return <Fragment>
-        <Box sx={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-        }}>
-            <Typography align='center'>
-                Veterinarians
-            </Typography>
+    const TRow = ({vetObject}) => {
+        return <TableRow
+            sx={{'&:last-child td, &:last-child th': {border: 0}}}
+        >
             {
-                vets.map((vet,idx) => 
-                    <Box sx={{
-                        width: '100%',
-                        height: 50,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-around'
-                    }}>
-                        <Typography>
-                            {vet['name']}
-                        </Typography>
-                        <Typography>
-                            {vet['email']}
-                        </Typography>
-                        <Typography>
-                            {vet['phone_num']}
-                        </Typography>
-                    </Box>
-                )
+                vetsTableAttributes.map((attr, idx) =>
+                    <TableCell key={idx}
+                               align={attr.align}>
+                        {
+                            vetObject[attr.attributeDBName]
+                        }
+                    </TableCell>)
             }
-            
-        </Box>
+        </TableRow>
+    }
+    return <Fragment>
+        {
+            vets.length > 0 &&
+                <TableContainer component={Paper}>
+                    <Table sx={{minWidth: 650}} aria-label="vet table">
+                        <TableHead>
+                            <TableRow>
+                                {
+                                    vetsTableAttributes.map((attr, idx) =>
+                                        <TableCell  key={idx}
+                                                    align={attr.align}>
+                                            {attr.title}
+                                        </TableCell>)
+                                }
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {
+                                vets.map((vet, idx) => (
+                                    <TRow vetObject={vet} key={idx}/>
+                                ))
+                            }
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+        }
     </Fragment>
 }
 
@@ -174,9 +204,18 @@ export default function Profile(props) {
             return <AddPet />
         }
         if( selectedIndex === -1 ){
-            return <Typography>
-                summary?
-            </Typography>
+            return <Box sx={{
+                width: '100%',
+                maxHeight: 200,
+                overflow: 'auto',
+                display: 'flex',
+                flexDirection: 'column'
+            }}>
+                <Typography>
+                    Veterinarians:
+                </Typography>
+                <Vets vets={vets} />
+            </Box>
         }
         return <PetProfile pet={getPetProfile()} vet={getVet()} />
     }
@@ -188,76 +227,61 @@ export default function Profile(props) {
         return <PetsList pets={sittingPets} name={'Sitting'} />
     }
 
-    return (
+    return <Fragment>
         <Box sx={{
-            height: 750,
             width: '100%',
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center"
+            height: 50,
+            display: 'flex',
+            flexDirection: 'row',
+            alignContent: 'center',
+            justifyContent: 'center'
+        }}>
+            <Typography fontSize={30} justifyContent={'center'}>
+                My Profile
+            </Typography>
+            <Button
+                onClick={() => {
+                setSelectedIndex(-2);
+            }}>
+                <AddCircleIcon/>
+            </Button>
+        </Box>
+        <Box sx={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: "start"
         }}>
             <Box sx={{
-                width: '100%',
-                height: 50,
-                display: 'flex',
-                flexDirection: 'row',
-                alignContent: 'center',
-                justifyContent: 'center'
-            }}>
-                <Typography fontSize={30} justifyContent={'center'}>
-                    My Profile
-                </Typography>
-                <Button
-                    onClick={() => {
-                    setSelectedIndex(-2);
-                }}>
-                    <AddCircleIcon/>
-                </Button>
-            </Box>
-            <Box sx={{
-                width: '100%',
+                width: 130,
                 height: 500,
                 display: 'flex',
-                flexDirection: 'row',
-                justifyContent: "start"
+                flexDirection: 'column',
+                justifyContent: "start",
+                mr: 1
             }}>
                 <Box sx={{
-                    width: 130,
-                    height: 500,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: "start",
-                    mr: 1
+                    width: '100%',
+                    height: 10,
+                    justifyContent: 'start',
+                    mb: 6
                 }}>
-                    <Box sx={{
-                        width: '100%',
-                        height: 10,
-                        justifyContent: 'start',
-                        mb: 6
-                    }}>
-                        <ButtonGroup variant="outlined" aria-label="Basic button group">
-                            <Button
-                                size="small"
-                                onClick={() => {setChosenList(0)}}
-                            >My Pets</Button>
-                            <Button
-                                size="small"
-                                onClick={() => {setChosenList(1)}}
-                            >Sitting</Button>
-                        </ButtonGroup>
-                    </Box>
-                    {chooseList()}
+                    <ButtonGroup variant="outlined" aria-label="Basic button group">
+                        <Button
+                            size="small"
+                            onClick={() => {setChosenList(0)}}
+                        >My Pets</Button>
+                        <Button
+                            size="small"
+                            onClick={() => {setChosenList(1)}}
+                        >Sitting</Button>
+                    </ButtonGroup>
                 </Box>
-                {display()}
+                {chooseList()}
             </Box>
-            <Box sx={{
-                width: '100%',
-                height: 50,
-                alignItems: 'center'
-            }}>
-                <Vets vets={vets} />
-            </Box>
-
+            {display()}
         </Box>
-    )
+
+    </Fragment>
 }
