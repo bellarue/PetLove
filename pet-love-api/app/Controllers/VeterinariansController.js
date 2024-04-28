@@ -137,9 +137,72 @@ const vetOfPet = (ctx) => {
     });
 }
 
+const addVet = (ctx) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+                   INSERT INTO veterinarians
+                    VALUE (?, ?, ?)
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [ctx.params.email, ctx.params.name, ctx.params.phone_num]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in VeterinariansController::addVet", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in addVet.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
+const removeVetFromUser = (ctx) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+                   DELETE FROM vets_of_owners
+                    WHERE
+                        user = ?
+                    AND
+                        vet = ?
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [ctx.params.user, ctx.params.vet]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in VeterinariansController::removeVetFromUser", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in removeVetFromUser.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
 module.exports = {
     allVets,
     vetWithEmail,
     vetsByUser,
-    vetOfPet
+    vetOfPet,
+    addVet,
+    removeVetFromUser
 };

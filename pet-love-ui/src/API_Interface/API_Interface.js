@@ -47,10 +47,6 @@ export default class APIInterface {
         return axiosAgent.get(`users/all-users`);
     }
 
-    async allUsersEmails() {
-        return axiosAgent.get(`users/all-users-emails`);
-    }
-
     async userWithEmail(email) {
         return axiosAgent.get(`users/${email}/email`);
     }
@@ -75,6 +71,30 @@ export default class APIInterface {
         return axiosAgent.get(`users/${user}/friends`);
     }
 
+    async addUser(email,username,fname,lname) {
+        return axiosAgent.post(`user/${email}/${username}/${fname}/${lname}`)
+    }
+
+    async addFriendship(user1, user2) {
+        return axiosAgent.post(`user/${user1}/${user2}/add-friend`)
+    }
+
+    async removeFriendship(user1, user2) {
+        return axiosAgent.post(`user/${user1}/${user2}/remove-friend`)
+    }
+
+    async addFriendRequest(sender, recipient) {
+        return axiosAgent.post(`user/${sender}/${recipient}/send-friend-request`)
+    }
+
+    async removeFriendRequest(sender, recipient) {
+        return axiosAgent.post(`user/${sender}/${recipient}/remove-friend-request`)
+    }
+
+    async friendRequestsByRecipient(recipient) {
+        return axiosAgent.get(`user/${recipient}/get-friend-requests`);
+    }
+
     //Pets Routes
 
     async allPets() {
@@ -97,6 +117,30 @@ export default class APIInterface {
         return axiosAgent.get(`pets/${pet}/allergies`);
     }
 
+    async addPet(name,type,veterinarian) {
+        return axiosAgent.post(`pets/${name}/${type}/${veterinarian}`);
+    }
+
+    async addParent(user,pet) {
+        return axiosAgent.post(`pets/${user}/${pet}/add-parent`);
+    }
+
+    async addSitter(user,pet) {
+        return axiosAgent.post(`pets/${user}/${pet}/add-sitter`);
+    }
+
+    async changeVet(veterinarian, petID) {
+        return axiosAgent.post(`pets/${veterinarian}/${petID}/change-vet`);
+    }
+
+    async changeNotes(notes, petID) {
+        return axiosAgent.post(`pets/${notes}/${petID}/change-pet-notes`)
+    }
+
+    async addAllergy(pet, allergy) {
+        return axiosAgent.post(`pets/${pet}/${allergy}/add-allergy`);
+    }
+
     //Veterinarians routes
 
     async allVets() {
@@ -113,6 +157,14 @@ export default class APIInterface {
 
     async vetOfPet(petID) {
         return axiosAgent.get(`veterinarians/${petID}/pet`);
+    }
+
+    async addVet(email, name, phone_num) {
+        return axiosAgent.post(`veterinarians/${email}/${name}/${phone_num}`)
+    }
+
+    async removeVetFromUser(user,vet) {
+        return axiosAgent.post(`veterinarians/${user}/${vet}`);
     }
 
     //Mealtimes routes
@@ -137,16 +189,16 @@ export default class APIInterface {
         return axiosAgent.get(`mealtimes/${pet}/num-meals`);
     }
 
-    async brandsByMealtime(time, pet) {
-        return axiosAgent.get(`mealtimes/${time}/${pet}/brands`);
-    }
-
     async addMealtime(time, pet, type, amount, notes) {
-        return axiosAgent.get(`mealtimes/${time}/${pet}/${type}/${amount}/${notes}`);
+        return axiosAgent.post(`mealtimes/${time}/${pet}/${type}/${amount}/${notes}`);
     }
 
     async removeMealtime(time, pet) {
-        return axiosAgent.get(`mealtimes/${time}/${pet}/remove-mealtime`);
+        return axiosAgent.post(`mealtimes/${time}/${pet}/remove-mealtime`);
+    }
+
+    async changeNotes(notes, time, pet) {
+        return axiosAgent.post(`mealtimes/${notes}/${time}/${pet}/change-meal-notes`);
     }
 
     //Medications routes
@@ -164,11 +216,11 @@ export default class APIInterface {
     }
 
     async removeMedication(name, startDate) {
-        return axiosAgent.get(`medications/${name}/${startDate}`);
+        return axiosAgent.post(`medications/${name}/${startDate}`);
     }
 
-    async addMedication(name, startDate, pet, veterinarian, type, dosage, admin_method, notes) {
-        return axiosAgent.get(`medications/${name}/${startDate}/${pet}/${veterinarian}/${type}/${dosage}/${admin_method}/${notes}`)
+    async addMedication(name, startDate, pet, veterinarian, type, dosage, admin_method) {
+        return axiosAgent.post(`medications/${name}/${startDate}/${pet}/${veterinarian}/${type}/${dosage}/${admin_method}`)
     }
 
     //Appointments routes
@@ -195,6 +247,18 @@ export default class APIInterface {
 
     async appointmentsWithPetAndUser(pet, user) {
         return axiosAgent.get(`appointments/${pet}/${user}/pet-by-user`);
+    }
+
+    async addAppointment(dateTime, user, type, notes) {
+        return axiosAgent.post(`appointments/${dateTime}/${user}/${type}/${notes}`)
+    }
+
+    async removeAppointment(apptID) {
+        return axiosAgent.post(`appointments/${apptID}/remove-appt`);
+    }
+
+    async addPetToAppt(pet, appt) {
+        return axiosAgent.post(`appointments/${pet}/${appt}/add-pet`)
     }
 
 }

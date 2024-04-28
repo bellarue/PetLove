@@ -1,6 +1,5 @@
-import React, {useState, useEffect, Fragment} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import API from '../../API_Interface/API_Interface'
-
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,74 +9,84 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-
-const routesTableAttributes = [
+const mealsTableAttributes = [
     {
-        title: 'Route Name',
-        attributeDBName: 'routeName',
+        title: 'Pet',
+        attributeDBName: 'pet',
         align: 'left'
     },
     {
-        title: 'Route ID',
-        attributeDBName: 'routeID',
+        title: 'Time',
+        attributeDBName: 'time',
         align: 'left'
     },
     {
-        title: 'Cycle ID',
-        attributeDBName: 'cycleID',
+        title: 'Type',
+        attributeDBName: 'type',
         align: 'left'
     },
     {
-        title: 'Date Created',
-        attributeDBName: 'dateCreated',
+        title: 'Amount',
+        attributeDBName: 'amount',
         align: 'left'
     }
 ];
 
-export default function RouteTable(props) {
-
-
-    const [routes, setRoutes] = useState([]);
-    console.log(`in RouteTTable routes contains is ${JSON.stringify(routes)}`);
-
+export default function MealtimesSummary(props) {
+    const {meals} = props;
+    const [petNames, setPetNames] = useState([]);
+    const [petIDs, setPetIDs] = useState([]);
 
     useEffect(() => {
+        if( meals.length === 0 ){
+            return
+        }
         const api = new API();
 
-        async function getRoutes() {
-            const routesJSONString = await api.allRoutes();
-            console.log(`routes from the DB ${JSON.stringify(routesJSONString)}`);
-            setRoutes(routesJSONString.data);
+        async function getPets() {
+            const names = [];
+            const ids = [];
+            for(let meal of meals){
+                if( ids.includes(meal['pet']) ) {
+                    continue; //no duplicates
+                }
+                const petJSONString = await api.petWithPetID(meal['pet']);
+                console.log(`pet from the DB ${JSON.stringify(petJSONString)}`);
+                names.push(petJSONString.data[0]['name']);
+                ids.push(meal['pet']);
+            }
+            console.log(`pets from the DB ${JSON.stringify(names)}`);
+            setPetNames(names);
+            setPetIDs(ids);
         }
 
-        getRoutes();
-    }, []);
+        getPets();
+    }, [meals]);
 
-    const TRow = ({routeObject}) => {
+    const TRow = ({mealtimeObject}) => {
         return <TableRow
             sx={{'&:last-child td, &:last-child th': {border: 0}}}
         >
             {
-                routesTableAttributes.map((attr, idx) =>
+                mealsTableAttributes.map((attr, idx) =>
                     <TableCell key={idx}
                                align={attr.align}>
                         {
-                            routeObject[attr.attributeDBName]
+                            mealtimeObject[attr.attributeDBName]
                         }
                     </TableCell>)
             }
         </TableRow>
     }
-
     return <Fragment>
         {
-            routes.length > 0 &&
+            meals.length > 0 &&
                 <TableContainer component={Paper}>
-                    <Table sx={{minWidth: 650}} aria-label="route table">
+                    <Table sx={{minWidth: 650}} aria-label="mealtime table">
                         <TableHead>
                             <TableRow>
                                 {
-                                    routesTableAttributes.map((attr, idx) =>
+                                    mealsTableAttributes.map((attr, idx) =>
                                         <TableCell  key={idx}
                                                     align={attr.align}>
                                             {attr.title}
@@ -87,8 +96,8 @@ export default function RouteTable(props) {
                         </TableHead>
                         <TableBody>
                             {
-                                routes.map((route, idx) => (
-                                    <TRow routeObject={route} key={idx}/>
+                                meals.map((meal, idx) => (
+                                    <TRow mealtimeObject={meal} key={idx}/>
                                 ))
                             }
                         </TableBody>

@@ -9,40 +9,104 @@ import {Typography} from '@mui/material'
 import Divider from '@mui/material/Divider';
 
 const CreateAccount = props => {
-    const {users} = props;
+    const {users, emails, setShowForm} = props;
     const [emailInput, setEmailInput] = useState('');
-    const [verifyEmail, setVerifyEmail] = useState(false);
+    const [usernameInput, setUsernameInput] = useState('');
+    const [fnameInput, setFNameInput] = useState('');
+    const [lnameInput, setLNameInput] = useState('');
+    const [verifyInfo, setVerifyInfo] = useState(false);
     const [emailUsed, setEmailUsed] = useState(false);
-    const handleInputChange = event => {
+    const [usernameUsed, setUsernameUsed] = useState(false);
+    const handleEmailChange = event => {
         console.log("handleInputChange called.");
         setEmailInput(event.target.value);
         setEmailUsed(false);
     };
+    const handleUsernameChange = event => {
+        console.log("handleInputChange called.");
+        setUsernameInput(event.target.value);
+        setUsernameUsed(false);
+    };
+    const handleFNameChange = event => {
+        console.log("handleInputChange called.");
+        setFNameInput(event.target.value);
+    };
+    const handleLNameChange = event => {
+        console.log("handleInputChange called.");
+        setLNameInput(event.target.value);
+    };
 
     useEffect(()=>{
-        if( !verifyEmail ){
+        let authFailed = false;
+        if( !verifyInfo ){
             return;
         }
-        if( users.includes(emailInput) ){
+        if( emails.includes(emailInput) ){
             setEmailUsed(true);
+            authFailed = true;
         }
-    }, [verifyEmail]);
+        if( users.includes(usernameInput) ){
+            setUsernameUsed(true);
+            authFailed = true;
+        }
+        if( authFailed || emailInput.length === 0 || usernameInput.length === 0
+            || fnameInput.length === 0 || lnameInput.length === 0 ){
+            return;
+        }
+
+        const api = new API();
+    
+        async function addUser() {
+            const userJSONString = api.addFriendRequest(emailInput, usernameInput, fnameInput, lnameInput);
+            console.log(`addUser result ${JSON.stringify(userJSONString)}`);
+        }
+
+        addUser();
+        setShowForm(false);
+
+    }, [verifyInfo]);
 
     return <Fragment>
-        <Box display="flex" justifyContent="center" alignItems="center" width="100%" mt={10}>
-            <TextField
-                error={emailUsed}
-                id="outlined-error-helper-text"
-                label="Email"
-                placeholder=""
-                value={emailInput}
-                onChange={handleInputChange}
-            />
+        <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" width={400} mt={10}>
+            <Box display="flex" flexDirection="row" justifyContent="space-around" alignItems="center" width="100%" mb={0.75}>
+                <TextField
+                    error={emailUsed}
+                    id="outlined-error-helper-text"
+                    label="Email"
+                    placeholder=""
+                    value={emailInput}
+                    onChange={handleEmailChange}
+                />
+                <TextField
+                    error={usernameUsed}
+                    id="outlined-error-helper-text"
+                    label="Username"
+                    placeholder=""
+                    value={usernameInput}
+                    onChange={handleUsernameChange}
+                />
+            </Box>
+            <Box display="flex" flexDirection="row" justifyContent="space-around" alignItems="center" width="100%">
+                <TextField
+                    id="outlined-error-helper-text"
+                    label="First Name"
+                    placeholder=""
+                    value={fnameInput}
+                    onChange={handleFNameChange}
+                />
+                <TextField
+                    id="outlined-error-helper-text"
+                    label="Last Name"
+                    placeholder=""
+                    value={lnameInput}
+                    onChange={handleLNameChange}
+                />
+            </Box>
         </Box>
         <Button
             variant="outlined"
             size="medium"
-            onClick={() => {setVerifyEmail(true)}}
+            onClick={() => {setVerifyInfo(true)}}
         >Create</Button>
     </Fragment>
 }
@@ -53,18 +117,22 @@ export default function Login({setUser}) {
     const [authFailed, setAuthFailed] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [users, setUsers] = useState([]);
+    const [emails, setEmails] = useState([]);
 
     useEffect(() => {
         const api = new API();
 
         async function getUsers() {
-            const usersJSONString = await api.allUsersEmails();
+            const usersJSONString = await api.allUsers();
             console.log(`users from the DB ${JSON.stringify(usersJSONString)}`);
-            setUsers(usersJSONString.data);
+            setEmails(usersJSONString.data.map(comp => comp.email));
+            setUsers(usersJSONString.data.map(comp => comp.username));
         }
 
         getUsers();
     }, []);
+    console.log(`emails list is ${JSON.stringify(emails)}`);
+    console.log(`users list is ${JSON.stringify(users)}`);
 
     const handleInputChange = event => {
         console.log("handleInputChange called.");
@@ -106,7 +174,7 @@ export default function Login({setUser}) {
 
     const display = () => {
         if(showForm){
-            return <CreateAccount users={users} />;
+            return <CreateAccount users={users} emails={emails} setShowForm={(value)=>setShowForm(value)} />;
         }
         return;
     }

@@ -1,8 +1,8 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import API from '../../API_Interface/API_Interface'
 import Typography from '@mui/material/Typography';
-import {Box, Grid} from '@mui/material'
-import ReactCalendar from 'react-calendar';
+import { Box } from '@mui/material'
+//import { DateCalendar } from '@mui/x-date-pickers';
 
 const ApptsView = props => {
     const {date, appts} = props;
@@ -60,17 +60,17 @@ export default function Calendar(props) {
         }
 
         getAppts();
-    }, [date]);
+    }, [date, email]);
 
     return <Fragment>
         <Box sx={{
             width: '100%',
-            height: 600,
+            maxHeight: 600,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center'
         }}>
-            <ReactCalendar onChange={(value) => setDate(value)} value={date} calendarType={"gregory"} />
+            {/* <DateCalendar defaultValue={dayjs('2022-04-17')} /> */}
             <ApptsView date={date} appts={appts} />
         </Box>
     </Fragment>

@@ -1,13 +1,17 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import API from '../../API_Interface/API_Interface'
 import Typography from '@mui/material/Typography';
-import {Box, Grid} from '@mui/material'
+import {Box} from '@mui/material'
 
 import CalendarSummary from './CalenderSummary';
+import MealtimesSummary from './MealtimesSummary';
 
 export default function Dashboard(props) {
     const {username} = props;
     const [email, setEmail] = React.useState("");
+    const [meals, setMeals] = useState([]);
+    const [numFriendRequests, setNumFriendRequests] = useState(0);
+
     useEffect(() => {
         const api = new API();
 
@@ -19,6 +23,36 @@ export default function Dashboard(props) {
 
         getEmail();
     }, []);
+
+    useEffect(() => {
+        if( email === "" ){
+            return;
+        }
+        const api = new API();
+
+        async function getMeals() {
+            const mealsJSONString = await api.mealtimesWithUser(email);
+            console.log(`mealtimes from the DB ${JSON.stringify(mealsJSONString)}`);
+            setMeals(mealsJSONString.data);
+        }
+
+        getMeals();
+    }, [email]);
+
+    useEffect(() => {
+        if( email === "" ){
+            return;
+        }
+        const api = new API();
+
+        async function getNumFriendRequests() {
+            const frJSONString = await api.friendRequestsByRecipient(email);
+            console.log(`friend requests from the DB ${JSON.stringify(frJSONString)}`);
+            setNumFriendRequests(frJSONString.data.length);
+        }
+
+        getNumFriendRequests();
+    }, [email]);
 
     return <Fragment>
     <Box sx={{
@@ -38,7 +72,7 @@ export default function Dashboard(props) {
             </Typography>
         </Box>
         <Box sx={{
-            width: '100%',
+            width: 650,
             height: 20,
             alignItems: 'center'
         }}>
@@ -47,7 +81,7 @@ export default function Dashboard(props) {
             </Typography>
         </Box>
         <Box sx={{
-            width: '100%',
+            width: 650,
             height: 70,
             alignItems: 'center',
             mb: 1
@@ -62,15 +96,18 @@ export default function Dashboard(props) {
             alignItems: 'center'
         }}>
             <Box sx={{
-                width: 70,
+                width: 80,
                 height: '100%',
                 alignItems: 'center',
                 justifyContent: 'center',
                 border: 1,
                 mr: 1
             }}>
-                <Typography>
+                <Typography fontSize={12} align="center">
                     friend requests
+                </Typography>
+                <Typography align="center">
+                    {numFriendRequests}
                 </Typography>
             </Box>
             <Box sx={{
@@ -85,6 +122,16 @@ export default function Dashboard(props) {
                 </Typography>
             </Box>
         </Box>
+        <Box sx={{
+            width: '100%',
+            height: 20,
+            alignItems: 'center'
+        }}>
+            <Typography>
+                Mealtimes:
+            </Typography>
+        </Box>
+        <MealtimesSummary meals={meals} />
     </Box>
     
 </Fragment>

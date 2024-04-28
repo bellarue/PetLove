@@ -35,35 +35,6 @@ const allUsers = async (ctx) => {
     });
 }
 
-const allUsersEmails = async (ctx) => {
-    console.log('users all users called.');
-    return new Promise((resolve, reject) => {
-        const query = `
-                       SELECT email
-                        FROM 
-                            users
-                        ORDER BY email
-                        `;
-        dbConnection.query({
-            sql: query,
-        }, (error, tuples) => {
-            if (error) {
-                console.log("Connection error in UsersController::allUsersEmails", error);
-                return reject(error);
-            }
-            ctx.body = tuples;
-            ctx.status = 200;
-            return resolve();
-        });
-    }).catch(err => {
-        console.log("Database connection error in allUsersEmails.", err);
-        // The UI side will have to look for the value of status and
-        // if it is not 200, act appropriately.
-        ctx.body = [];
-        ctx.status = 500;
-    });
-}
-
 const userWithEmail = (ctx) => {
         return new Promise((resolve, reject) => {
             const query = `
@@ -262,13 +233,199 @@ const friendsByUser = (ctx) => { //FIXME: idk how to do this query
     });
 }
 
+const addUser = (ctx) => { 
+    return new Promise((resolve, reject) => {
+        const query = `
+                   INSERT INTO user(email, username, fname, lname)
+                   VALUE (?,?,?,?)
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [ctx.params.email, ctx.params.username, ctx.params.fname, ctx.params.lname]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in UsersController::addUser", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in addUser.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
+const addFriendship = (ctx) => { 
+    return new Promise((resolve, reject) => {
+        const query = `
+                   INSERT INTO friendships
+                   VALUE (?,?)
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [ctx.params.user1, ctx.params.user2]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in UsersController::addFriendship", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in addFriendship.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
+const removeFriendship = (ctx) => { 
+    return new Promise((resolve, reject) => {
+        const query = `
+                   DELETE FROM friendships
+                    WHERE
+                        user1 = ?
+                    AND
+                        user2 = ?
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [ctx.params.user1, ctx.params.user2]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in UsersController::removeFriendship", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in removeFriendship.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
+const addFriendRequest = (ctx) => { 
+    return new Promise((resolve, reject) => {
+        const query = `
+                   INSERT INTO friend_requests
+                   VALUE (?,?)
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [ctx.params.sender, ctx.params.recipient]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in UsersController::addFriendRequest", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in addFriendRequest.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
+const removeFriendRequest = (ctx) => { 
+    return new Promise((resolve, reject) => {
+        const query = `
+                   DELETE FROM friend_requests
+                    WHERE
+                        sender = ?
+                    AND
+                        recipient = ?
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [ctx.params.sender, ctx.params.recipient]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in UsersController::removeFriendRequest", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in removeFriendRequest.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
+const friendRequestsByRecipient = (ctx) => { 
+    return new Promise((resolve, reject) => {
+        const query = `
+                   SELECT * FROM friend_requests
+                    WHERE
+                        recipient = ?
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [ctx.params.recipient]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in UsersController::friendRequestsByRecipient", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in friendRequestsByRecipient.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
 module.exports = {
     allUsers,
-    allUsersEmails,
     userWithEmail,
     usersWithUsername,
     usersByPet,
     usersByPetSitting,
     rolesWithEmail,
-    friendsByUser
+    friendsByUser,
+    addUser,
+    addFriendship,
+    removeFriendship,
+    addFriendRequest,
+    removeFriendRequest,
+    friendRequestsByRecipient
 };

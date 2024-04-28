@@ -11,7 +11,6 @@ CREATE TABLE `medications` (
     `type` varchar(100) NOT NULL,
     `dosage` varchar(200) NOT NULL,
     `admin_method` varchar(100) NOT NULL,
-    `notes` TEXT,
     FOREIGN KEY (`pet`) REFERENCES `pets`(`petID`) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (`veterinarian`) REFERENCES `veterinarians`(`email`) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (`name`, `startDate`, `pet`)
