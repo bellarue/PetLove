@@ -9,9 +9,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import CreateIcon from '@mui/icons-material/Create';
 
 import Edit from './Edit';
+import AddMealtime from './AddMealtime';
+import AddMedication from './AddMedication';
+import AddParent from './AddParent';
+import AddSitter from './AddSitter';
+import AddAllergy from './AddAllergy';
 
 const mealsTableAttributes = [
     {
@@ -236,6 +240,7 @@ const allergiesString = (allergies) => {
 export default function PetProfile(props) {
     const {pet, vet} = props; //pet is a pet object
     console.log(`this is pet: ${JSON.stringify(pet)}`);
+    console.log(`this is vet: ${JSON.stringify(vet)}`);
     const [mealtimes, setMealtimes] = React.useState([]);
     const [allergies, setAllergies] = React.useState([]);
     const [owners, setOwners] = useState([]);
@@ -243,7 +248,6 @@ export default function PetProfile(props) {
     const [meds, setMeds] = useState([]);
     const [notes, setNotes] = useState(pet['notes']);
 
-    //FIXME: what is different for posting vs getting
     useEffect(() => {
         if( notes === '' || notes === pet['notes'] ){ //is empty or hasnt changed
             return;
@@ -369,8 +373,20 @@ export default function PetProfile(props) {
                 border: 1,
                 mb: 1
             }}>
+                <Box sx={{
+                    width: '100%',
+                    height: 21,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
+                }}>
+                    <Typography>
+                        Allergies:
+                    </Typography>
+                    <AddAllergy petID={pet['petID']} />
+                </Box>
                 <Typography>
-                    Allergies: {allergiesString(allergies)}
+                    {allergiesString(allergies)}
                 </Typography>
 
             </Box>
@@ -382,9 +398,18 @@ export default function PetProfile(props) {
                 border: 1,
                 mb: 1
             }}>
-                <Typography>
-                    Mealtimes:
-                </Typography>
+                <Box sx={{
+                    width: '100%',
+                    height: 21,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
+                }}>
+                    <Typography>
+                        Mealtimes:
+                    </Typography>
+                    {/* <AddMealtime petID={pet['petID']} /> */}
+                </Box>
                 <Mealtimes meals={mealtimes} />
             </Box>
             <Box sx={{
@@ -396,9 +421,18 @@ export default function PetProfile(props) {
                 mb: 1,
                 overflow: 'auto'
             }}>
-                <Typography>
-                    Medications:
-                </Typography>
+                <Box sx={{
+                    width: '100%',
+                    height: 21,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
+                }}>
+                    <Typography>
+                        Medications:
+                    </Typography>
+                    {/* <AddMedication petID={pet['petID']} /> */}
+                </Box>
                 <Medications meds={meds} />
             </Box>
             <Box sx={{
@@ -409,9 +443,18 @@ export default function PetProfile(props) {
                 border: 1,
                 mb: 1
             }}>
-                <Typography marginLeft={0.5}>
-                    Parents:
-                </Typography>
+                <Box sx={{
+                    width: '100%',
+                    height: 21,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
+                }}>
+                    <Typography marginLeft={0.5}>
+                        Parents:
+                    </Typography>
+                    <AddParent petID={pet['petID']} friends={friends} />
+                </Box>
                 <RelatedUsers users={owners} />
             </Box>
             <Box sx={{
@@ -422,9 +465,18 @@ export default function PetProfile(props) {
                 border: 1,
                 mb: 1
             }}>
-                <Typography marginLeft={0.5}>
-                    Sitters:
-                </Typography>
+                <Box sx={{
+                    width: '100%',
+                    height: 21,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
+                }}>
+                    <Typography marginLeft={0.5}>
+                        Sitters:
+                    </Typography>
+                    <AddSitter petID={pet['petID']} friends={friends} />
+                </Box>
                 <RelatedUsers users={sitters} />
             </Box>
             <Typography>
