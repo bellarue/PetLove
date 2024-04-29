@@ -10,12 +10,20 @@ const addParent = (ctx) => {
     return new Promise((resolve, reject) => {
         const query = `
                    INSERT INTO 
+
                    pet_parents
+
+                   pet_parents(user, pet)
+
                    VALUES (?, ?)
                     `;
         dbConnection.query({
             sql: query,
+
             values: [ctx.params.user, ctx.params.pet]
+
+            values: [ctx.params.user, pet]
+
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in PetsController::addParent", error);
@@ -35,46 +43,26 @@ const addParent = (ctx) => {
         ctx.status = 500;
     });
 }
-const addPet = (ctx) => {
-        return new Promise((resolve, reject) => {
-            const query = `
-                       INSERT INTO 
-                       pets(name, type, veterinarian)
-                       VALUE (?,?,?,?)
-                        `;
-            dbConnection.query({
-                sql: query,
-                values: [ctx.params.name, ctx.params.type, ctx.params.vetrinarian]
-            }, (error, tuples) => {
-                if (error) {
-                    console.log("Connection error in PetsController::addPet", error);
-                    ctx.body = [];
-                    ctx.status = 200;
-                    return reject(error);
-                }
-                ctx.body = tuples;
-                ctx.status = 200;
-                return resolve();
-            });
-        }).catch(err => {
-            console.log("Database connection error in addPet.", err);
-            // The UI side will have to look for the value of status and
-            // if it is not 200, act appropriately.
-            ctx.body = [];
-            ctx.status = 500;
-        });
-}
+
 
 const addSitter = (ctx) => {
     return new Promise((resolve, reject) => {
         const query = `
                    INSERT INTO 
+
                    pet_sitters
+
+                   pet_sitters(user, pet)
+
                    VALUES (?, ?)
                     `;
         dbConnection.query({
             sql: query,
+
             values: [ctx.params.user, ctx.params.pet]
+
+            values: [ctx.params.user, pet]
+
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in PetsController::addSitter", error);
