@@ -2,17 +2,19 @@
   "name": "ssiapp",
   "version": "1.0.0",
   "description": "An node-based application for Shared Services",
-  "main": "index.js",
+  "main": "ChatServer.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "nodemon ChatServer.js"
   },
   "author": "Ali A. Kooshesh",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "csrf": "^3.0.6",
     "dateformat": "^3.0.3",
     "dotenv": "^4.0.0",
+    "express": "^4.19.2",
     "jsonwebtoken": "^8.3.0",
     "kcors": "^2.2.1",
     "knex": "^0.13.0",
@@ -23,9 +25,10 @@
     "koa-jwt": "^3.3.2",
     "koa-router": "^7.3.0",
     "lodash": "^4.17.4",
-    "mysql": "^2.15.0"
+    "mysql": "^2.15.0",
+    "socket.io": "^4.7.5"
   },
   "devDependencies": {
-    "nodemon": "^1.18.3"
+    "nodemon": "^1.19.4"
   }
 }
