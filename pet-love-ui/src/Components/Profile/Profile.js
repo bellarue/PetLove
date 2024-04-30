@@ -93,6 +93,31 @@ export default function Profile(props) {
     const [email, setEmail] = React.useState("");
     const [vets, setVets] = React.useState([]);
     const [chosenList, setChosenList] = useState(0);
+    const [friends, setFriends] = useState([]);
+
+    useEffect(() => {
+        if( email = '' ){
+            return;
+        }
+        const api = new API();
+
+        async function getFriends() {
+            const friendsJSONString = await api.friendsByUser(email);
+            console.log(`friends from the DB ${JSON.stringify(friendsJSONString)}`);
+            const tempFriends = [];
+            for( let friendSet of friendsJSONString.data ){
+                if( friendSet['user1'] === email ){
+                    tempFriends.push(friendSet['user2']);
+                }
+                else{
+                    tempFriends.push(friendSet['user1']);
+                }
+            }
+            setFriends(tempFriends);
+        }
+
+        getFriends();
+    }, [email]);
 
     useEffect(() => {
         if(email === ""){
@@ -217,7 +242,7 @@ export default function Profile(props) {
                 <Vets vets={vets} />
             </Box>
         }
-        return <PetProfile pet={getPetProfile()} vet={getVet()} />
+        return <PetProfile pet={getPetProfile()} vet={getVet()} friends={friends} />
     }
 
     const chooseList = () => {

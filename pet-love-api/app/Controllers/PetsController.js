@@ -9,21 +9,12 @@ function now() {
 const addParent = (ctx) => {
     return new Promise((resolve, reject) => {
         const query = `
-                   INSERT INTO 
-
-                   pet_parents
-
-                   pet_parents(user, pet)
-
+                   INSERT INTO pet_parents(user, pet)
                    VALUES (?, ?)
                     `;
         dbConnection.query({
             sql: query,
-
             values: [ctx.params.user, ctx.params.pet]
-
-            values: [ctx.params.user, pet]
-
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in PetsController::addParent", error);
@@ -48,21 +39,12 @@ const addParent = (ctx) => {
 const addSitter = (ctx) => {
     return new Promise((resolve, reject) => {
         const query = `
-                   INSERT INTO 
-
-                   pet_sitters
-
-                   pet_sitters(user, pet)
-
+                   INSERT INTO pet_sitters(user, pet)
                    VALUES (?, ?)
                     `;
         dbConnection.query({
             sql: query,
-
             values: [ctx.params.user, ctx.params.pet]
-
-            values: [ctx.params.user, pet]
-
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in PetsController::addSitter", error);
