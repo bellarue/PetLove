@@ -1,15 +1,13 @@
-import React, { Fragment } from "react";
-import Typography from "@mui/material/Typography";
-import { useState } from "react";
-import { Box } from "@mui/material";
-import ChatApp from "../Chat/ChatApp";
+import React, {Fragment} from 'react';
+import Typography from '@mui/material/Typography';
+import { Box } from '@mui/material';
 
-import Button from "@mui/material/Button";
-
-import testPFP from "../../images/testImg.jpeg";
+import testPFP from '../../images/testImg.jpeg';
+import testQR from '../../images/QRCodeExample.jpg';
 
 const ProfilePic = (props) => {
-    return (
+
+    return(
         <Box
             sx={{
                 width: "100%",
@@ -27,24 +25,19 @@ const ProfilePic = (props) => {
                 justifyContent: "center",
                 alignContent: "center",
                 textAlign: "center",
+                
             }}
         >
-            <img
-                src={testPFP}
-                alt=""
-                style={{ maxWidth: "100%", maxHeight: "100%" }}
-            />
+            <img src={testPFP} alt="" style={{ maxWidth: "100%", maxHeight: "100%" }} />
         </Box>
-    );
+    )
 };
 
 const FriendCode = (props) => {
-    // const teststr = "SW-7417-3522-1808";
-    return (
+    const teststr = "SW-7417-3522-1808";
+    return(
         <Box
             sx={{
-                width: 100,
-                maxWidth: "100%",
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "center",
@@ -52,15 +45,18 @@ const FriendCode = (props) => {
                 textAlign: "center",
             }}
         >
-            {/* FriendCode: {teststr} */}
+            FriendCode: {teststr}
+
         </Box>
-    );
+    )
+
 };
 
 const DisplayUserName = (props) => {
+
     const userName = "Phi Do";
 
-    return (
+    return(
         <Fragment>
             <Box
                 sx={{
@@ -83,28 +79,33 @@ const DisplayUserName = (props) => {
             >
                 <Box>
                     {userName}
-                    <FriendCode />
+                    <FriendCode/> 
                 </Box>
 
                 <Box
-                    sx={{
+                    sx={{    
                         display: "flex",
                         justifyContent: "right",
                         alignContent: "right",
                         textAlign: "right",
                     }}
-                ></Box>
+                >
+                    <img src={testQR} alt="" style={{ width: 50, height: 50 }} />
+                </Box>
+                
             </Box>
         </Fragment>
-    );
+
+    )
 };
 
 const FriendRequests = (props) => {
-    return (
+
+    return(
         <Box
             sx={{
-                width: "75%",
-                height: "75%",
+                width: 1350,
+                height: 75,
 
                 maxWidth: "100%",
                 maxHeight: "100%",
@@ -121,11 +122,12 @@ const FriendRequests = (props) => {
         >
             Friend Requests
         </Box>
-    );
+    )
 };
 
 const Messages = (props) => {
-    return (
+
+    return(
         <Box
             sx={{
                 width: 1350,
@@ -146,17 +148,16 @@ const Messages = (props) => {
         >
             Messages
         </Box>
-    );
+    )
 };
 
 const FriendPictures = (props) => {
-    return (
+
+    return(
         <Box
             sx={{
                 width: 1350,
                 height: 400,
-
-                position: "relative",
 
                 maxWidth: "100%",
                 maxHeight: "100%",
@@ -173,92 +174,53 @@ const FriendPictures = (props) => {
         >
             Friend Pictures
         </Box>
-    );
+    )
 };
 
 export default function Social(props) {
-    const [showChatApp, setShowChatApp] = useState(false);
-    const [selected, setSelected] = React.useState(false);
-
-    const handleClick = () => {
-        setShowChatApp(true);
-    };
-
     return (
-        // <Box>
-        //     <App/>
-        // </Box>
         <Fragment>
-            <Box sx={{ maxWidth: "75%" }}>
-                <Box
-                    sx={{
-                        m: 2,
-                        fontSize: 40,
-                        fontWeight: 500,
-                        
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignContent: "center",
-                        textAlign: "center",
-                    }}
-                >
-                    Social Page
-                </Box>
+            <Box
+                sx={{
+                    m: 2,
+                    fontSize: 40,
+                    fontWeight: 500,
 
-                <Box
-                    sx={{
-                        width: "75%",
-                        display: "flex",
-                        flexDirection: "column",
-                        // justifyContent: "center",
-                        gap: "2px",
-                    }}
-                >
-                    <ProfilePic />
-
-                    <DisplayUserName />
-                    {/* <FriendPictures /> */}
-                </Box>
-                <Box
-                    sx={{
-                        
-                        position: "absolute",
-                        bottom: 5,
-                        right: 5,
-                        display: "flex",
-                        flexDirection: "column",
-                        // justifyContent: "center",
-                        gap: "2px",
-                    }}
-                >
-                    {!showChatApp && (
-                        <Box>
-                            <Button
-                                variant="contained"
-                                color="success"
-                                onClick={handleClick}
-                            >
-                                Chat Rooms!
-                            </Button>
-                        </Box>
-                    )}
-                    {showChatApp && <ChatApp />}
-                </Box>
-
-                <Box>
-                    <FriendRequests />
-                </Box>
-
-                {/* dont need since phi addded chat rooms. implement direct messages if time */}
-                {/* <Box>
-                <Messages />
-                </Box> */}
-
-                {/* <Box>
-                    <FriendPictures/>
-                </Box> */}
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignContent: "center",
+                    textAlign: "center",
+                }}
+            >
+                Social Page
             </Box>
+
+            <Box
+                sx={{
+                    display: "flex",
+                    // justifyContent: "center",
+                    gap: "2px",
+                }}
+            >
+                <ProfilePic/>
+                
+                <DisplayUserName/>
+                <FriendPictures/>
+            </Box>
+
+            <Box>
+                <FriendRequests/>
+            </Box>
+
+            <Box>
+                <Messages/>
+            </Box>
+
+            {/* <Box>
+                <FriendPictures/>
+            </Box> */}
+
         </Fragment>
-    );
+    )
 }
