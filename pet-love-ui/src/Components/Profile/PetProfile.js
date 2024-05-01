@@ -238,7 +238,7 @@ const allergiesString = (allergies) => {
 }
 
 export default function PetProfile(props) {
-    const {pet, vet} = props; //pet is a pet object
+    const {pet, vet, friends} = props; //pet is a pet object
     console.log(`this is pet: ${JSON.stringify(pet)}`);
     console.log(`this is vet: ${JSON.stringify(vet)}`);
     const [mealtimes, setMealtimes] = React.useState([]);
@@ -255,7 +255,7 @@ export default function PetProfile(props) {
         const api = new API();
 
         async function postNotes() {
-            const notesUpdateResults = api.changeNotes(notes, pet['petID']);
+            const notesUpdateResults = api.changePetNotes(notes, pet['petID']);
             console.log(`changing notes ${JSON.stringify(notesUpdateResults)}`);
         }
 

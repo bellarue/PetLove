@@ -2,7 +2,11 @@ import React, {Fragment, useEffect, useState} from 'react';
 import API from '../../API_Interface/API_Interface'
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/material'
-//import { DateCalendar } from '@mui/x-date-pickers';
+// import dayjs from 'dayjs';
+// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+
 
 const ApptsView = props => {
     const {date, appts} = props;
@@ -70,7 +74,10 @@ export default function Calendar(props) {
             flexDirection: 'column',
             alignItems: 'center'
         }}>
-            {/* <DateCalendar defaultValue={dayjs('2022-04-17')} /> */}
+            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateCalendar value={date} onChange={(newValue) => setDate(newValue)} />
+            </LocalizationProvider> */}
+            
             <ApptsView date={date} appts={appts} />
         </Box>
     </Fragment>

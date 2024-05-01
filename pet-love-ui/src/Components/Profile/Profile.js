@@ -95,29 +95,29 @@ export default function Profile(props) {
     const [chosenList, setChosenList] = useState(0);
     const [friends, setFriends] = useState([]);
 
-    useEffect(() => {
-        if( email = '' ){
-            return;
-        }
-        const api = new API();
+    // useEffect(() => {
+    //     if( email = '' ){
+    //         return;
+    //     }
+    //     const api = new API();
 
-        async function getFriends() {
-            const friendsJSONString = await api.friendsByUser(email);
-            console.log(`friends from the DB ${JSON.stringify(friendsJSONString)}`);
-            const tempFriends = [];
-            for( let friendSet of friendsJSONString.data ){
-                if( friendSet['user1'] === email ){
-                    tempFriends.push(friendSet['user2']);
-                }
-                else{
-                    tempFriends.push(friendSet['user1']);
-                }
-            }
-            setFriends(tempFriends);
-        }
+    //     async function getFriends() {
+    //         const friendsJSONString = await api.friendsByUser(email);
+    //         console.log(`friends from the DB ${JSON.stringify(friendsJSONString)}`);
+    //         const tempFriends = [];
+    //         for( let friendSet of friendsJSONString.data ){
+    //             if( friendSet['user1'] === email ){
+    //                 tempFriends.push(friendSet['user2']);
+    //             }
+    //             else{
+    //                 tempFriends.push(friendSet['user1']);
+    //             }
+    //         }
+    //         setFriends(tempFriends);
+    //     }
 
-        getFriends();
-    }, [email]);
+    //     getFriends();
+    // }, [email]);
 
     useEffect(() => {
         if(email === ""){
@@ -178,6 +178,7 @@ export default function Profile(props) {
         const {pets,name} = props; //need to get this from api route
         console.log(`rendering pets list, ${JSON.stringify(pets)}`);
         const handleListItemClick = (event, index) => {
+            console.log(`handleListItemClick called, index is ${index}`);
             setSelectedIndex(index);
         };
         return (

@@ -28,7 +28,7 @@ export default function AddAllergy(props) {
         const api = new API();
 
         async function postAllergy() {
-            const allergyUpdateResults = api.addAllergy(petID, input);
+            const allergyUpdateResults = await api.addAllergy(petID, input);
             console.log(`adding to allergies ${JSON.stringify(allergyUpdateResults)}`);
         }
 
@@ -51,7 +51,7 @@ export default function AddAllergy(props) {
                 <Fragment>
                     <TextField
                         id="outlined-error-helper-text"
-                        label={label}
+                        label="New Allergy"
                         placeholder=""
                         value={input}
                         onChange={handleInputChange}

@@ -114,7 +114,7 @@ const appointmentsWithUserAndDate = (ctx) => {
                     AND
                         DATE(dateTime) = ?
                     ORDER BY
-                        TIME(dateTime)
+                        dateTime
                     `;
         dbConnection.query({
             sql: query,

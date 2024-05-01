@@ -57,7 +57,7 @@ const CreateAccount = props => {
         const api = new API();
     
         async function addUser() {
-            const userJSONString = api.addFriendRequest(emailInput, usernameInput, fnameInput, lnameInput);
+            const userJSONString = api.addUser({email: emailInput, username: usernameInput, fname: fnameInput, lname: lnameInput});
             console.log(`addUser result ${JSON.stringify(userJSONString)}`);
         }
 
