@@ -34,7 +34,14 @@ export default function AddPet(props) {
         if( vetInput.length > 0 && !vets.includes(vetInput) ){ //vet can be left empty
             setVetAvail(false);
         }
-        //otherwise, create pet
+        const api = new API();
+
+        async function postPet() {
+            const petUpdateResults = api.addPet({name: nameInput, type: typeInput, veterinarian: vetInput});
+            console.log(`adding to pets ${JSON.stringify(petUpdateResults)}`);
+        }
+
+        postPet();
     }, [verifyVet]);
 
     const handleNameChange = event => {

@@ -48,7 +48,14 @@ export default function AddVet(props) {
         if( vets.includes(emailInput) ){
             setEmailUsed(true);
         }
-        //otherwise, create vet
+        const api = new API();
+
+        async function postVet() {
+            const vetUpdateResults = api.addVet({email: emailInput, name: nameInput, phone_num: phoneNumInput});
+            console.log(`adding to vets ${JSON.stringify(vetUpdateResults)}`);
+        }
+
+        postVet();
     }, [verifyEmail]);
 
     return <Fragment>

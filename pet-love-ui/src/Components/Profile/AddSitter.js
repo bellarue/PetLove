@@ -27,7 +27,7 @@ export default function AddSitter(props) {
         const api = new API();
 
         async function postSitter() {
-            const sitterUpdateResults = api.addSitter(sitter, petID);
+            const sitterUpdateResults = api.addSitter({user: sitter, pet: petID});
             console.log(`adding to pet sitters ${JSON.stringify(sitterUpdateResults)}`);
         }
 

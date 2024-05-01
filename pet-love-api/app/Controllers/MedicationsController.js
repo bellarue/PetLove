@@ -102,6 +102,7 @@ const medicationsByPet = (ctx) => {
 }
 
 const removeMedication = (ctx) => {
+    const medDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                    DELETE FROM 
@@ -113,7 +114,7 @@ const removeMedication = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.name, ctx.params.startDate]
+            values: [medDict['name'], medDict['startDate']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in MedicationsController::removeMedication", error);
@@ -135,6 +136,7 @@ const removeMedication = (ctx) => {
 }
 
 const addMedication = (ctx) => {
+    const medDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                    INSERT INTO
@@ -144,7 +146,7 @@ const addMedication = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.name, ctx.params.startDate, ctx.params.pet, ctx.params.veterinarian, ctx.params.type, ctx.params.dosage, ctx.params.admin_method]
+            values: [medDict['name'], medDict['startDate'], medDict['pet'], medDict['veterinarian'], medDict['type'], medDict['dosage'], medDict['admin_method']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in MedicationsController::addMedication", error);

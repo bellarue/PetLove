@@ -266,6 +266,7 @@ const addUser = (ctx) => {
 }
 
 const addFriendship = (ctx) => { 
+    const userDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                    INSERT INTO friendships
@@ -273,7 +274,7 @@ const addFriendship = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.user1, ctx.params.user2]
+            values: [userDict['user1'], userDict['user2']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in UsersController::addFriendship", error);
@@ -295,6 +296,7 @@ const addFriendship = (ctx) => {
 }
 
 const removeFriendship = (ctx) => { 
+    const userDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                    DELETE FROM friendships
@@ -305,7 +307,7 @@ const removeFriendship = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.user1, ctx.params.user2]
+            values: [userDict['user1'], userDict['user2']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in UsersController::removeFriendship", error);
@@ -327,6 +329,7 @@ const removeFriendship = (ctx) => {
 }
 
 const addFriendRequest = (ctx) => { 
+    const userDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                    INSERT INTO friend_requests
@@ -334,7 +337,7 @@ const addFriendRequest = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.sender, ctx.params.recipient]
+            values: [userDict['sender'], userDict['recipient']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in UsersController::addFriendRequest", error);
@@ -356,6 +359,7 @@ const addFriendRequest = (ctx) => {
 }
 
 const removeFriendRequest = (ctx) => { 
+    const userDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                    DELETE FROM friend_requests
@@ -366,7 +370,7 @@ const removeFriendRequest = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.sender, ctx.params.recipient]
+            values: [userDict['sender'], userDict['recipient']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in UsersController::removeFriendRequest", error);

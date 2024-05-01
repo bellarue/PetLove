@@ -47,7 +47,7 @@ export default function AddMealtime(props) {
         }
 
         async function postMealtime() {
-            const mealtimeUpdateResults = api.addMealtime(timeInput, petID, typeInput, amountInput, notes);
+            const mealtimeUpdateResults = api.addMealtime({time: timeInput, pet: petID, type: typeInput, amount: amountInput, notes: notes});
             console.log(`adding to mealtimes ${JSON.stringify(mealtimeUpdateResults)}`);
         }
 

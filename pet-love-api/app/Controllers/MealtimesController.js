@@ -204,6 +204,7 @@ const removeMealtime = (ctx) => {
 }
 
 const addMealtime = (ctx) => {
+    const mealDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                    INSERT INTO mealtimes
@@ -211,7 +212,7 @@ const addMealtime = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.time, ctx.params.pet, ctx.params.type, ctx.params.amount, ctx.params.notes]
+            values: [mealDict['time'], mealDict['pet'], mealDict['type'], mealDict['amount'], mealDict['notes']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in MealtimesController::addMealtime", error);

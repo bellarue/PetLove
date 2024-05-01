@@ -23,7 +23,7 @@ export default function Search(props) {
         const api = new API();
 
         async function postFriendRequest() {
-            const userJSONString = api.addFriendRequest(email, friendRequest['email']);
+            const userJSONString = api.addFriendRequest({sender: email, recipient: friendRequest['email']});
             console.log(`FR result ${JSON.stringify(userJSONString)}`);
             setFriendRequest(''); //reset FR
         }

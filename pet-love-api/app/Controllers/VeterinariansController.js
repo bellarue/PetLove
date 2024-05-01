@@ -138,6 +138,7 @@ const vetOfPet = (ctx) => {
 }
 
 const addVet = (ctx) => {
+    const vetDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                    INSERT INTO veterinarians
@@ -145,7 +146,7 @@ const addVet = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.email, ctx.params.name, ctx.params.phone_num]
+            values: [vetDict['email'], vetDict['name'], vetDict['phone_num']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in VeterinariansController::addVet", error);
@@ -167,6 +168,7 @@ const addVet = (ctx) => {
 }
 
 const removeVetFromUser = (ctx) => {
+    const vetDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                    DELETE FROM vets_of_owners
@@ -177,7 +179,7 @@ const removeVetFromUser = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.user, ctx.params.vet]
+            values: [vetDict['user'], vetDict['vet']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in VeterinariansController::removeVetFromUser", error);

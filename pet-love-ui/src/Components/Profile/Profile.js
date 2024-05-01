@@ -211,7 +211,11 @@ export default function Profile(props) {
     }
 
     const getPetProfile = () => {
-        const pet = pets[selectedIndex];
+        if( chosenList === 0 ){
+            const pet = pets[selectedIndex];
+            return pet;
+        }
+        const pet = sittingPets[selectedIndex];
         return pet;
     }
 
@@ -243,7 +247,7 @@ export default function Profile(props) {
                 <Vets vets={vets} />
             </Box>
         }
-        return <PetProfile pet={getPetProfile()} vet={getVet()} friends={friends} />
+        return <PetProfile pet={getPetProfile()} vet={getVet()} friends={friends} chosenList={chosenList} />
     }
 
     const chooseList = () => {

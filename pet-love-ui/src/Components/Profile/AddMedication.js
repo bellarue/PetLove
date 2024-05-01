@@ -17,7 +17,6 @@ export default function AddMedication(props) {
     const [typeInput, setTypeInput] = useState('');
     const [dosageInput, setDosageInput] = useState('');
     const [adminMethodInput, setAdminMethodInput] = useState('');
-    const [notesInput, setNotesInput] = useState('');
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
@@ -28,10 +27,6 @@ export default function AddMedication(props) {
     const handleTypeChange = event => {
         console.log("handleInputChange called.");
         setTypeInput(event.target.value);
-    };
-    const handleNotesChange = event => {
-        console.log("handleInputChange called.");
-        setNotesInput(event.target.value);
     };
     const handleVetChange = event => {
         console.log("handleInputChange called.");
@@ -53,14 +48,9 @@ export default function AddMedication(props) {
         }
 
         const api = new API();
-        
-        let notes = notesInput;
-        if( notes === '' ){
-            notes = null;
-        }
 
         async function postMedication() {
-            const medUpdateResults = api.addMedication(nameInput, startDateInput, petID, vetInput, typeInput, dosageInput, adminMethodInput, notes);
+            const medUpdateResults = api.addMedication({name: nameInput, startDate: startDateInput, pet: petID, veterinarian: vetInput, type: typeInput, dosage: dosageInput, admin_method: adminMethodInput});
             console.log(`adding to medications ${JSON.stringify(medUpdateResults)}`);
         }
 
@@ -145,18 +135,6 @@ export default function AddMedication(props) {
                             placeholder=""
                             value={adminMethodInput}
                             onChange={handleMethodChange}
-                        />
-                    </Box>
-                    <Box sx={{
-                        width: '100%',
-                        height: 50
-                    }}>
-                        <TextField
-                            id="outlined-error-helper-text"
-                            label="Notes"
-                            placeholder=""
-                            value={notesInput}
-                            onChange={handleNotesChange}
                         />
                     </Box>
                     <Button onClick={setVerify(true)}>

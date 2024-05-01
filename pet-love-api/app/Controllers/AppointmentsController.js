@@ -210,14 +210,15 @@ const appointmentsWithPetAndUser = (ctx) => {
 }
 
 const addAppointment = (ctx) => {
+    const apptDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
-                   INSERT INTO appointments
-                    VALUE (null, ?, ?, ?, ?)
+                   INSERT INTO appointments(dateTime, user, type, notes)
+                    VALUE (?, ?, ?, ?)
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.dateTime, ctx.params.user, ctx.params.type, ctx.params.notes]
+            values: [apptDict['dateTime'], apptDict['user'], apptDict['type'], apptDict['notes']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in AppointmentsController::addAppointment", error);
@@ -239,6 +240,7 @@ const addAppointment = (ctx) => {
 }
 
 const removeAppointment = (ctx) => {
+    const apptDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                     DELETE FROM 
@@ -248,7 +250,7 @@ const removeAppointment = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.apptID]
+            values: [apptDict['apptID']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in AppointmentsController::removeAppointment", error);
@@ -270,6 +272,7 @@ const removeAppointment = (ctx) => {
 }
 
 const addPetToAppt = (ctx) => {
+    const apptDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                    INSERT INTO pet_on_appt
@@ -277,7 +280,7 @@ const addPetToAppt = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.pet, ctx.params.appt]
+            values: [apptDict['pet'], apptDict['appt']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in AppointmentsController::addPetToAppt", error);

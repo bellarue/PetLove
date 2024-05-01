@@ -6,8 +6,8 @@ import TextField from '@mui/material/TextField';
 import CreateIcon from '@mui/icons-material/Create';
 import { Button } from '@mui/material'
 
-export default function Edit(props) {
-    const {label, value, setValue} = props;
+export default function EditNotes(props) {
+    const {value, setValue} = props;
     const [input, setInput] = useState(value);
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
@@ -40,7 +40,7 @@ export default function Edit(props) {
                 <Fragment>
                   <TextField
                     id="outlined-error-helper-text"
-                    label={label}
+                    label="Notes"
                     placeholder=""
                     value={input}
                     onChange={handleInputChange}
