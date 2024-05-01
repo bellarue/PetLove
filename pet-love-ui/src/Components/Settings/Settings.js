@@ -12,7 +12,6 @@ import AccountSettings from './AccountSettings';
 import Logout from './Logout';
 import ManagePets from './ManagePets';
 import VisualAndAccessibility from './VisualAccessibility';
-import UserSettings from './UserSettings';
 
 export default function Settings (props) {
     const {username, logoutAction} = props;
@@ -36,8 +35,7 @@ export default function Settings (props) {
                     onClick={() => handleClick(0)}
                 >
                     {/* need user icons */}
-                    {/* <ListItemText primary={username} /> */}
-                    <ListItemText primary='Username' />
+                    <ListItemText primary={username} />
                 </ListItemButton>
             </ListItem>
             <Divider />
@@ -59,14 +57,14 @@ export default function Settings (props) {
                 </ListItemButton>
             </ListItem>
             <Divider />
-            {/* <ListItem disablePadding>
+            <ListItem disablePadding>
                 <ListItemButton
                     selected={selectedIndex === 3}
                     onClick={() => handleClick(3)}
                 >
                     <ListItemText primary="Manage Pets" />
                 </ListItemButton>
-            </ListItem> */}
+            </ListItem>
             <Divider />
             <ListItem disablePadding>
                 <ListItemButton
@@ -82,9 +80,6 @@ export default function Settings (props) {
     }
 
     const display = () => {
-        if( selectedIndex === 0 ){
-            return <UserSettings username={username}/>
-        }
         if( selectedIndex === 1 ){
             return <AccountSettings />
         }
