@@ -234,14 +234,17 @@ const friendsByUser = (ctx) => { //FIXME: idk how to do this query
 }
 
 const addUser = (ctx) => { 
+    const userDict = ctx.request.body;
+    console.log(`in addUser, dictionary is ${JSON.stringify(userDict)}`);
+
     return new Promise((resolve, reject) => {
         const query = `
-                   INSERT INTO user(email, username, fname, lname)
+                   INSERT INTO users(email, username, fname, lname)
                    VALUE (?,?,?,?)
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.email, ctx.params.username, ctx.params.fname, ctx.params.lname]
+            values: [userDict['email'], userDict['username'], userDict['fname'], userDict['lname']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in UsersController::addUser", error);

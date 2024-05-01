@@ -71,28 +71,28 @@ export default class APIInterface {
         return axiosAgent.get(`users/${user}/friends`);
     }
 
-    async addUser(email,username,fname,lname) {
-        return axiosAgent.post(`user/${email}/${username}/${fname}/${lname}`)
+    async addUser(paramsDict) {
+        return axiosAgent.post(`/users/add-user`, paramsDict)
     }
 
     async addFriendship(user1, user2) {
-        return axiosAgent.post(`user/${user1}/${user2}/add-friend`)
+        return axiosAgent.post(`users/${user1}/${user2}/add-friend`)
     }
 
     async removeFriendship(user1, user2) {
-        return axiosAgent.post(`user/${user1}/${user2}/remove-friend`)
+        return axiosAgent.post(`users/${user1}/${user2}/remove-friend`)
     }
 
     async addFriendRequest(sender, recipient) {
-        return axiosAgent.post(`user/${sender}/${recipient}/send-friend-request`)
+        return axiosAgent.post(`users/${sender}/${recipient}/send-friend-request`)
     }
 
     async removeFriendRequest(sender, recipient) {
-        return axiosAgent.post(`user/${sender}/${recipient}/remove-friend-request`)
+        return axiosAgent.post(`users/${sender}/${recipient}/remove-friend-request`)
     }
 
     async friendRequestsByRecipient(recipient) {
-        return axiosAgent.get(`user/${recipient}/get-friend-requests`);
+        return axiosAgent.get(`users/${recipient}/get-friend-requests`);
     }
 
     //Pets Routes
@@ -133,7 +133,7 @@ export default class APIInterface {
         return axiosAgent.post(`pets/${veterinarian}/${petID}/change-vet`);
     }
 
-    async changeNotes(notes, petID) {
+    async changePetNotes(notes, petID) {
         return axiosAgent.post(`pets/${notes}/${petID}/change-pet-notes`)
     }
 
@@ -197,7 +197,7 @@ export default class APIInterface {
         return axiosAgent.post(`mealtimes/${time}/${pet}/remove-mealtime`);
     }
 
-    async changeNotes(notes, time, pet) {
+    async changeMealNotes(notes, time, pet) {
         return axiosAgent.post(`mealtimes/${notes}/${time}/${pet}/change-meal-notes`);
     }
 

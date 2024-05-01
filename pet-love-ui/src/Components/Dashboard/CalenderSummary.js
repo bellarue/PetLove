@@ -57,6 +57,9 @@ export default function CalendarSummary(props) {
         const temp = new Date();
         let date = "";
         let month = temp.getMonth()+1;
+        if(month < 10) {
+            month = "0" + month
+        }
         date = temp.getFullYear() + '-' + month + '-' + temp.getDate();
        setDate(date);
     }, [email]);

@@ -14,41 +14,25 @@ export default function Search(props) {
     const [showList, setShowList] = useState(false);
     const [users, setUsers] = useState([]);
     const [friendRequest, setFriendRequest] = useState('');
-    const [FREmail, setFREmail] = useState('');
 
     useEffect(() => {
-        if(friendRequest === ''){
-            return;
-        }
-        const api = new API();
-    
-        async function getFREmail() {
-            const userJSONString = await api.userWithUsername(friendRequest);
-            console.log(`user from the DB ${JSON.stringify(userJSONString)}`);
-            setFREmail(userJSONString.data[0]['email']);
-            setFriendRequest(''); //reset friend request
-        }
-
-        getFREmail();
-    }, [friendRequest])
-
-    useEffect(() => {
-        if(FREmail === ''){
+        if( friendRequest === '' ){
             return;
         }
     
         const api = new API();
 
         async function postFriendRequest() {
-            const userJSONString = api.addFriendRequest(email, FREmail);
+            const userJSONString = api.addFriendRequest(email, friendRequest['email']);
             console.log(`FR result ${JSON.stringify(userJSONString)}`);
-            setFREmail(''); //reset FR email
+            setFriendRequest(''); //reset FR
         }
 
         postFriendRequest();
-    }, [FREmail]);
-
+    }, [friendRequest]);
+    console.log(`show list is ${showList}`);
     useEffect(() => {
+
         if( input === '' || !showList ){
             return;
         }
@@ -61,7 +45,7 @@ export default function Search(props) {
         }
 
         getUsers();
-    }, [input]);
+    }, [showList]);
 
     const handleInputChange = event => {
         console.log("handleInputChange called.");

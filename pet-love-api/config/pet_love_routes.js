@@ -44,7 +44,7 @@ const usersRouter = require('koa-router')({
     prefix: '/users'
 });
 
-usersRouter.use(VerifyJWT);
+// usersRouter.use(VerifyJWT);
 usersRouter.get('/all-users', UsersController.allUsers, err => console.log(`allUsers ran into an error: ${err}`));
 usersRouter.get('/:email/email', UsersController.userWithEmail, err => console.log(`userWithEmail ran into an error: ${err}`));
 usersRouter.get('/:email/roles', UsersController.rolesWithEmail, err => console.log(`rolesWithEmail ran into an error: ${err}`));
@@ -53,7 +53,7 @@ usersRouter.get('/:pet/pet-parent', UsersController.usersByPet, err => console.l
 usersRouter.get('/:pet/pet-sitter', UsersController.usersByPetSitting, err => console.log(`usersByPetSitting ran into an error: ${err}`));
 usersRouter.get('/:user/friends', UsersController.friendsByUser, err => console.log(`friendsByUser ran into an error: ${err}`));
 usersRouter.get('/:recipient/get-friend-requests', UsersController.friendRequestsByRecipient, err => console.log(`friendRequestByRecipient ran into an error: ${err}`));
-usersRouter.post('/:email/:username/:fname/:lname', UsersController.addUser, err => console.log(`addUser ran into an error: ${err}`));
+usersRouter.post('/add-user', UsersController.addUser, err => console.log(`addUser ran into an error: ${err}`));
 usersRouter.post('/:user1/:user2/add-friend', UsersController.addFriendship, err => console.log(`addFriendship ran into an error: ${err}`));
 usersRouter.post('/:user1/:user2/remove-friend', UsersController.removeFriendship, err => console.log(`removeFriendship ran into an error: ${err}`));
 usersRouter.post('/:sender/:recipient/send-friend-request', UsersController.addFriendRequest, err => console.log(`addFriendRequest ran into an error: ${err}`));
@@ -66,7 +66,7 @@ const petsRouter = require('koa-router')({
     prefix: '/pets'
 });
 
-petsRouter.use(VerifyJWT);
+// petsRouter.use(VerifyJWT);
 petsRouter.get('/all-pets', PetsController.allPets, err => console.log(`allPets ran into an error: ${err}`));
 petsRouter.get('/:petID/pet-with-id', PetsController.petWithPetID, err => console.log(`petWithPetID ran into an error: ${err}`));
 petsRouter.get('/:user/pets-by-owner', PetsController.petsByOwner, err => console.log(`petsByOwner ran into an error: ${err}`));
@@ -86,7 +86,7 @@ const veterinariansRouter = require('koa-router')({
     prefix: '/veterinarians'
 });
 
-veterinariansRouter.use(VerifyJWT);
+// veterinariansRouter.use(VerifyJWT);
 veterinariansRouter.get('/all-vets', VeterinariansController.allVets, err => console.log(`allVets ran into an error: ${err}`));
 veterinariansRouter.get('/:email/email', VeterinariansController.vetWithEmail, err => console.log(`vetWithEmail ran into an error: ${err}`));
 veterinariansRouter.get('/:user/user', VeterinariansController.vetsByUser, err => console.log(`vetsByUser ran into an error: ${err}`));
@@ -101,7 +101,7 @@ const mealtimesRouter = require('koa-router')({
     prefix: '/mealtimes'
 });
 
-mealtimesRouter.use(VerifyJWT);
+// mealtimesRouter.use(VerifyJWT);
 mealtimesRouter.get('/all-mealtimes', MealtimesController.allMealtimes, err => console.log(`allMealtimes ran into an error: ${err}`));
 mealtimesRouter.get('/:petID/pet', MealtimesController.mealtimesWithPetID, err => console.log(`mealtimesWithPetID ran into an error: ${err}`));
 mealtimesRouter.get('/:user/owner', MealtimesController.mealtimesWithUser, err => console.log(`mealtimesWithUser ran into an error: ${err}`));
@@ -118,7 +118,7 @@ const medicationsRouter = require('koa-router')({
     prefix: '/medications'
 });
 
-medicationsRouter.use(VerifyJWT);
+// medicationsRouter.use(VerifyJWT);
 medicationsRouter.get('/all-medications', MedicationsController.allMedications, err => console.log(`allMedications ran into an error: ${err}`));
 medicationsRouter.get('/:name/name', MedicationsController.medicationWithName, err => console.log(`medicationWithName ran into an error: ${err}`));
 medicationsRouter.get('/:pet/pet', MedicationsController.medicationsByPet, err => console.log(`medicationsByPet ran into an error: ${err}`));
@@ -132,7 +132,7 @@ const appointmentsRouter = require('koa-router')({
     prefix: '/appointments'
 });
 
-appointmentsRouter.use(VerifyJWT);
+// appointmentsRouter.use(VerifyJWT);
 appointmentsRouter.get('/all-appointments', AppointmentsController.allAppointments, err => console.log(`allAppointments ran into an error: ${err}`));
 appointmentsRouter.get('/:apptID/apptID', AppointmentsController.appointmentWithApptID, err => console.log(`appointmentWithApptID ran into an error: ${err}`));
 appointmentsRouter.get('/:user/user', AppointmentsController.appointmentsWithUser, err => console.log(`appointmentsWithUser ran into an error: ${err}`));
