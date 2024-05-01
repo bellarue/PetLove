@@ -36,6 +36,8 @@ export default function CalendarSummary(props) {
     const [email, setEmail] = React.useState("");
     const [date, setDate] = useState("");
     const [today, setToday] = useState((new Date).getDate());
+    const months = [31,28,31,30,31,30,31,31,30,31,30,31];
+    const thisMonth = (new Date).getMonth();
     console.log(`date is ${date}`);
     const [appts, setAppts] = React.useState([]);
 
@@ -57,9 +59,7 @@ export default function CalendarSummary(props) {
         const temp = new Date();
         let date = "";
         let month = temp.getMonth()+1;
-        if(month < 10) {
-            month = "0" + month
-        }
+        
         date = temp.getFullYear() + '-' + month + '-' + temp.getDate();
        setDate(date);
     }, [email]);
@@ -71,15 +71,26 @@ export default function CalendarSummary(props) {
         const api = new API();
 
         async function getAppts() {
+            let numDays = months[thisMonth];
             let week = [];
             let tempDate = date;
+            let dates = [];
             if( date[date.length-2] === '-' ){
                 tempDate = date.slice(0,date.length-1);
             }
             else{
                 tempDate = date.slice(0,date.length-2);
             }
-            for( let i = today; i < today+7; i++ ){
+            let j = today;
+            for( let i = 0; i < 7; i++ ){
+                if( j > numDays ) {
+                    j = 1;
+                }
+                dates.push(j);
+                j++;
+            }
+            for( let i of dates ){
+                
                 const dateJSONString = await api.appointmentsWithUserAndDate(email, tempDate+i);
                 week.push(dateJSONString.data);
             }
@@ -92,6 +103,13 @@ export default function CalendarSummary(props) {
 
         getAppts();
     }, [date]);
+
+    const getDay = (idx) => {
+        if( idx + today > months[thisMonth] ){
+            return idx + today - months[thisMonth];
+        }
+        return idx + today;
+    }
 
     return <Fragment>
         <Box sx={{
@@ -126,7 +144,7 @@ export default function CalendarSummary(props) {
                                 border: 1
                             }}>
                                 <Typography marginLeft={0.5}>
-                                    {idx+today}
+                                    {getDay(idx)}
                                 </Typography>
                                 <ApptsList appts={day} />
                             </Box>

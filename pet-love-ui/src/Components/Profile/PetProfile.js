@@ -10,7 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-import Edit from './Edit';
+import EditNotes from './EditNotes';
 import AddMealtime from './AddMealtime';
 import AddMedication from './AddMedication';
 import AddParent from './AddParent';
@@ -238,7 +238,7 @@ const allergiesString = (allergies) => {
 }
 
 export default function PetProfile(props) {
-    const {pet, vet, friends} = props; //pet is a pet object
+    const {pet, vet, friends, chosenList} = props; //pet is a pet object
     console.log(`this is pet: ${JSON.stringify(pet)}`);
     console.log(`this is vet: ${JSON.stringify(vet)}`);
     const [mealtimes, setMealtimes] = React.useState([]);
@@ -255,7 +255,7 @@ export default function PetProfile(props) {
         const api = new API();
 
         async function postNotes() {
-            const notesUpdateResults = api.changePetNotes(notes, pet['petID']);
+            const notesUpdateResults = api.changePetNotes({notes: notes, petID: pet['petID']});
             console.log(`changing notes ${JSON.stringify(notesUpdateResults)}`);
         }
 
@@ -358,7 +358,7 @@ export default function PetProfile(props) {
                     <Typography>
                         Notes:
                     </Typography>
-                    <Edit label={"Notes"} value={notes} setValue={(notes)=>setNotes(notes)} />
+                    {chosenList ? null : <EditNotes value={notes} setValue={(notes)=>setNotes(notes)} /> }
                 </Box>
                 
                 <Typography>
@@ -383,7 +383,7 @@ export default function PetProfile(props) {
                     <Typography>
                         Allergies:
                     </Typography>
-                    <AddAllergy petID={pet['petID']} />
+                    {chosenList ? null : <AddAllergy petID={pet['petID']} />}
                 </Box>
                 <Typography>
                     {allergiesString(allergies)}
@@ -408,7 +408,7 @@ export default function PetProfile(props) {
                     <Typography>
                         Mealtimes:
                     </Typography>
-                    {/* <AddMealtime petID={pet['petID']} /> */}
+                    {/* {chosenList ? null : <AddMealtime petID={pet['petID']} /> } */}
                 </Box>
                 <Mealtimes meals={mealtimes} />
             </Box>
@@ -431,7 +431,7 @@ export default function PetProfile(props) {
                     <Typography>
                         Medications:
                     </Typography>
-                    {/* <AddMedication petID={pet['petID']} /> */}
+                    {/* {chosenList ? null : <AddMedication petID={pet['petID']} />} */}
                 </Box>
                 <Medications meds={meds} />
             </Box>
@@ -453,7 +453,7 @@ export default function PetProfile(props) {
                     <Typography marginLeft={0.5}>
                         Parents:
                     </Typography>
-                    <AddParent petID={pet['petID']} friends={friends} />
+                    {chosenList ? null : <AddParent petID={pet['petID']} friends={friends} />}
                 </Box>
                 <RelatedUsers users={owners} />
             </Box>
@@ -475,7 +475,7 @@ export default function PetProfile(props) {
                     <Typography marginLeft={0.5}>
                         Sitters:
                     </Typography>
-                    <AddSitter petID={pet['petID']} friends={friends} />
+                    {chosenList ? null : <AddSitter petID={pet['petID']} friends={friends} /> }
                 </Box>
                 <RelatedUsers users={sitters} />
             </Box>

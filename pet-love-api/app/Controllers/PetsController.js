@@ -7,6 +7,7 @@ function now() {
 }
 
 const addPet = (ctx) => {
+    const petDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                    INSERT INTO 
@@ -18,9 +19,7 @@ const addPet = (ctx) => {
         dbConnection.query({
             sql: query,
 
-            values: [ctx.params.name, ctx.params.type, ctx.params.vet],
-
-            values: [ctx.params.user, pet]
+            values: [petDict['name'], petDict['type'], petDict['vet']]
 
         }, (error, tuples) => {
             if (error) {
@@ -43,6 +42,7 @@ const addPet = (ctx) => {
 }
 
 const addParent = (ctx) => {
+    const petDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                    INSERT INTO pet_parents(user, pet)
@@ -50,7 +50,7 @@ const addParent = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.user, ctx.params.pet]
+            values: [petDict['user'], petDict['pet']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in PetsController::addParent", error);
@@ -73,6 +73,7 @@ const addParent = (ctx) => {
 
 
 const addSitter = (ctx) => {
+    const petDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                    INSERT INTO pet_sitters(user, pet)
@@ -80,7 +81,7 @@ const addSitter = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.user, ctx.params.pet]
+            values: [petDict['user'], petDict['pet']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in PetsController::addSitter", error);
@@ -264,6 +265,7 @@ const allergiesByPetID = (ctx) => {
 }
 
 const removePet = (ctx) => {
+    const petDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                    DELETE FROM pets
@@ -271,7 +273,7 @@ const removePet = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.petID]
+            values: [petDict['petID']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in PetsController::removePet", error);
@@ -293,6 +295,7 @@ const removePet = (ctx) => {
 }
 
 const removeParent = (ctx) => {
+    const petDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                    DELETE FROM pet_parents
@@ -303,7 +306,7 @@ const removeParent = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.user, ctx.params.pet]
+            values: [petDict['user'], petDict['pet']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in PetsController::removeParent", error);
@@ -325,6 +328,7 @@ const removeParent = (ctx) => {
 }
 
 const removeSitter = (ctx) => {
+    const petDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                    DELETE FROM pet_sitters
@@ -335,7 +339,7 @@ const removeSitter = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.user, ctx.params.pet]
+            values: [petDict['user'], petDict['pet']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in PetsController::removeSitter", error);
@@ -357,6 +361,7 @@ const removeSitter = (ctx) => {
 }
 
 const changeVet = (ctx) => {
+    const petDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                    UPDATE pets
@@ -367,7 +372,7 @@ const changeVet = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.veterinarian, ctx.params.petID]
+            values: [petDict['veterinarian'], petDict['petID']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in PetsController::changeVet", error);
@@ -389,6 +394,7 @@ const changeVet = (ctx) => {
 }
 
 const changeNotes = (ctx) => {
+    const petDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                    UPDATE pets
@@ -399,7 +405,7 @@ const changeNotes = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.notes, ctx.params.petID]
+            values: [petDict['notes'], petDict['petID']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in PetsController::changeNotes", error);
@@ -421,6 +427,7 @@ const changeNotes = (ctx) => {
 }
 
 const addAllergy = (ctx) => {
+    const petDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
                    INSERT INTO 
@@ -429,7 +436,7 @@ const addAllergy = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.pet, ctx.params.allergy]
+            values: [petDict['pet'], petDict['allergy']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in PetsController::addAllergy", error);

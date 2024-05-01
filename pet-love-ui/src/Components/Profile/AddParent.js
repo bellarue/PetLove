@@ -27,7 +27,7 @@ export default function AddParent(props) {
         const api = new API();
 
         async function postParent() {
-            const parentUpdateResults = api.addParent(parent, petID);
+            const parentUpdateResults = api.addParent({user: parent, pet: petID});
             console.log(`adding to pet parents ${JSON.stringify(parentUpdateResults)}`);
         }
 

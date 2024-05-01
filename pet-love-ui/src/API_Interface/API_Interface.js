@@ -71,28 +71,28 @@ export default class APIInterface {
         return axiosAgent.get(`users/${user}/friends`);
     }
 
+    async friendRequestsByRecipient(recipient) {
+        return axiosAgent.get(`users/${recipient}/get-friend-requests`);
+    }
+
     async addUser(paramsDict) {
         return axiosAgent.post(`/users/add-user`, paramsDict)
     }
 
-    async addFriendship(user1, user2) {
-        return axiosAgent.post(`users/${user1}/${user2}/add-friend`)
+    async addFriendship(paramsDict) {
+        return axiosAgent.post(`users/add-friend`, paramsDict)
     }
 
-    async removeFriendship(user1, user2) {
-        return axiosAgent.post(`users/${user1}/${user2}/remove-friend`)
+    async removeFriendship(paramsDict) {
+        return axiosAgent.post(`users/remove-friend`, paramsDict)
     }
 
-    async addFriendRequest(sender, recipient) {
-        return axiosAgent.post(`users/${sender}/${recipient}/send-friend-request`)
+    async addFriendRequest(paramsDict) {
+        return axiosAgent.post(`users/send-friend-request`, paramsDict)
     }
 
-    async removeFriendRequest(sender, recipient) {
-        return axiosAgent.post(`users/${sender}/${recipient}/remove-friend-request`)
-    }
-
-    async friendRequestsByRecipient(recipient) {
-        return axiosAgent.get(`users/${recipient}/get-friend-requests`);
+    async removeFriendRequest(paramsDict) {
+        return axiosAgent.post(`users/remove-friend-request`, paramsDict)
     }
 
     //Pets Routes
@@ -117,28 +117,28 @@ export default class APIInterface {
         return axiosAgent.get(`pets/${pet}/allergies`);
     }
 
-    async addPet(name,type,veterinarian) {
-        return axiosAgent.post(`pets/${name}/${type}/${veterinarian}`);
+    async addPet(paramsDict) {
+        return axiosAgent.post(`pets/add-pet`, paramsDict);
     }
 
-    async addParent(user,pet) {
-        return axiosAgent.post(`pets/${user}/${pet}/add-parent`);
+    async addParent(paramsDict) {
+        return axiosAgent.post(`pets/add-parent`, paramsDict);
     }
 
-    async addSitter(user,pet) {
-        return axiosAgent.post(`pets/${user}/${pet}/add-sitter`);
+    async addSitter(paramsDict) {
+        return axiosAgent.post(`pets/add-sitter`, paramsDict);
     }
 
-    async changeVet(veterinarian, petID) {
-        return axiosAgent.post(`pets/${veterinarian}/${petID}/change-vet`);
+    async changeVet(paramsDict) {
+        return axiosAgent.post(`pets/change-vet`, paramsDict);
     }
 
-    async changePetNotes(notes, petID) {
-        return axiosAgent.post(`pets/${notes}/${petID}/change-pet-notes`)
+    async changePetNotes(paramsDict) {
+        return axiosAgent.post(`pets/change-pet-notes`, paramsDict)
     }
 
-    async addAllergy(pet, allergy) {
-        return axiosAgent.post(`pets/${pet}/${allergy}/add-allergy`);
+    async addAllergy(paramsDict) {
+        return axiosAgent.post(`pets/add-allergy`, paramsDict);
     }
 
     //Veterinarians routes
@@ -159,12 +159,12 @@ export default class APIInterface {
         return axiosAgent.get(`veterinarians/${petID}/pet`);
     }
 
-    async addVet(email, name, phone_num) {
-        return axiosAgent.post(`veterinarians/${email}/${name}/${phone_num}`)
+    async addVet(paramsDict) {
+        return axiosAgent.post(`veterinarians/add-vet`, paramsDict)
     }
 
-    async removeVetFromUser(user,vet) {
-        return axiosAgent.post(`veterinarians/${user}/${vet}`);
+    async removeVetFromUser(paramsDict) {
+        return axiosAgent.post(`veterinarians/remove-vet-from-user`, paramsDict);
     }
 
     //Mealtimes routes
@@ -189,16 +189,16 @@ export default class APIInterface {
         return axiosAgent.get(`mealtimes/${pet}/num-meals`);
     }
 
-    async addMealtime(time, pet, type, amount, notes) {
-        return axiosAgent.post(`mealtimes/${time}/${pet}/${type}/${amount}/${notes}`);
+    async addMealtime(paramsDict) {
+        return axiosAgent.post(`mealtimes/add-mealtime`, paramsDict);
     }
 
-    async removeMealtime(time, pet) {
-        return axiosAgent.post(`mealtimes/${time}/${pet}/remove-mealtime`);
+    async removeMealtime(paramsDict) {
+        return axiosAgent.post(`mealtimes/remove-mealtime`, paramsDict);
     }
 
-    async changeMealNotes(notes, time, pet) {
-        return axiosAgent.post(`mealtimes/${notes}/${time}/${pet}/change-meal-notes`);
+    async changeMealNotes(paramsDict) {
+        return axiosAgent.post(`mealtimes/change-meal-notes`, paramsDict);
     }
 
     //Medications routes
@@ -215,12 +215,12 @@ export default class APIInterface {
         return axiosAgent.get(`medications/${pet}/pet`);
     }
 
-    async removeMedication(name, startDate) {
-        return axiosAgent.post(`medications/${name}/${startDate}`);
+    async removeMedication(paramsDict) {
+        return axiosAgent.post(`medications/remove-med`, paramsDict);
     }
 
-    async addMedication(name, startDate, pet, veterinarian, type, dosage, admin_method) {
-        return axiosAgent.post(`medications/${name}/${startDate}/${pet}/${veterinarian}/${type}/${dosage}/${admin_method}`)
+    async addMedication(paramsDict) {
+        return axiosAgent.post(`medications/add-med`, paramsDict);
     }
 
     //Appointments routes
@@ -249,16 +249,16 @@ export default class APIInterface {
         return axiosAgent.get(`appointments/${pet}/${user}/pet-by-user`);
     }
 
-    async addAppointment(dateTime, user, type, notes) {
-        return axiosAgent.post(`appointments/${dateTime}/${user}/${type}/${notes}`)
+    async addAppointment(paramsDict) {
+        return axiosAgent.post(`appointments/add-appt`, paramsDict);
     }
 
-    async removeAppointment(apptID) {
-        return axiosAgent.post(`appointments/${apptID}/remove-appt`);
+    async removeAppointment(paramsDict) {
+        return axiosAgent.post(`appointments/remove-appt`, paramsDict);
     }
 
-    async addPetToAppt(pet, appt) {
-        return axiosAgent.post(`appointments/${pet}/${appt}/add-pet`)
+    async addPetToAppt(paramsDict) {
+        return axiosAgent.post(`appointments/add-pet-appt`, paramsDict);
     }
 
 }
