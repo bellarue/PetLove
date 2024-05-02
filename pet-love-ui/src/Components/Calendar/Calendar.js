@@ -1,39 +1,35 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import API from '../../API_Interface/API_Interface'
 import Typography from '@mui/material/Typography';
-import { Box } from '@mui/material'
-// import dayjs from 'dayjs';
-// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-// import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { Box, Button } from '@mui/material'
+import ReactCalendar from 'react-calendar'
+import 'react-calendar/dist/Calendar.css';
 
-
-const ApptsView = props => {
-    const {date, appts} = props;
-
-    const showDate = () => {
-        return date;
-    }
-
-    return <Fragment>
-        <Box sx={{
-            height: '100%',
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column'
-        }}>
-            <Typography>
-                {showDate()}
-            </Typography>
-        </Box>
-    </Fragment>
-}
+import ApptTable from './ApptTable';
+import AddAppt from './AddAppt';
 
 export default function Calendar(props) {
     const {username} = props;
     const [email, setEmail] = useState("");
     const [date, setDate] = useState(new Date());
     const [appts, setAppts] = useState([]);
+    const [petsOnAppts, setPetsOnAppts] = useState([]);
+    const [deleteAppt, setDeleteAppt] = useState("");
+
+    useEffect(() => {
+        if( deleteAppt.length === 0 ) {
+            return;
+        }
+        const api = new API();
+
+        async function postDelete() {
+            const deleteJSONString = await api.removeAppointment({apptID: deleteAppt});
+            console.log(`delete appt results ${JSON.stringify(deleteJSONString)}`);
+            setDeleteAppt("");
+        }
+
+        postDelete();
+    }, [deleteAppt]);
 
     useEffect(() => {
         const api = new API();
@@ -66,6 +62,30 @@ export default function Calendar(props) {
         getAppts();
     }, [date, email]);
 
+    useEffect(() => {
+        console.log(`in getPets, appts is ${JSON.stringify(appts)}`);
+        if( appts.length === 0 ) {
+            return;
+        }
+        const pets = [];
+        const api = new API();
+        async function getPets(apptID) {
+            const petsJSONString = await api.petsOnAppt(apptID);
+            console.log(`pets from the DB ${JSON.stringify(petsJSONString)}`);
+            return petsJSONString;
+        }
+        for( let appt of appts ) {
+            const petsJSONString = getPets(appt['apptID']);
+            if( petsJSONString.data == null ){
+                pets.push([]);
+            }
+            else{
+                pets.push(petsJSONString.data);
+            }
+        }
+        setPetsOnAppts(pets);
+    }, [date]);
+
     return <Fragment>
         <Box sx={{
             width: '100%',
@@ -74,11 +94,11 @@ export default function Calendar(props) {
             flexDirection: 'column',
             alignItems: 'center'
         }}>
-            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateCalendar value={date} onChange={(newValue) => setDate(newValue)} />
-            </LocalizationProvider> */}
-            
-            <ApptsView date={date} appts={appts} />
+            <ReactCalendar href='react-calendar/dist/Calendar.css' calendarType='gregory' value={date} onChange={(value, event) => setDate(value)} />
+            <Typography align='center' fontSize={20} marginTop={1}>
+                {date.toDateString()}
+            </Typography>
+            <ApptTable appts={appts} petsOnAppts={petsOnAppts} setDeleteAppt={(apptID)=>setDeleteAppt(apptID)} />
         </Box>
     </Fragment>
 }

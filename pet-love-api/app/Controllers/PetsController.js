@@ -457,6 +457,40 @@ const addAllergy = (ctx) => {
     });
 }
 
+const petsOnAppt = (ctx) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+                   SELECT pet, name, appt
+                    FROM 
+                        pets p, pet_on_appt a
+                    WHERE 
+                        appt = ?
+                    AND p.petID = a.pet
+                    ORDER BY pet
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [ctx.params.appt]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in PetsController::petsOnAppt", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in petsOnAppt.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
 module.exports = {
     addParent,
     addSitter,
@@ -471,5 +505,6 @@ module.exports = {
     removeSitter,
     changeVet,
     changeNotes,
-    addAllergy
+    addAllergy,
+    petsOnAppt
 };

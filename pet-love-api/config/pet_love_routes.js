@@ -72,6 +72,7 @@ petsRouter.get('/:petID/pet-with-id', PetsController.petWithPetID, err => consol
 petsRouter.get('/:user/pets-by-owner', PetsController.petsByOwner, err => console.log(`petsByOwner ran into an error: ${err}`));
 petsRouter.get('/:user/pets-by-sitter', PetsController.petsBySitter, err => console.log(`petsBySitter ran into an error: ${err}`));
 petsRouter.get('/:pet/allergies', PetsController.allergiesByPetID, err => console.log(`allergiesByPetID ran into an error: ${err}`));
+petsRouter.get('/:appt/pets-on-appt', PetsController.petsOnAppt, err => console.log(`petsOnAppt ran into an error: ${err}`));
 petsRouter.post('/add-pet', PetsController.addPet, err=>console.log(`addPet ran into an error: ${err}`));
 petsRouter.post('/add-parent', PetsController.addParent, err=> console.log(`addParent ran into an error: ${err}`));
 petsRouter.post('/add-sitter', PetsController.addSitter, err=> console.log(`addSitter ran into an errr: ${err}`));

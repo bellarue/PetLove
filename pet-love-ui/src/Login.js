@@ -131,8 +131,8 @@ export default function Login({setUser}) {
 
         getUsers();
     }, []);
-    console.log(`emails list is ${JSON.stringify(emails)}`);
-    console.log(`users list is ${JSON.stringify(users)}`);
+    // console.log(`emails list is ${JSON.stringify(emails)}`);
+    // console.log(`users list is ${JSON.stringify(users)}`);
 
     const handleInputChange = event => {
         console.log("handleInputChange called.");

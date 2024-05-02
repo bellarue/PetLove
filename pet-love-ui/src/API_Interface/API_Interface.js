@@ -117,6 +117,10 @@ export default class APIInterface {
         return axiosAgent.get(`pets/${pet}/allergies`);
     }
 
+    async petsOnAppt(appt) {
+        return axiosAgent.get(`pets/${appt}/pets-on-appt`);
+    }
+
     async addPet(paramsDict) {
         return axiosAgent.post(`pets/add-pet`, paramsDict);
     }

@@ -71,13 +71,15 @@ const mealtimesWithPetID = (ctx) => {
 const mealtimesWithUser = (ctx) => {
     return new Promise((resolve, reject) => {
         const query = `
-                   SELECT *
+                   SELECT time, petID, name, m.type, amount, m.notes, user
                     FROM 
-                        mealtimes m, pet_parents p
+                        mealtimes m, pet_parents o, pets p
                     WHERE 
-                        m.pet = p.pet
+                        m.pet = o.pet
                     AND
-                        p.user = ?
+                        m.pet = p.petID
+                    AND
+                        o.user = ?
                     GROUP BY m.pet, m.time
                     `;
         dbConnection.query({

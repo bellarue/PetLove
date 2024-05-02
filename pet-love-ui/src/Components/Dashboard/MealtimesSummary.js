@@ -12,7 +12,7 @@ import Paper from '@mui/material/Paper';
 const mealsTableAttributes = [
     {
         title: 'Pet',
-        attributeDBName: 'pet',
+        attributeDBName: 'name',
         align: 'left'
     },
     {
@@ -34,34 +34,6 @@ const mealsTableAttributes = [
 
 export default function MealtimesSummary(props) {
     const {meals} = props;
-    const [petNames, setPetNames] = useState([]);
-    const [petIDs, setPetIDs] = useState([]);
-
-    useEffect(() => {
-        if( meals.length === 0 ){
-            return
-        }
-        const api = new API();
-
-        async function getPets() {
-            const names = [];
-            const ids = [];
-            for(let meal of meals){
-                if( ids.includes(meal['pet']) ) {
-                    continue; //no duplicates
-                }
-                const petJSONString = await api.petWithPetID(meal['pet']);
-                console.log(`pet from the DB ${JSON.stringify(petJSONString)}`);
-                names.push(petJSONString.data[0]['name']);
-                ids.push(meal['pet']);
-            }
-            console.log(`pets from the DB ${JSON.stringify(names)}`);
-            setPetNames(names);
-            setPetIDs(ids);
-        }
-
-        getPets();
-    }, [meals]);
 
     const TRow = ({mealtimeObject}) => {
         return <TableRow
