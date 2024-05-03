@@ -14,29 +14,32 @@ import DeleteIcon from '@mui/icons-material/Delete';
 export default function ApptTable(props) {
     const {appts, petsOnAppts, setDeleteAppt} = props;
     console.log(`pets on appts ${JSON.stringify(petsOnAppts)}`);
-
-    const getTime = (dateTime) => {
-        return dateTime.slice(11,dateTime.length);
-    }
     
     const rows = [];
+    let idx = 0;
     for( let appt of appts ){
-        rows.push({id: appt['apptID'], time: getTime(appt['dateTime']), type: appt['type'], notes: appt['notes']});
+        let n = appt['notes'];
+        if(n === '/0'){
+            n = '';
+        }
+        let pets = [];
+        if( petsOnAppts.length !== 0 ){
+            pets = petsOnAppts[idx].map(comp => comp.name);
+        }
+        rows.push({id: appt['apptID'], time: appt['time'], type: appt['type'], pets: pets, notes: n});
+        idx++;
     }
 
-    const petsList = (idx) => {
-        if( petsOnAppts.length === 0 ){
+    const petsList = (pets) => {
+        if( pets.length === 0 ){
             return "";
         }
-        if( petsOnAppts[idx].length === 0 ){
-            return "";
+        let p = "";
+        for( let pet of pets ){
+            p = p + pet + ", ";
         }
-        let pets = "";
-        for( let pet of petsOnAppts[idx] ){
-            pets = pets + pet['name'] + ", ";
-        }
-        pets = pets.slice(0, pets.length-2);
-        return pets;
+        p = p.slice(0, p.length-2);
+        return p;
     }
 
     return (
@@ -63,7 +66,7 @@ export default function ApptTable(props) {
                     {row.time}
                   </TableCell>
                   <TableCell align="left">{row.type}</TableCell>
-                  <TableCell align="left">{petsList(idx)}</TableCell>
+                  <TableCell align="left">{petsList(row.pets)}</TableCell>
                   <TableCell align="left">{row.notes}</TableCell>
                   <TableCell align="right">
                     <Button onClick={()=>setDeleteAppt(row.id)}>

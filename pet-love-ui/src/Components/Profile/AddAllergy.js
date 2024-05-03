@@ -12,6 +12,11 @@ export default function AddAllergy(props) {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [verify, setVerify] = useState(false);
+
+    const onAddClick = () => {
+        setVerify(true);
+        return;
+    }
     
     const handleInputChange = event => {
         console.log("handleInputChange called.");
@@ -31,6 +36,7 @@ export default function AddAllergy(props) {
         }
 
         postAllergy();
+        handleClose();
     }, [verify]);
 
     return (
@@ -53,7 +59,7 @@ export default function AddAllergy(props) {
                         value={input}
                         onChange={handleInputChange}
                     />
-                    <Button onClick={setVerify(true)}>
+                    <Button onClick={onAddClick}>
                         Add 
                         <AddIcon/>
                     </Button>

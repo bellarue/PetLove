@@ -14,6 +14,11 @@ export default function AddSitter(props) {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [verify, setVerify] = useState(false);
+
+    const onAddClick = () => {
+        setVerify(true);
+        return;
+    }
     
     const handleChange = (event) => {
         setSitter(event.target.value);
@@ -32,19 +37,19 @@ export default function AddSitter(props) {
         }
 
         postSitter();
+        handleClose();
     }, [verify]);
 
     return (
         <div>
-        <TriggerButton type="button" onClick={handleOpen}>
+        <Button onClick={handleOpen}>
             <AddIcon />
-        </TriggerButton>
+        </Button>
         <Modal
             aria-labelledby="unstyled-modal-title"
             aria-describedby="unstyled-modal-description"
             open={open}
             onClose={handleClose}
-            slots={{ backdrop: StyledBackdrop }}
         >
             <ModalContent sx={{ width: 400 }}>
                 <Fragment>
@@ -68,7 +73,7 @@ export default function AddSitter(props) {
                             </Select>
                         </FormControl>
                     </Box>
-                    <Button onClick={setVerify(true)}>
+                    <Button onClick={onAddClick}>
                         Add 
                         <AddIcon/>
                     </Button>
@@ -78,31 +83,6 @@ export default function AddSitter(props) {
         </div>
     );
 }
-
-const Backdrop = React.forwardRef((props, ref) => {
-  const { open, className, ...other } = props;
-  return (
-    <div
-      className={clsx({ 'base-Backdrop-open': open }, className)}
-      ref={ref}
-      {...other}
-    />
-  );
-});
-
-Backdrop.propTypes = {
-  className: PropTypes.string.isRequired,
-  open: PropTypes.bool,
-};
-
-const blue = {
-  200: '#99CCFF',
-  300: '#66B2FF',
-  400: '#3399FF',
-  500: '#007FFF',
-  600: '#0072E5',
-  700: '#0066CC',
-};
 
 const grey = {
   50: '#F3F6F9',
@@ -124,14 +104,6 @@ const Modal = styled(BaseModal)`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
-
-const StyledBackdrop = styled(Backdrop)`
-  z-index: -1;
-  position: fixed;
-  inset: 0;
-  background-color: rgb(0 0 0 / 0.5);
-  -webkit-tap-highlight-color: transparent;
 `;
 
 const ModalContent = styled('div')(
@@ -164,37 +136,6 @@ const ModalContent = styled('div')(
       font-weight: 400;
       color: ${theme.palette.mode === 'dark' ? grey[400] : grey[800]};
       margin-bottom: 4px;
-    }
-  `,
-);
-
-const TriggerButton = styled('button')(
-  ({ theme }) => css`
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-weight: 600;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    padding: 8px 16px;
-    border-radius: 8px;
-    transition: all 150ms ease;
-    cursor: pointer;
-    background: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
-    border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[200]};
-    color: ${theme.palette.mode === 'dark' ? grey[200] : grey[900]};
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-
-    &:hover {
-      background: ${theme.palette.mode === 'dark' ? grey[800] : grey[50]};
-      border-color: ${theme.palette.mode === 'dark' ? grey[600] : grey[300]};
-    }
-
-    &:active {
-      background: ${theme.palette.mode === 'dark' ? grey[700] : grey[100]};
-    }
-
-    &:focus-visible {
-      box-shadow: 0 0 0 4px ${theme.palette.mode === 'dark' ? blue[300] : blue[200]};
-      outline: none;
     }
   `,
 );

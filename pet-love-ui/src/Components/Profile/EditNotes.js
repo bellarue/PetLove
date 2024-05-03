@@ -15,9 +15,11 @@ export default function EditNotes(props) {
 
     const onUpdateClick = () => {
       if( value === input ){
+        handleClose();
         return; //no change
       }
       setValue(input);
+      handleClose();
     }
 
     const handleInputChange = event => {
