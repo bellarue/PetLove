@@ -1,4 +1,5 @@
 import React, {Fragment, useEffect, useState} from 'react';
+import API from '../../API_Interface/API_Interface'
 import clsx from 'clsx';
 import { styled, css } from '@mui/system';
 import { Modal as BaseModal } from '@mui/base/Modal';
@@ -7,20 +8,36 @@ import CreateIcon from '@mui/icons-material/Create';
 import { Button } from '@mui/material'
 
 export default function EditNotes(props) {
-    const {value, setValue} = props;
+    const {value, setValue, petID} = props;
     const [input, setInput] = useState(value);
     const [open, setOpen] = React.useState(false);
+    const [verify, setVerify] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const onUpdateClick = () => {
+    useEffect(() => {
+      if( !verify ){
+          return;
+      }
       if( value === input ){
         handleClose();
         return; //no change
       }
       setValue(input);
+      const api = new API();
+      let notes = input;
+        if( notes === '' ){
+            notes = null;
+        }
+
+      async function postNotes() {
+          const notesUpdateResults = await api.changePetNotes({notes: notes, petID: petID});
+          console.log(`changing notes ${JSON.stringify(notesUpdateResults)}`);
+      }
+
+      postNotes();
       handleClose();
-    }
+    }, [verify]);
 
     const handleInputChange = event => {
         console.log("handleInputChange called.");
@@ -47,7 +64,7 @@ export default function EditNotes(props) {
                     value={input}
                     onChange={handleInputChange}
                   />
-                  <Button onClick={onUpdateClick}>
+                  <Button onClick={()=>setVerify(true)}>
                     Update 
                     <CreateIcon/>
                   </Button>

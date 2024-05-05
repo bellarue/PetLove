@@ -11,6 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 import EditNotes from './EditNotes';
+import EditVet from './EditVet';
 import AddMealtime from './AddMealtime';
 import AddMedication from './AddMedication';
 import AddParent from './AddParent';
@@ -238,7 +239,7 @@ const allergiesString = (allergies) => {
 }
 
 export default function PetProfile(props) {
-    const {pet, vet, friends, chosenList} = props; //pet is a pet object
+    const {pet, vet, friends, chosenList, email} = props; //pet is a pet object
     console.log(`this is pet: ${JSON.stringify(pet)}`);
     console.log(`this is vet: ${JSON.stringify(vet)}`);
     const [mealtimes, setMealtimes] = React.useState([]);
@@ -247,20 +248,6 @@ export default function PetProfile(props) {
     const [sitters, setSitters] = useState([]);
     const [meds, setMeds] = useState([]);
     const [notes, setNotes] = useState(pet['notes']);
-
-    useEffect(() => {
-        if( notes === '' || notes === pet['notes'] ){ //is empty or hasnt changed
-            return;
-        }
-        const api = new API();
-
-        async function postNotes() {
-            const notesUpdateResults = api.changePetNotes({notes: notes, petID: pet['petID']});
-            console.log(`changing notes ${JSON.stringify(notesUpdateResults)}`);
-        }
-
-        postNotes();
-    }, [notes]);
 
     useEffect(() => {
         const api = new API();
@@ -364,7 +351,7 @@ export default function PetProfile(props) {
                     <Typography marginLeft={0.5}>
                         Notes:
                     </Typography>
-                    {chosenList ? null : <EditNotes value={notes} setValue={(notes)=>setNotes(notes)} /> }
+                    {chosenList ? null : <EditNotes value={notes} setValue={(newNotes)=>setNotes(newNotes)} petID={pet['petID']} /> }
                 </Box>
                 
                 <Typography marginLeft={0.5}>
@@ -416,13 +403,13 @@ export default function PetProfile(props) {
                     <Typography marginLeft={0.5}>
                         Mealtimes:
                     </Typography>
-                    {/* {chosenList ? null : <AddMealtime petID={pet['petID']} /> } */}
+                    {chosenList ? null : <AddMealtime petID={pet['petID']} /> }
                 </Box>
                 <Mealtimes meals={mealtimes} />
             </Box>
             <Box sx={{
                 width: '100%',
-                height: 200,
+                maxHeight: 200,
                 display: 'flex',
                 flexDirection: 'column',
                 border: 1,
@@ -440,7 +427,7 @@ export default function PetProfile(props) {
                     <Typography marginLeft={0.5}>
                         Medications:
                     </Typography>
-                    {/* {chosenList ? null : <AddMedication petID={pet['petID']} />} */}
+                    {chosenList ? null : <AddMedication petID={pet['petID']} />}
                 </Box>
                 <Medications meds={meds} />
             </Box>
@@ -490,10 +477,21 @@ export default function PetProfile(props) {
                 </Box>
                 <RelatedUsers users={sitters} />
             </Box>
-            <Typography>
-                Veterinarian:
-            </Typography>
             <Box sx={{
+                    width: '100%',
+                    height: 30,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                }}>
+                <Typography>
+                    Veterinarian:
+                </Typography>
+                {chosenList ? null : <EditVet email={email} petID={pet['petID']} />}
+            </Box>
+            
+            {vet === null ? null : <Box sx={{
                 width: '100%',
                 maxHeight: 50,
                 display: 'flex',
@@ -510,7 +508,7 @@ export default function PetProfile(props) {
                 <Typography>
                     {vet['phone_num']}
                 </Typography>
-            </Box>
+            </Box>}
         </Box>
     </Fragment>
 }
