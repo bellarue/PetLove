@@ -6,17 +6,12 @@ import { Modal as BaseModal } from '@mui/base/Modal';
 import AddIcon from '@mui/icons-material/Add';
 
 export default function AddAllergy(props) {
-    const {petID} = props;
+    const {petID, setUpdate} = props;
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState('');
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [verify, setVerify] = useState(false);
-
-    const onAddClick = () => {
-        setVerify(true);
-        return;
-    }
     
     const handleInputChange = event => {
         console.log("handleInputChange called.");
@@ -24,7 +19,12 @@ export default function AddAllergy(props) {
     };
 
     useEffect(() => {
-        if( !verify || input.length === 0 ){
+        console.log(`in useEffect, verify is ${verify}, input is ${input}`)
+        if( !verify ){
+            return;
+        }
+        if( input.length === 0 ){
+            handleClose();
             return;
         }
 
@@ -33,6 +33,9 @@ export default function AddAllergy(props) {
         async function postAllergy() {
             const allergyUpdateResults = await api.addAllergy({pet: petID, allergy: input});
             console.log(`adding to allergies ${JSON.stringify(allergyUpdateResults)}`);
+            setUpdate(true);
+            setInput('');
+            setVerify(false);
         }
 
         postAllergy();
@@ -59,7 +62,7 @@ export default function AddAllergy(props) {
                         value={input}
                         onChange={handleInputChange}
                     />
-                    <Button onClick={onAddClick}>
+                    <Button onClick={()=>setVerify(true)}>
                         Add 
                         <AddIcon/>
                     </Button>

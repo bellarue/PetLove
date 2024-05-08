@@ -48,7 +48,7 @@ const mealtimesWithPetID = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.user]
+            values: [ctx.params.pet]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in MealtimesController::mealtimesWithPetID", error);

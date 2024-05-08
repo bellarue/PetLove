@@ -33,6 +33,11 @@ const mealsTableAttributes = [
         title: 'Amount',
         attributeDBName: 'amount',
         align: 'left'
+    },
+    {
+        title: 'Notes',
+        attributeDBName: 'notes',
+        align: 'left'
     }
 ];
 
@@ -72,7 +77,7 @@ const medsTableAttributes = [
     },
     {
         title: 'Veterinarian',
-        attributeDBName: 'veterinarian',
+        attributeDBName: 'vname',
         align: 'left'
     },
     {
@@ -186,48 +191,46 @@ const Mealtimes = props => {
 
 const Medications = props => {
     const {meds} = props;
-    const TRow = ({medicationObject}) => {
-        return <TableRow
-            sx={{'&:last-child td, &:last-child th': {border: 0}}}
-        >
-            {
-                medsTableAttributes.map((attr, idx) =>
-                    <TableCell key={idx}
-                               align={attr.align}>
-                        {
-                            medicationObject[attr.attributeDBName]
-                        }
-                    </TableCell>)
-            }
-        </TableRow>
+    console.log(`meds is ${JSON.stringify(meds)}`);
+    const rows = [];
+    for ( let med of meds ) {
+        let startDate = med['startDate'].slice(0,10);
+        console.log(`medication row`)
+        rows.push({name: med['name'], startDate: startDate, veterinarian: med['vname'], type: med['type'], dosage: med['dosage'], admin_method: med['admin_method']});
     }
-    return <Fragment>
-        {
-            meds.length > 0 &&
-                <TableContainer component={Paper}>
-                    <Table sx={{minWidth: 650}} aria-label="medication table">
-                        <TableHead>
-                            <TableRow>
-                                {
-                                    medsTableAttributes.map((attr, idx) =>
-                                        <TableCell  key={idx}
-                                                    align={attr.align}>
-                                            {attr.title}
-                                        </TableCell>)
-                                }
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {
-                                meds.map((med, idx) => (
-                                    <TRow medicationObject={med} key={idx}/>
-                                ))
-                            }
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-        }
-    </Fragment>
+    return (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell align="left">Start Date</TableCell>
+                <TableCell align="left">Veterinarian</TableCell>
+                <TableCell align="left">Type</TableCell>
+                <TableCell align="left">Dosage</TableCell>
+                <TableCell align="left">Admin Method</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row, idx) => (
+                <TableRow
+                  key={idx}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {row.name}
+                  </TableCell>
+                  <TableCell align="left">{row.startDate}</TableCell>
+                  <TableCell align="left">{row.veterinarian}</TableCell>
+                  <TableCell align="left">{row.type}</TableCell>
+                  <TableCell align="left">{row.dosage}</TableCell>
+                  <TableCell align="left">{row.admin_method}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      );
 }
 
 const allergiesString = (allergies) => {
@@ -239,58 +242,116 @@ const allergiesString = (allergies) => {
 }
 
 export default function PetProfile(props) {
-    const {pet, vet, friends, chosenList, email} = props; //pet is a pet object
-    console.log(`this is pet: ${JSON.stringify(pet)}`);
-    console.log(`this is vet: ${JSON.stringify(vet)}`);
+    const {petID, friends, chosenList, email} = props; //pet is a pet object
+    console.log(`this is pet: ${JSON.stringify(petID)}`);
     const [mealtimes, setMealtimes] = React.useState([]);
     const [allergies, setAllergies] = React.useState([]);
     const [owners, setOwners] = useState([]);
     const [sitters, setSitters] = useState([]);
     const [meds, setMeds] = useState([]);
-    const [notes, setNotes] = useState(pet['notes']);
+    const [notes, setNotes] = useState([]);
+    const [pet, setPet] = useState([]);
+    const [name, setName] = useState('');
+    const [type, setType] = useState('');
+    const [vet, setVet] = useState([]);
+    const [vetExists, setVetExists] = useState(false);
+    const [update, setUpdate] = useState(false);
 
     useEffect(() => {
         const api = new API();
 
+        async function getPet() {
+            const petJSONString = await api.petWithPetID(petID);
+            console.log(`pet from the DB ${JSON.stringify(petJSONString)}`);
+            setPet(petJSONString.data[0]);
+        }
+
+        getPet();
+        setUpdate(false);
+    }, [petID, update]);
+
+    useEffect(() => {
+        if( pet.length === 0 ){
+            return;
+        }
+        if( pet['veterinarian'] === null ){
+            return;
+        }
+        const api = new API();
+
+        async function getVet() {
+            const vetJSONString = await api.vetWithEmail(pet['veterinarian']);
+            console.log(`vet from the DB ${JSON.stringify(vetJSONString)}`);
+            setVet(vetJSONString.data[0]);
+            setVetExists(true);
+        }
+
+        getVet();
+    }, [pet]);
+
+    useEffect(() => {
+        if( pet.length === 0 ){
+            return;
+        }
+        setNotes(pet['notes']);
+        setName(pet['name']);
+        setType(pet['type']);
+    }, [pet]);
+
+    useEffect(() => {
+        if( pet.length === 0 ){
+            return;
+        }
+        const api = new API();
+
         async function getOwners() {
-            const ownersJSONString = await api.usersByPet(pet['petID']);
+            const ownersJSONString = await api.usersByPet(petID);
             console.log(`owners from the DB ${JSON.stringify(ownersJSONString)}`);
             setOwners(ownersJSONString.data);
         }
 
         getOwners();
-    }, []);
+    }, [pet]);
 
     useEffect(() => {
+        if( pet.length === 0 ){
+            return;
+        }
         const api = new API();
 
         async function getSitters() {
-            const sittersJSONString = await api.sittersByPet(pet['petID']);
+            const sittersJSONString = await api.sittersByPet(petID);
             console.log(`sitters from the DB ${JSON.stringify(sittersJSONString)}`);
             setSitters(sittersJSONString.data);
         }
 
         getSitters();
-    }, []);
+    }, [pet]);
 
     useEffect(() => {
+        if( pet.length === 0 ){
+            return;
+        }
         const api = new API();
 
         async function getAllergies() {
-            const allergiesJSONString = await api.allergiesByPetID(pet['petID']);
+            const allergiesJSONString = await api.allergiesByPetID(petID);
             console.log(`allergies from the DB ${JSON.stringify(allergiesJSONString)}`);
             setAllergies(allergiesJSONString.data);
         }
 
         getAllergies();
-    }, []);
+    }, [pet]);
 
     useEffect(() => {
+        if( pet.length === 0 ){
+            return;
+        }
         const api = new API();
 
         async function getMealtimes() {
-            console.log(`petID is ${pet['petID']}`);
-            const mealsJSONString = await api.mealtimesWithPetID(pet['petID']);
+            console.log(`petID is ${petID}`);
+            const mealsJSONString = await api.mealtimesWithPetID(petID);
             console.log(`mealtimes from the DB ${JSON.stringify(mealsJSONString)}`);
             setMealtimes(mealsJSONString.data);
         }
@@ -299,11 +360,14 @@ export default function PetProfile(props) {
     }, [pet]);
 
     useEffect(() => {
+        if( pet.length === 0 ){
+            return;
+        }
         const api = new API();
 
         async function getMeds() {
-            console.log(`petID is ${pet['petID']}`);
-            const medsJSONString = await api.medicationsByPet(pet['petID']);
+            console.log(`petID is ${petID}`);
+            const medsJSONString = await api.medicationsByPet(petID);
             console.log(`medications from the DB ${JSON.stringify(medsJSONString)}`);
             setMeds(medsJSONString.data);
         }
@@ -327,18 +391,20 @@ export default function PetProfile(props) {
                 justifyContent: 'center'
             }}>
                 <Typography align="center" fontSize={25}>
-                    {pet['name']}
+                    {name}
                 </Typography>
                 <Typography align="center" fontSize={25} marginLeft={1}>
-                    ({pet['type']})
+                    ({type})
                 </Typography>
             </Box>
             <Box sx={{
                 width: '100%',
-                height: 100,
+                minHeight: 100,
+                maxHeight: 200,
                 display: 'flex',
                 flexDirection: 'column',
                 border: 1,
+                overflow: 'auto',
                 mb: 1
             }}>
                 <Box sx={{
@@ -351,11 +417,11 @@ export default function PetProfile(props) {
                     <Typography marginLeft={0.5}>
                         Notes:
                     </Typography>
-                    {chosenList ? null : <EditNotes value={notes} setValue={(newNotes)=>setNotes(newNotes)} petID={pet['petID']} /> }
+                    {chosenList ? null : <EditNotes value={notes} setValue={(newNotes)=>setNotes(newNotes)} petID={petID} setUpdate={(value)=>setUpdate(value)} /> }
                 </Box>
                 
                 <Typography marginLeft={0.5}>
-                    {pet['notes']}
+                    {notes}
                 </Typography>
             </Box>
             
@@ -377,7 +443,7 @@ export default function PetProfile(props) {
                     <Typography marginLeft={0.5}>
                         Allergies:
                     </Typography>
-                    {chosenList ? null : <AddAllergy petID={pet['petID']} />}
+                    {chosenList ? null : <AddAllergy petID={petID} setUpdate={(value)=>setUpdate(value)} />}
                 </Box>
                 <Typography marginLeft={0.5}>
                     {allergiesString(allergies)}
@@ -386,7 +452,7 @@ export default function PetProfile(props) {
             </Box>
             <Box sx={{
                 width: '100%',
-                maxHeight: 200,
+                maxHeight: 225,
                 display: 'flex',
                 flexDirection: 'column',
                 border: 1,
@@ -403,13 +469,13 @@ export default function PetProfile(props) {
                     <Typography marginLeft={0.5}>
                         Mealtimes:
                     </Typography>
-                    {chosenList ? null : <AddMealtime petID={pet['petID']} /> }
+                    {chosenList ? null : <AddMealtime petID={petID} setUpdate={(value)=>setUpdate(value)} /> }
                 </Box>
                 <Mealtimes meals={mealtimes} />
             </Box>
             <Box sx={{
                 width: '100%',
-                maxHeight: 200,
+                maxHeight: 225,
                 display: 'flex',
                 flexDirection: 'column',
                 border: 1,
@@ -427,13 +493,13 @@ export default function PetProfile(props) {
                     <Typography marginLeft={0.5}>
                         Medications:
                     </Typography>
-                    {chosenList ? null : <AddMedication petID={pet['petID']} />}
+                    {chosenList ? null : <AddMedication petID={petID} setUpdate={(value)=>setUpdate(value)} />}
                 </Box>
-                <Medications meds={meds} />
+                {meds.length !== 0 ? <Medications meds={meds} /> : null}
             </Box>
             <Box sx={{
                 width: '100%',
-                maxHeight: 150,
+                maxHeight: 175,
                 display: 'flex',
                 flexDirection: 'column',
                 border: 1,
@@ -450,13 +516,13 @@ export default function PetProfile(props) {
                     <Typography marginLeft={0.5}>
                         Parents:
                     </Typography>
-                    {chosenList ? null : <AddParent petID={pet['petID']} friends={friends} />}
+                    {chosenList ? null : <AddParent petID={petID} friends={friends} setUpdate={(value)=>setUpdate(value)} />}
                 </Box>
                 <RelatedUsers users={owners} />
             </Box>
             <Box sx={{
                 width: '100%',
-                maxHeight: 150,
+                maxHeight: 175,
                 display: 'flex',
                 flexDirection: 'column',
                 border: 1,
@@ -473,7 +539,7 @@ export default function PetProfile(props) {
                     <Typography marginLeft={0.5}>
                         Sitters:
                     </Typography>
-                    {chosenList ? null : <AddSitter petID={pet['petID']} friends={friends} /> }
+                    {chosenList ? null : <AddSitter petID={petID} friends={friends} setUpdate={(value)=>setUpdate(value)} /> }
                 </Box>
                 <RelatedUsers users={sitters} />
             </Box>
@@ -488,10 +554,10 @@ export default function PetProfile(props) {
                 <Typography>
                     Veterinarian:
                 </Typography>
-                {chosenList ? null : <EditVet email={email} petID={pet['petID']} />}
+                {chosenList ? null : <EditVet email={email} petID={petID} setUpdate={(value)=>setUpdate(value)} />}
             </Box>
             
-            {vet === null ? null : <Box sx={{
+            {!vetExists ? null : <Box sx={{
                 width: '100%',
                 maxHeight: 50,
                 display: 'flex',

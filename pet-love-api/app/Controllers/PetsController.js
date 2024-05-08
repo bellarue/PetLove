@@ -12,14 +12,14 @@ const addPet = (ctx) => {
         const query = `
                    INSERT INTO 
 
-                   pets(name, type, vet)
+                   pets(name, type, veterinarian)
 
                    VALUES (?, ?, ?)
                     `;
         dbConnection.query({
             sql: query,
 
-            values: [petDict['name'], petDict['type'], petDict['vet']]
+            values: [petDict['name'], petDict['type'], petDict['veterinarian']]
 
         }, (error, tuples) => {
             if (error) {
@@ -45,8 +45,8 @@ const addParent = (ctx) => {
     const petDict = ctx.request.body;
     return new Promise((resolve, reject) => {
         const query = `
-                   INSERT INTO pet_parents(user, pet)
-                   VALUES (?, ?)
+                   INSERT INTO pet_parents
+                   VALUE (?, ?)
                     `;
         dbConnection.query({
             sql: query,

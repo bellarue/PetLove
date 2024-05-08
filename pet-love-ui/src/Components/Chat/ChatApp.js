@@ -2,10 +2,13 @@ import "./ChatApp.css";
 import io from "socket.io-client";
 import { useState } from "react";
 import Chat from "./Chat";
+import CloseIcon from '@mui/icons-material/Close';
+import {Box, Button} from '@mui/material'
 
 const socket = io.connect("http://localhost:3001");
 
-function ChatApp() {
+function ChatApp(props) {
+    const {setShowChatApp} = props;
     const [username, setUserName] = useState("");
     const [room, setRoom] = useState("");
     const [showChat, setShowChat] = useState(false);
@@ -19,6 +22,15 @@ function ChatApp() {
 
     return (
         <div className="chatApp">
+            <Button variant="contained"
+                onClick={()=>setShowChatApp(false)}
+                sx={{position: "absolute",
+                    top: 5,
+                    right: 5,
+                    backgroundColor: '#FF6D01'
+            }}>
+                <CloseIcon/>
+            </Button>
             {!showChat ? (
                 <div className="joinChatContainer">
                     <h3>Join a Chat Room</h3>

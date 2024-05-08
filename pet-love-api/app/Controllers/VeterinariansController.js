@@ -200,11 +200,42 @@ const removeVetFromUser = (ctx) => {
     });
 }
 
+const addVetToUser = (ctx) => {
+    const vetDict = ctx.request.body;
+    return new Promise((resolve, reject) => {
+        const query = `
+                   INSERT INTO vets_of_owners
+                    VALUE (?, ?)
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [vetDict['user'], vetDict['vet']]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in VeterinariansController::addVetToUser", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in addVetToUser.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
 module.exports = {
     allVets,
     vetWithEmail,
     vetsByUser,
     vetOfPet,
     addVet,
-    removeVetFromUser
+    removeVetFromUser,
+    addVetToUser
 };

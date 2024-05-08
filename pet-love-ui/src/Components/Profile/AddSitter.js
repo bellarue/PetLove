@@ -8,7 +8,7 @@ import { Modal as BaseModal } from '@mui/base/Modal';
 import AddIcon from '@mui/icons-material/Add';
 
 export default function AddSitter(props) {
-    const {petID, friends} = props;
+    const {petID, friends, setUpdate} = props;
     const [open, setOpen] = React.useState(false);
     const [sitter, setSitter] = useState('');
     const handleOpen = () => setOpen(true);
@@ -34,6 +34,9 @@ export default function AddSitter(props) {
         async function postSitter() {
             const sitterUpdateResults = await api.addSitter({user: sitter, pet: petID});
             console.log(`adding to pet sitters ${JSON.stringify(sitterUpdateResults)}`);
+            setUpdate(true);
+            setSitter('');
+            setVerify(false);
         }
 
         postSitter();
@@ -65,8 +68,8 @@ export default function AddSitter(props) {
                             >
                             {
                                 friends.map((friend, idx) => 
-                                    <MenuItem key={idx} value={friend}>
-                                        {friend}
+                                    <MenuItem key={idx} value={friend['friend']}>
+                                        {friend['username']}
                                     </MenuItem>
                                 )
                             }

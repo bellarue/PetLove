@@ -115,7 +115,6 @@ export default function AddAppt(props) {
             let hour = parseInt(timeInput.slice(0,2));
             let minute = parseInt(timeInput.slice(3,timeInput.length));
             if( timeInput.length !== 5 || timeInput[2] !== ':' ||
-                hour.isNaN() || minute.isNaN() ||
                 hour > 23 || hour < 0 || minute > 59 || minute < 0 ) {
                 setTimeFailed(true);
                 failed = true;
@@ -135,6 +134,11 @@ export default function AddAppt(props) {
             notes = '/0';
         }
         setApptInfo({time: timeInput, type: typeInput, pets: petInput, notes: notes});
+        setTimeInput('');
+        setTypeInput('');
+        setPetInput([]);
+        setNotesInput('');
+        setVerify(false);
         handleClose();
     }, [verify])
 

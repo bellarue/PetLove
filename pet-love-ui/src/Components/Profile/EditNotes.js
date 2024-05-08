@@ -8,12 +8,16 @@ import CreateIcon from '@mui/icons-material/Create';
 import { Button } from '@mui/material'
 
 export default function EditNotes(props) {
-    const {value, setValue, petID} = props;
-    const [input, setInput] = useState(value);
+    const {value, setValue, petID, setUpdate} = props;
+    const [input, setInput] = useState('');
     const [open, setOpen] = React.useState(false);
     const [verify, setVerify] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    useEffect(() => {
+      setInput(value);
+    }, [value]);
 
     useEffect(() => {
       if( !verify ){
@@ -26,13 +30,15 @@ export default function EditNotes(props) {
       setValue(input);
       const api = new API();
       let notes = input;
-        if( notes === '' ){
-            notes = null;
-        }
+      if( notes === '' ){
+          notes = null;
+      }
+      console.log(`notes is ${notes}`);
 
       async function postNotes() {
           const notesUpdateResults = await api.changePetNotes({notes: notes, petID: petID});
           console.log(`changing notes ${JSON.stringify(notesUpdateResults)}`);
+          setVerify(false);
       }
 
       postNotes();

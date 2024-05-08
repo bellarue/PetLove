@@ -75,10 +75,10 @@ petsRouter.get('/:pet/allergies', PetsController.allergiesByPetID, err => consol
 petsRouter.get('/:appt/pets-on-appt', PetsController.petsOnAppt, err => console.log(`petsOnAppt ran into an error: ${err}`));
 petsRouter.post('/add-pet', PetsController.addPet, err=>console.log(`addPet ran into an error: ${err}`));
 petsRouter.post('/add-parent', PetsController.addParent, err=> console.log(`addParent ran into an error: ${err}`));
-petsRouter.post('/add-sitter', PetsController.addSitter, err=> console.log(`addSitter ran into an errr: ${err}`));
-petsRouter.post('/change-vet', PetsController.changeVet, err=> console.log(`changeVet ran into an errr: ${err}`));
-petsRouter.post('/change-pet-notes', PetsController.changeVet, err=> console.log(`changeNotes ran into an errr: ${err}`));
-petsRouter.post('/add-allergy', PetsController.changeVet, err=> console.log(`addAllergy ran into an errr: ${err}`));
+petsRouter.post('/add-sitter', PetsController.addSitter, err=> console.log(`addSitter ran into an error: ${err}`));
+petsRouter.post('/change-vet', PetsController.changeVet, err=> console.log(`changeVet ran into an error: ${err}`));
+petsRouter.post('/change-pet-notes', PetsController.changeNotes, err=> console.log(`changeNotes ran into an error: ${err}`));
+petsRouter.post('/add-allergy', PetsController.addAllergy, err=> console.log(`addAllergy ran into an error: ${err}`));
 
 // Pets router configuration.
 
@@ -94,6 +94,7 @@ veterinariansRouter.get('/:user/user', VeterinariansController.vetsByUser, err =
 veterinariansRouter.get('/:petID/pet', VeterinariansController.vetOfPet, err => console.log(`vetOfPet ran into an error: ${err}`));
 veterinariansRouter.post('/add-vet', VeterinariansController.addVet, err => console.log(`addVet ran into an error: ${err}`));
 veterinariansRouter.post('/remove-vet-from-user', VeterinariansController.removeVetFromUser, err => console.log(`removeVetFromUser ran into an error: ${err}`));
+veterinariansRouter.post('/add-vet-to-user', VeterinariansController.addVetToUser, err => console.log(`addVetToUser ran into an error: ${err}`));
 
 // Mealtimes router configuration.
 
@@ -104,7 +105,7 @@ const mealtimesRouter = require('koa-router')({
 
 // mealtimesRouter.use(VerifyJWT);
 mealtimesRouter.get('/all-mealtimes', MealtimesController.allMealtimes, err => console.log(`allMealtimes ran into an error: ${err}`));
-mealtimesRouter.get('/:petID/pet', MealtimesController.mealtimesWithPetID, err => console.log(`mealtimesWithPetID ran into an error: ${err}`));
+mealtimesRouter.get('/:pet/pet', MealtimesController.mealtimesWithPetID, err => console.log(`mealtimesWithPetID ran into an error: ${err}`));
 mealtimesRouter.get('/:user/owner', MealtimesController.mealtimesWithUser, err => console.log(`mealtimesWithUser ran into an error: ${err}`));
 mealtimesRouter.get('/:user/sitter', MealtimesController.mealtimesWithSitter, err => console.log(`mealtimesWithSitter ran into an error: ${err}`));
 mealtimesRouter.get('/:pet/num-meals', MealtimesController.numMealsByPet, err => console.log(`numMealsByPet ran into an error: ${err}`));

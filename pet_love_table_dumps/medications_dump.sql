@@ -18,6 +18,6 @@ CREATE TABLE `medications` (
 
 LOCK TABLES `medications` WRITE;
 
--- INSERT INTO `medications` VALUE ('A med', '2024-03-28', 2, 'vet@gmail.com', 'anxiety', '1 pill daily', 'orally');
+INSERT INTO `medications` VALUE ('A med', '2024-03-28', 2, 'vet@gmail.com', 'anxiety', '1 pill daily', 'orally', NULL);
 
 UNLOCK TABLES;

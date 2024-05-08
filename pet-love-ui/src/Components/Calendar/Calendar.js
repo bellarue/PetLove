@@ -17,6 +17,7 @@ export default function Calendar(props) {
     const [deleteAppt, setDeleteAppt] = useState("");
     const [pets, setPets] = useState([]);
     const [apptInfo, setApptInfo] = useState([]);
+    const [showTable, setShowTable] = useState(false);
 
     const findPet = (name) => {
         for( let pet of pets ){
@@ -59,34 +60,15 @@ export default function Calendar(props) {
             const apptJSONString = await api.addAppointment({dateTime: dateTime, user: email, type: apptInfo['type'], notes: notes});
             console.log(`post appt results ${JSON.stringify(apptJSONString)}`);
             for( let pet of apptInfo['pets'] ){
-                const petJSONString = await api.addPetToAppt({pet: findPet(pet), appt: apptJSONString.insertID});
+                console.log(`pet is ${findPet(pet)} appt is ${apptJSONString.data.insertId}`);
+                const petJSONString = await api.addPetToAppt({pet: findPet(pet), appt: apptJSONString.data.insertId});
                 console.log(`pet on appt results ${JSON.stringify(petJSONString)}`);
             }
-            setApptInfo("");
         }
-
         postAppt();
+        setApptInfo([]);
+        setShowTable(false);
     }, [apptInfo]);
-
-    // useEffect(() => {
-    //     if( !addPets ) {
-    //         return;
-    //     }
-    //     if( apptInfo['pets'].length === 0 ){
-    //         setAddPets(false);
-    //         setApptInfo([]);
-    //         return;
-    //     }
-    //     const api = new API();
-
-    //     async function postApptPets() {
-    //         // const numJSONString = await api
-    //         const petApptJSONString = await api.addPetToAppt({apptID: deleteAppt});
-    //         console.log(`post pets on appt results ${JSON.stringify(petApptJSONString)}`);
-    //     }
-
-    //     postApptPets();
-    // }, [addPets]);
 
     useEffect(() => {
         const api = new API();
@@ -130,30 +112,38 @@ export default function Calendar(props) {
         async function getAppts() {
             const apptsJSONString = await api.appointmentsWithUserAndDate(email, temp);
             console.log(`appts from the DB ${JSON.stringify(apptsJSONString)}`);
+            const pets = [];
+            for( let appt of apptsJSONString.data ){
+                const petsJSONString = await api.petsOnAppt(appt['apptID']);
+                console.log(`pets on appts from the DB ${JSON.stringify(petsJSONString)}`);
+                pets.push(petsJSONString.data);
+            }
             setAppts(apptsJSONString.data);
+            setPetsOnAppts(pets);
+            setShowTable(true);
         }
-
         getAppts();
     }, [date, email, deleteAppt, apptInfo]);
 
-    useEffect(() => {
-        console.log(`in getPets, appts is ${JSON.stringify(appts)}`);
-        if( appts.length === 0 ) {
-            return;
-        }
-        const pets = [];
-        const api = new API();
-        async function getPets() {
-            for( let appt of appts ){
-                const petsJSONString = await api.petsOnAppt(appt['apptID']);
-                console.log(`pets from the DB ${JSON.stringify(petsJSONString)}`);
-                pets.push(petsJSONString.data);
-            }
-            setPetsOnAppts(pets);
-        }
+    // useEffect(() => {
+    //     console.log(`in getPets, appts is ${JSON.stringify(appts)}`);
+    //     if( appts.length === 0 ) {
+    //         return;
+    //     }
+    //     const api = new API();
+    //     async function getPets() {
+    //         const pets = [];
+    //         for( let appt of appts ){
+    //             const petsJSONString = await api.petsOnAppt(appt['apptID']);
+    //             console.log(`pets on appts from the DB ${JSON.stringify(petsJSONString)}`);
+    //             pets.push(petsJSONString.data);
+    //         }
+    //         setPetsOnAppts(pets);
+    //         setShowTable(true);
+    //     }
 
-        getPets();
-    }, [appts, setAppts]);
+    //     getPets();
+    // }, [appts, apptInfo]);
 
     console.log(`total pets list is ${JSON.stringify(pets)}`);
 
@@ -181,7 +171,7 @@ export default function Calendar(props) {
                 </Typography>
                 <AddAppt pets={pets} apptInfo={apptInfo} setApptInfo={(info)=>setApptInfo(info)} />
             </Box>
-            <ApptTable appts={appts} petsOnAppts={petsOnAppts} setDeleteAppt={(apptID)=>setDeleteAppt(apptID)} />
+            {!showTable ? null : <ApptTable appts={appts} petsOnAppts={petsOnAppts} setDeleteAppt={(apptID)=>setDeleteAppt(apptID)} />}
         </Box>
     </Fragment>
 }
