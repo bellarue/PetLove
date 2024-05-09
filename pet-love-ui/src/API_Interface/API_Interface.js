@@ -164,11 +164,15 @@ export default class APIInterface {
     }
 
     async addVet(paramsDict) {
-        return axiosAgent.post(`veterinarians/add-vet`, paramsDict)
+        return axiosAgent.post(`veterinarians/add-vet`, paramsDict);
     }
 
     async removeVetFromUser(paramsDict) {
         return axiosAgent.post(`veterinarians/remove-vet-from-user`, paramsDict);
+    }
+
+    async addVetToUser(paramsDict) {
+        return axiosAgent.post(`veterinarians/add-vet-to-user`, paramsDict);
     }
 
     //Mealtimes routes

@@ -8,7 +8,7 @@ import { Modal as BaseModal } from '@mui/base/Modal';
 import AddIcon from '@mui/icons-material/Add';
 
 export default function AddParent(props) {
-    const {petID, friends} = props;
+    const {petID, friends, setUpdate} = props;
     const [open, setOpen] = React.useState(false);
     const [parent, setParent] = useState('');
     const handleOpen = () => setOpen(true);
@@ -34,8 +34,10 @@ export default function AddParent(props) {
         async function postParent() {
             const parentUpdateResults = await api.addParent({user: parent, pet: petID});
             console.log(`adding to pet parents ${JSON.stringify(parentUpdateResults)}`);
+            setUpdate(true);
+            setParent('');
+            setVerify(false);
         }
-
         postParent();
         handleClose();
     }, [verify]);
@@ -65,8 +67,8 @@ export default function AddParent(props) {
                             >
                             {
                                 friends.map((friend, idx) => 
-                                    <MenuItem key={idx} value={friend}>
-                                        {friend}
+                                    <MenuItem key={idx} value={friend['friend']}>
+                                        {friend['username']}
                                     </MenuItem>
                                 )
                             }

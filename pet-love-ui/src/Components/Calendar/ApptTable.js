@@ -23,7 +23,7 @@ export default function ApptTable(props) {
             n = '';
         }
         let pets = [];
-        if( petsOnAppts.length !== 0 ){
+        if( petsOnAppts.length > idx && petsOnAppts[idx].length !== 0 ){
             pets = petsOnAppts[idx].map(comp => comp.name);
         }
         rows.push({id: appt['apptID'], time: appt['time'], type: appt['type'], pets: pets, notes: n});

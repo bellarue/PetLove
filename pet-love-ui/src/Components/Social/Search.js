@@ -5,15 +5,23 @@ import {Box, Button, ListItemButton} from '@mui/material'
 import TextField from '@mui/material/TextField';
 import List from '@mui/material/List';
 import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import Tooltip from '@mui/material/Tooltip';
+import AddIcon from '@mui/icons-material/Add';
 
 export default function Search(props) {
-    const {email} = props;
+    const {email, friends} = props;
+    console.log(`friends in search bar is ${friends}`);
     const [input, setInput] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(-1);
-    const [showList, setShowList] = useState(false);
     const [users, setUsers] = useState([]);
     const [friendRequest, setFriendRequest] = useState('');
+    
+    const removeUser = (idx) => {
+        let tempUsers = users.slice();
+        tempUsers.splice(idx);
+        setUsers(tempUsers);
+    }
 
     useEffect(() => {
         if( friendRequest === '' ){
@@ -21,19 +29,18 @@ export default function Search(props) {
         }
     
         const api = new API();
-
+        console.log(friendRequest);
         async function postFriendRequest() {
-            const userJSONString = api.addFriendRequest({sender: email, recipient: friendRequest['email']});
+            const userJSONString = await api.addFriendRequest({sender: email, recipient: friendRequest['email']});
             console.log(`FR result ${JSON.stringify(userJSONString)}`);
             setFriendRequest(''); //reset FR
         }
 
         postFriendRequest();
     }, [friendRequest]);
-    console.log(`show list is ${showList}`);
     useEffect(() => {
 
-        if( input === '' || !showList ){
+        if( input === '' ){
             return;
         }
         const api = new API();
@@ -45,7 +52,25 @@ export default function Search(props) {
         }
 
         getUsers();
-    }, [showList]);
+    }, [friends, input]);
+
+    useEffect(() => {
+        if( users.length === 0 ){
+            return;
+        }
+        let tempUsers = users.slice();
+        let removed = false;
+        for( let i = 0; i < tempUsers.length; i++ ){
+            if( tempUsers[i]['email'] === email || friends.includes(tempUsers[i]['email']) ){
+                console.log(`removing user from search ${tempUsers[i]['email']}`);
+                tempUsers.splice(i, 1);
+                removed = true;
+            }
+        }
+        if( removed ){
+            setUsers(tempUsers);
+        }
+    }, [users]);
 
     const handleInputChange = event => {
         console.log("handleInputChange called.");
@@ -58,6 +83,7 @@ export default function Search(props) {
         const handleListItemClick = (event, index) => {
             setSelectedIndex(index);
             setFriendRequest(users[index]);
+            removeUser(index);
         };
         return (
             <List component="nav"
@@ -71,25 +97,22 @@ export default function Search(props) {
             }}>
                 {
                     users.map((user,idx) =>
-                        <Tooltip title="Send friend request?">
+                        <Tooltip title="Send friend request?" key={idx}>
                             <ListItemButton 
                                 key={idx}
                                 selected={selectedIndex === idx}
                                 onClick={(event) => handleListItemClick(event, idx)}
                             >
                                 <ListItemText primary={user['username']} />
+                                <ListItemIcon>
+                                    <AddIcon/>
+                                </ListItemIcon>
                             </ListItemButton>
                         </Tooltip>
                     )
                 }
             </List>
         )
-    }
-
-    const display = () => {
-        if( showList ) {
-            return <UsersList users={users} />
-        }
     }
 
     return <Fragment>
@@ -109,12 +132,7 @@ export default function Search(props) {
                     onChange={handleInputChange}
                 />
             </Box>
-            <Button
-                variant="outlined"
-                size="medium"
-                onClick={() => {setShowList(true)}}
-            >Search</Button>
-            {display()}
+            <UsersList users={users} />
         </Box>
         
     </Fragment>

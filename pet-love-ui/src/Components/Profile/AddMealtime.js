@@ -8,7 +8,7 @@ import { Modal as BaseModal } from '@mui/base/Modal';
 import AddIcon from '@mui/icons-material/Add';
 
 export default function AddMealtime(props) {
-    const {petID} = props;
+    const {petID, setUpdate} = props;
     const [open, setOpen] = useState(false);
     const [verify, setVerify] = useState(false);
     const [timeInput, setTimeInput] = useState('');
@@ -57,7 +57,6 @@ export default function AddMealtime(props) {
             let hour = parseInt(timeInput.slice(0,2));
             let minute = parseInt(timeInput.slice(3,timeInput.length));
             if( timeInput.length !== 5 || timeInput[2] !== ':' ||
-                hour.isNaN() || minute.isNaN() ||
                 hour > 23 || hour < 0 || minute > 59 || minute < 0 ) {
                 setTimeFailed(true);
                 failed = true;
@@ -86,6 +85,12 @@ export default function AddMealtime(props) {
         async function postMealtime() {
             const mealtimeUpdateResults = await api.addMealtime({time: timeInput, pet: petID, type: typeInput, amount: amountInput, notes: notes});
             console.log(`adding to mealtimes ${JSON.stringify(mealtimeUpdateResults)}`);
+            setUpdate(true);
+            setAmountInput('');
+            setNotesInput('');
+            setTimeInput('');
+            setTypeInput('');
+            setVerify(false);
         }
 
         postMealtime();
@@ -108,13 +113,16 @@ export default function AddMealtime(props) {
                     width: '100%',
                     height: '100%',
                     display: 'flex',
-                    flexDirection: 'column'
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center'
                 }}>
                     <Box sx={{
                         width: '100%',
                         height: 30,
                         display: 'flex',
-                        flexDirection: 'row'
+                        flexDirection: 'row',
+                        marginBottom: 3.2
                     }}>
                         <TextField
                             error={timeFailed}
@@ -142,10 +150,10 @@ export default function AddMealtime(props) {
                         onChange={handleAmountChange}
                     />
                     <Box sx={{
-                        width: '100%',
-                        height: 50
+                      width: '100%'
                     }}>
                         <TextField
+                            fullWidth
                             id="outlined-error-helper-text"
                             label="Notes"
                             placeholder=""

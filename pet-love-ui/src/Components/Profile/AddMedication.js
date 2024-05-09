@@ -8,7 +8,7 @@ import { Modal as BaseModal } from '@mui/base/Modal';
 import AddIcon from '@mui/icons-material/Add';
 
 export default function AddMedication(props) {
-    const {petID} = props;
+    const {petID, setUpdate} = props;
     const [open, setOpen] = useState(false);
     const [verify, setVerify] = useState(false);
     const [nameInput, setNameInput] = useState('');
@@ -88,8 +88,7 @@ export default function AddMedication(props) {
             let month = startDateInput.slice(5,7);
             let day = startDateInput.slice(8,startDateInput.length);
             if( startDateInput.length != 10 || startDateInput[4] != '-' || startDateInput[7] != '-' ||
-                year.isNaN() || month.isNaN() || day.isNaN() || year < 2000 || 
-                year > 2050 || month <= 0 || month > 12 || day <= 0 || day > months[month-1] ){
+                year < 2000 || year > 2050 || month <= 0 || month > 12 || day <= 0 || day > months[month-1] ){
                   setStartDateFailed(true);
                   failed = true;
             }
@@ -108,6 +107,14 @@ export default function AddMedication(props) {
         async function postMedication() {
             const medUpdateResults = await api.addMedication({name: nameInput, startDate: startDateInput, pet: petID, veterinarian: vet, type: typeInput, dosage: dosageInput, admin_method: adminMethodInput});
             console.log(`adding to medications ${JSON.stringify(medUpdateResults)}`);
+            setUpdate(true);
+            setNameInput('');
+            setStartDateInput('');
+            setVetInput('');
+            setTypeInput('');
+            setDosageInput('');
+            setAdminMethodInput('');
+            setVerify(false);
         }
 
         postMedication();
@@ -136,7 +143,8 @@ export default function AddMedication(props) {
                         width: '100%',
                         height: 30,
                         display: 'flex',
-                        flexDirection: 'row'
+                        flexDirection: 'row',
+                        marginBottom: 4
                     }}>
                         <TextField
                             error={nameFailed}
@@ -159,7 +167,8 @@ export default function AddMedication(props) {
                         width: '100%',
                         height: 30,
                         display: 'flex',
-                        flexDirection: 'row'
+                        flexDirection: 'row',
+                        marginBottom: 4
                     }}>
                         <TextField
                             id="outlined-error-helper-text"
@@ -181,7 +190,8 @@ export default function AddMedication(props) {
                         width: '100%',
                         height: 30,
                         display: 'flex',
-                        flexDirection: 'row'
+                        flexDirection: 'row',
+                        marginBottom: 4
                     }}>
                         <TextField
                             error={dosageFailed}
@@ -194,7 +204,7 @@ export default function AddMedication(props) {
                         <TextField
                             error={adminMethodFailed}
                             id="outlined-error-helper-text"
-                            label="Administration Method*"
+                            label="Admin Method*"
                             placeholder=""
                             value={adminMethodInput}
                             onChange={handleMethodChange}

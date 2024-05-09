@@ -47,11 +47,12 @@ const SelectVet = (props) => {
 }
 
 export default function EditVet(props) {
-    const {email, petID} = props;
+    const {email, petID, setUpdate} = props;
     const [vets, setVets] = useState([]);
     const [chosenVet, setChosenVet] = useState('');
     const [open, setOpen] = React.useState(false);
     const [check, setCheck] = useState(false);
+    const [verifyVet, setVerifyVet] = useState(false); //filler
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
@@ -62,11 +63,11 @@ export default function EditVet(props) {
             const vetsJSONString = await api.vetsByUser(email);
             console.log(`vets from the DB ${JSON.stringify(vetsJSONString)}`);
             setVets(vetsJSONString.data);
+            setVerifyVet(false);
         }
 
         getVets();
-        handleClose();
-    }, []);
+    }, [verifyVet]);
 
     useEffect(() => {
         if( !check ){
@@ -81,9 +82,13 @@ export default function EditVet(props) {
         async function postVet() {
             const vetsJSONString = await api.changeVet({veterinarian: chosenVet, petID: petID});
             console.log(`vet posted ${JSON.stringify(vetsJSONString)}`);
+            setUpdate(true);
+            setChosenVet('');
+            setCheck(false);
         }
 
         postVet();
+        handleClose();
     }, [check]);
 
     return (
@@ -99,7 +104,7 @@ export default function EditVet(props) {
         >
             <ModalContent sx={{ width: 400 }}>
             <Fragment>
-                <Typography>
+                <Typography align="center">
                     Select Vet from Available or Create New
                 </Typography>
                 <Box sx={{
@@ -107,10 +112,23 @@ export default function EditVet(props) {
                     display: 'flex',
                     flexDirection: 'row'
                 }}>
-                    <SelectVet vets={vets} chosenVet={chosenVet} setChosenVet={(vetEmail)=>setChosenVet(vetEmail)} />
-                    <AddVet email={email} />
+                    <Box sx={{
+                        width: 200
+                    }}>
+                        <SelectVet vets={vets} chosenVet={chosenVet} setChosenVet={(vetEmail)=>setChosenVet(vetEmail)} />
+                    </Box>
+                    <Box sx={{
+                        width: 150,
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent:'center',
+                        marginTop: 1
+                    }}>
+                        <AddVet email={email} setVerifyVet={(value)=>setVerifyVet(value)} setUpdateVets={(value)=>setUpdate(value)} value={''} />
+                    </Box>
                 </Box>
                 <Button onClick={()=>setCheck(true)}>
+                    Add
                     <CheckIcon/>
                 </Button>
             </Fragment>

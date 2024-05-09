@@ -6,7 +6,7 @@ import { Modal as BaseModal } from '@mui/base/Modal';
 import AddIcon from '@mui/icons-material/Add';
 
 export default function AddVet(props) {
-    const {email} = props;
+    const {email, setVerifyVet, setUpdateVets, value} = props;
     const [open, setOpen] = useState(false);
     const [nameInput, setNameInput] = useState('');
     const [emailInput, setEmailInput] = useState('');
@@ -20,16 +20,20 @@ export default function AddVet(props) {
     const handleClose = () => setOpen(false);
 
     useEffect(() => {
+        setEmailInput(value);
+      }, [value]);
+
+    useEffect(() => {
         const api = new API();
 
         async function getVets() {
             const vetsJSONString = await api.vetsByUser(email);
-            console.log(`vets from the DB ${JSON.stringify(vetsJSONString)}`);
+            console.log(`vets from the DB in addVet ${JSON.stringify(vetsJSONString)}`);
             setVets(vetsJSONString.data.map(comp => comp.email));
         }
 
         getVets();
-    }, []);
+    }, [verifyEmail]);
 
     const onAddClick = () => {
         setVerifyEmail(true);
@@ -66,7 +70,7 @@ export default function AddVet(props) {
             setNameFailed(true);
             failed = true;
         }
-        if( phoneNumInput > 0 && phoneNumInput != 10 ){
+        if( phoneNumInput.length > 0 && phoneNumInput.length != 10 ){
             setPhoneNumFailed(true);
             failed = true;
         }
@@ -79,10 +83,22 @@ export default function AddVet(props) {
         if( phoneNum === '' ){
             phoneNum = null;
         }
+        else {
+            phoneNum = parseInt(phoneNum);
+        }
 
         async function postVet() {
+            console.log(`in addvet, email is ${emailInput} name is ${nameInput} phone num is ${phoneNum}`);
             const vetUpdateResults = await api.addVet({email: emailInput, name: nameInput, phone_num: phoneNum});
             console.log(`adding to vets ${JSON.stringify(vetUpdateResults)}`);
+            const vetUserUpdateResults = await api.addVetToUser({user: email, vet: emailInput});
+            console.log(`adding to vets of owners ${JSON.stringify(vetUserUpdateResults)}`)
+            setEmailInput('');
+            setNameInput('');
+            setPhoneNumInput('');
+            setVerifyEmail(false);
+            setVerifyVet(true);
+            setUpdateVets(true);
         }
 
         postVet();
@@ -91,7 +107,7 @@ export default function AddVet(props) {
 
     return (
         <div>
-        <Button onClick={handleOpen}>
+        <Button variant='outlined' onClick={handleOpen}>
             <AddIcon />
         </Button>
         <Modal
@@ -100,10 +116,10 @@ export default function AddVet(props) {
             open={open}
             onClose={handleClose}
         >
-            <ModalContent sx={{ width: 400 }}>
+            <ModalContent sx={{ width: 450 }}>
                 <Fragment>
-                    <Box display="flex" flexDirection="column" alignItems="center" width={400} mt={10}>
-                        <Typography align='center'>
+                    <Box display="flex" flexDirection="column" alignItems="center" width={400} >
+                        <Typography align='center' marginBottom={1}>
                             New Vet
                         </Typography>
                         <Box display="flex" flexDirection="row" justifyContent="space-around" alignItems="center" width="100%" mb={0.75}>

@@ -4,10 +4,11 @@ import { Box, Button, TextField } from '@mui/material'
 import { styled, css } from '@mui/system';
 import { Modal as BaseModal } from '@mui/base/Modal';
 import AddIcon from '@mui/icons-material/Add';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import AddVet from './AddVet';
 
 export default function AddPet(props) {
-    const {email} = props;
+    const {email, setUpdatePets, setUpdateVets} = props;
     const [open, setOpen] = useState(false);
     const [nameInput, setNameInput] = useState('');
     const [typeInput, setTypeInput] = useState('');
@@ -43,7 +44,7 @@ export default function AddPet(props) {
     };
     const display = () => {
         if( vetNotAvail ){
-            return <AddVet email={email} />
+            return <AddVet email={email} setVerifyVet={(value)=>setVerifyVet(value)} setUpdateVets={(value)=>setUpdateVets(value)} value={vetInput} />
         }
         return;
     }
@@ -65,7 +66,9 @@ export default function AddPet(props) {
             return;
         }
         if( vetInput.length > 0 && !vets.includes(vetInput) ){ //vet can be left empty
+            console.log(`vet not available, vetInput is ${vetInput} vets is ${JSON.stringify(vets)}`);
             setVetNotAvail(true);
+            setVerifyVet(false);
             return;
         }
         const api = new API();
@@ -73,10 +76,19 @@ export default function AddPet(props) {
         if( vet.length === 0 ){
             vet = null;
         }
-
+        console.log(`name: ${nameInput}, type: ${typeInput}, veterinarian: ${vet}`);
         async function postPet() {
             const petUpdateResults = await api.addPet({name: nameInput, type: typeInput, veterinarian: vet});
             console.log(`adding to pets ${JSON.stringify(petUpdateResults)}`);
+            console.log(`petID is ${petUpdateResults.data.insertId} user is ${email}`);
+            const petParentUpdateResults = await api.addParent({user: email, pet: petUpdateResults.data.insertId });
+            console.log(`adding to pet parents ${JSON.stringify(petParentUpdateResults)}`);
+            setUpdatePets(true);
+            setVerifyVet(false);
+            setNameInput('');
+            setTypeInput('');
+            setVetInput('');
+            setVetNotAvail(false);
         }
 
         postPet();
@@ -86,7 +98,7 @@ export default function AddPet(props) {
     return (
         <div>
         <Button onClick={handleOpen}>
-            <AddIcon />
+            <AddCircleIcon />
         </Button>
         <Modal
             aria-labelledby="unstyled-modal-title"

@@ -202,17 +202,19 @@ const rolesWithEmail = (ctx) => {
 const friendsByUser = (ctx) => { //FIXME: idk how to do this query
     return new Promise((resolve, reject) => {
         const query = `
-                   SELECT *
+                   SELECT user, friend, username
                     FROM 
-                        friendships
+                        friendships f, users u
                     WHERE 
-                        user1 = ?
-                    OR
-                        user2 = ?
+                        user = ?
+                    AND
+                        f.friend = u.email
+                    ORDER BY 
+                        username
                     `;
         dbConnection.query({
             sql: query,
-            values: [ctx.params.user, ctx.params.user]
+            values: [ctx.params.user]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in UsersController::friendsByUser", error);
@@ -274,7 +276,7 @@ const addFriendship = (ctx) => {
                     `;
         dbConnection.query({
             sql: query,
-            values: [userDict['user1'], userDict['user2']]
+            values: [userDict['user'], userDict['friend']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in UsersController::addFriendship", error);
@@ -301,13 +303,13 @@ const removeFriendship = (ctx) => {
         const query = `
                    DELETE FROM friendships
                     WHERE
-                        user1 = ?
+                        user = ?
                     AND
-                        user2 = ?
+                        friend = ?
                     `;
         dbConnection.query({
             sql: query,
-            values: [userDict['user1'], userDict['user2']]
+            values: [userDict['user'], userDict['friend']]
         }, (error, tuples) => {
             if (error) {
                 console.log("Connection error in UsersController::removeFriendship", error);
@@ -330,6 +332,7 @@ const removeFriendship = (ctx) => {
 
 const addFriendRequest = (ctx) => { 
     const userDict = ctx.request.body;
+    console.log(`${JSON.stringify(userDict)}`);
     return new Promise((resolve, reject) => {
         const query = `
                    INSERT INTO friend_requests
@@ -394,9 +397,12 @@ const removeFriendRequest = (ctx) => {
 const friendRequestsByRecipient = (ctx) => { 
     return new Promise((resolve, reject) => {
         const query = `
-                   SELECT * FROM friend_requests
+                   SELECT sender, username 
+                   FROM friend_requests r, users u
                     WHERE
                         recipient = ?
+                    AND
+                        r.sender = u.email
                     `;
         dbConnection.query({
             sql: query,

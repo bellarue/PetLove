@@ -94,30 +94,23 @@ export default function Profile(props) {
     const [vets, setVets] = React.useState([]);
     const [chosenList, setChosenList] = useState(0);
     const [friends, setFriends] = useState([]);
+    const [updatePets, setUpdatePets] = useState(false);
+    const [updateVets, setUpdateVets] = useState(false);
 
-    // useEffect(() => {
-    //     if( email = '' ){
-    //         return;
-    //     }
-    //     const api = new API();
+    useEffect(() => {
+        if( email.length === 0 ){
+            return;
+        }
+        const api = new API();
 
-    //     async function getFriends() {
-    //         const friendsJSONString = await api.friendsByUser(email);
-    //         console.log(`friends from the DB ${JSON.stringify(friendsJSONString)}`);
-    //         const tempFriends = [];
-    //         for( let friendSet of friendsJSONString.data ){
-    //             if( friendSet['user1'] === email ){
-    //                 tempFriends.push(friendSet['user2']);
-    //             }
-    //             else{
-    //                 tempFriends.push(friendSet['user1']);
-    //             }
-    //         }
-    //         setFriends(tempFriends);
-    //     }
+        async function getFriends() {
+            const friendsJSONString = await api.friendsByUser(email);
+            console.log(`friends from the DB ${JSON.stringify(friendsJSONString)}`);
+            setFriends(friendsJSONString.data);
+        }
 
-    //     getFriends();
-    // }, [email]);
+        getFriends();
+    }, [email]);
 
     useEffect(() => {
         if(email === ""){
@@ -132,7 +125,8 @@ export default function Profile(props) {
         }
 
         getVets();
-    }, [email]);
+        setUpdateVets(false);
+    }, [email, updateVets]);
 
     useEffect(() => {
         const api = new API();
@@ -158,7 +152,8 @@ export default function Profile(props) {
         }
 
         getPets();
-    }, [email]);
+        setUpdatePets(false);
+    }, [email, updatePets]);
 
     useEffect(() => {
         if( email === '' ){
@@ -172,7 +167,8 @@ export default function Profile(props) {
         }
 
         getSittingPets();
-    }, [email]);
+        setUpdatePets(false);
+    }, [email, updatePets]);
 
     const PetsList = props => {
         const {pets,name} = props; //need to get this from api route
@@ -188,8 +184,9 @@ export default function Profile(props) {
                 maxHeight: 300,
                 bgcolor: 'background.paper',
                 position: 'relative',
-                overflow: 'auto',
-                mr: 2
+                overflow: 'scroll',
+                mr: 2,
+                border: 1
             }}>
                 <ListSubheader>
                     {name}
@@ -206,6 +203,7 @@ export default function Profile(props) {
                         </ListItemButton>
                     )
                 }
+                <Divider/>
             </List>
         )
     }
@@ -219,26 +217,7 @@ export default function Profile(props) {
         return pet;
     }
 
-    const getVet = () => {
-        let vetEmail = '';
-        if( chosenList === 0 ){
-            vetEmail = pets[selectedIndex]['veterinarian'];
-        }
-        else{
-            vetEmail = sittingPets[selectedIndex]['veterinarian'];
-        }
-        for( let vet of vets ){
-            if( vet['email'] === vetEmail ){
-                return vet; //this pet has an assigned vet
-            }
-        }
-        return null; //no assigned vet
-    }
-
     const display = () => {
-        if( selectedIndex === -2 ) {
-            return <AddPet />
-        }
         if( selectedIndex === -1 ){
             return <Box sx={{
                 width: '100%',
@@ -253,7 +232,7 @@ export default function Profile(props) {
                 <Vets vets={vets} />
             </Box>
         }
-        return <PetProfile pet={getPetProfile()} vet={getVet()} friends={friends} chosenList={chosenList} email={email} />
+        return <PetProfile petID={getPetProfile().petID} friends={friends} chosenList={chosenList} email={email} />
     }
 
     const chooseList = () => {
@@ -275,12 +254,7 @@ export default function Profile(props) {
             <Typography fontSize={30} justifyContent={'center'}>
                 My Profile
             </Typography>
-            <Button
-                onClick={() => {
-                setSelectedIndex(-2);
-            }}>
-                <AddCircleIcon/>
-            </Button>
+            <AddPet email={email} setUpdatePets={(value)=>setUpdatePets(value)} setUpdateVets={(value)=>setUpdateVets(value)} />
         </Box>
         <Box sx={{
             width: '100%',
@@ -306,11 +280,17 @@ export default function Profile(props) {
                     <ButtonGroup variant="outlined" aria-label="Basic button group">
                         <Button
                             size="small"
-                            onClick={() => {setChosenList(0)}}
+                            onClick={() => {
+                                setChosenList(0);
+                                setSelectedIndex(-1);
+                            }}
                         >My Pets</Button>
                         <Button
                             size="small"
-                            onClick={() => {setChosenList(1)}}
+                            onClick={() => {
+                                setChosenList(1);
+                                setSelectedIndex(-1);
+                            }}
                         >Sitting</Button>
                     </ButtonGroup>
                 </Box>

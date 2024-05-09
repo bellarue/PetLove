@@ -71,11 +71,13 @@ const medicationWithName = (ctx) => {
 const medicationsByPet = (ctx) => {
     return new Promise((resolve, reject) => {
         const query = `
-                   SELECT *
+                   SELECT m.*, v.name as 'vname'
                     FROM 
-                        medications
+                        medications m, veterinarians v
                     WHERE 
                         pet = ?
+                    AND
+                        v.email = m.veterinarian
                     ORDER BY name, startDate
                     `;
         dbConnection.query({
