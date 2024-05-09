@@ -427,6 +427,40 @@ const friendRequestsByRecipient = (ctx) => {
     });
 }
 
+const updateUserName = (ctx) => {
+    const userDict = ctx.request.body;
+    console.log(`in updateUserName, dictionary is ${JSON.stringify(userDict)}`);
+
+    return new Promise((resolve, reject) => {
+        // should it be 'WHERE u.username = ?' ?
+        const query = `
+                   UPDATE users
+                   SET username = ?
+                   WHERE email = ?
+                    `;
+        dbConnection.query({
+            sql: query,
+            values: [userDict['username'], userDict['email']]
+        }, (error, tuples) => {
+            if (error) {
+                console.log("Connection error in UsersController::updateUserName", error);
+                ctx.body = [];
+                ctx.status = 200;
+                return reject(error);
+            }
+            ctx.body = tuples;
+            ctx.status = 200;
+            return resolve();
+        });
+    }).catch(err => {
+        console.log("Database connection error in updateUserName.", err);
+        // The UI side will have to look for the value of status and
+        // if it is not 200, act appropriately.
+        ctx.body = [];
+        ctx.status = 500;
+    });
+}
+
 module.exports = {
     allUsers,
     userWithEmail,
@@ -440,5 +474,6 @@ module.exports = {
     removeFriendship,
     addFriendRequest,
     removeFriendRequest,
-    friendRequestsByRecipient
+    friendRequestsByRecipient,
+    updateUserName
 };

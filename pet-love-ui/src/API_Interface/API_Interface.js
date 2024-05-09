@@ -79,6 +79,11 @@ export default class APIInterface {
         return axiosAgent.post(`/users/add-user`, paramsDict)
     }
 
+    async updateUserName(paramsDict)
+    {
+        return axiosAgent.post(`user/change-username`, paramsDict);
+    }
+
     async addFriendship(paramsDict) {
         return axiosAgent.post(`users/add-friend`, paramsDict)
     }

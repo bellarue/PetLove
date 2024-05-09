@@ -58,6 +58,7 @@ usersRouter.post('/add-friend', UsersController.addFriendship, err => console.lo
 usersRouter.post('/remove-friend', UsersController.removeFriendship, err => console.log(`removeFriendship ran into an error: ${err}`));
 usersRouter.post('/send-friend-request', UsersController.addFriendRequest, err => console.log(`addFriendRequest ran into an error: ${err}`));
 usersRouter.post('/remove-friend-request', UsersController.removeFriendRequest, err => console.log(`removeFriendRequest ran into an error: ${err}`));
+usersRouter.post('/change-username', UsersController.updateUserName, err => console.log(`updateUserName ran into an error: ${err}`));
 
 // Pets router configuration.
 

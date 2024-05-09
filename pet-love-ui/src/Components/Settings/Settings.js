@@ -1,10 +1,8 @@
 import React, {Fragment, useState, useEffect} from 'react';
 import { Box } from '@mui/material';
-import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 
@@ -14,7 +12,7 @@ import ManagePets from './ManagePets';
 import VisualAndAccessibility from './VisualAccessibility';
 
 export default function Settings (props) {
-    const {username, logoutAction} = props;
+    const {username, logoutAction, email} = props;
     const [selectedIndex, setSelectedIndex] = React.useState(1);
 
     const userClick = () => {
@@ -29,15 +27,14 @@ export default function Settings (props) {
         return (
           <Box sx={{ width: '100%', maxWidth: 200, bgcolor: 'background.paper' }}>
             <List>
-            <ListItem disablePadding>
+            {/* <ListItem disablePadding>
                 <ListItemButton
                     selected={selectedIndex === 0}
                     onClick={() => handleClick(0)}
                 >
-                    {/* need user icons */}
-                    <ListItemText primary={username} />
+                    <ListItemText primary='Username' />
                 </ListItemButton>
-            </ListItem>
+            </ListItem> */}
             <Divider />
             <ListItem disablePadding>
                 <ListItemButton
@@ -57,14 +54,14 @@ export default function Settings (props) {
                 </ListItemButton>
             </ListItem>
             <Divider />
-            <ListItem disablePadding>
+            {/* <ListItem disablePadding>
                 <ListItemButton
                     selected={selectedIndex === 3}
                     onClick={() => handleClick(3)}
                 >
                     <ListItemText primary="Manage Pets" />
                 </ListItemButton>
-            </ListItem>
+            </ListItem> */}
             <Divider />
             <ListItem disablePadding>
                 <ListItemButton
@@ -80,8 +77,11 @@ export default function Settings (props) {
     }
 
     const display = () => {
+        // if( selectedIndex === 0 ){
+        //     return <UserSettings username={username}/>
+        // }
         if( selectedIndex === 1 ){
-            return <AccountSettings />
+            return <AccountSettings username={username} email={email}/>
         }
         if( selectedIndex === 2 ){
             return <VisualAndAccessibility />
