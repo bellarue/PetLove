@@ -334,10 +334,16 @@ export default function PetProfile(props) {
             <Box sx={{
                 width: '100%',
                 height: 35,
-                alignItems: 'center' 
+                alignItems: 'center',
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center'
             }}>
                 <Typography align="center" fontSize={25}>
                     {pet['name']}
+                </Typography>
+                <Typography align="center" fontSize={25} marginLeft={1}>
+                    ({pet['type']})
                 </Typography>
             </Box>
             <Box sx={{
@@ -355,37 +361,38 @@ export default function PetProfile(props) {
                     flexDirection: 'row',
                     justifyContent: 'space-between'
                 }}>
-                    <Typography>
+                    <Typography marginLeft={0.5}>
                         Notes:
                     </Typography>
                     {chosenList ? null : <EditNotes value={notes} setValue={(notes)=>setNotes(notes)} /> }
                 </Box>
                 
-                <Typography>
+                <Typography marginLeft={0.5}>
                     {pet['notes']}
                 </Typography>
             </Box>
             
             <Box sx={{
                 width: '100%',
-                maxHeight: 50,
+                maxHeight: 75,
                 alignItems: 'center',
                 border: 1,
                 mb: 1
             }}>
                 <Box sx={{
                     width: '100%',
-                    height: 21,
+                    height: 30,
                     display: 'flex',
                     flexDirection: 'row',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
                 }}>
-                    <Typography>
+                    <Typography marginLeft={0.5}>
                         Allergies:
                     </Typography>
                     {chosenList ? null : <AddAllergy petID={pet['petID']} />}
                 </Box>
-                <Typography>
+                <Typography marginLeft={0.5}>
                     {allergiesString(allergies)}
                 </Typography>
 
@@ -400,12 +407,13 @@ export default function PetProfile(props) {
             }}>
                 <Box sx={{
                     width: '100%',
-                    height: 21,
+                    height: 30,
                     display: 'flex',
                     flexDirection: 'row',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
                 }}>
-                    <Typography>
+                    <Typography marginLeft={0.5}>
                         Mealtimes:
                     </Typography>
                     {/* {chosenList ? null : <AddMealtime petID={pet['petID']} /> } */}
@@ -423,12 +431,13 @@ export default function PetProfile(props) {
             }}>
                 <Box sx={{
                     width: '100%',
-                    height: 21,
+                    height: 30,
                     display: 'flex',
                     flexDirection: 'row',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
                 }}>
-                    <Typography>
+                    <Typography marginLeft={0.5}>
                         Medications:
                     </Typography>
                     {/* {chosenList ? null : <AddMedication petID={pet['petID']} />} */}
@@ -445,10 +454,11 @@ export default function PetProfile(props) {
             }}>
                 <Box sx={{
                     width: '100%',
-                    height: 21,
+                    height: 30,
                     display: 'flex',
                     flexDirection: 'row',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
                 }}>
                     <Typography marginLeft={0.5}>
                         Parents:
@@ -467,10 +477,11 @@ export default function PetProfile(props) {
             }}>
                 <Box sx={{
                     width: '100%',
-                    height: 21,
+                    height: 30,
                     display: 'flex',
                     flexDirection: 'row',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
                 }}>
                     <Typography marginLeft={0.5}>
                         Sitters:

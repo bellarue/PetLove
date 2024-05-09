@@ -106,7 +106,7 @@ const appointmentsWithUser = (ctx) => {
 const appointmentsWithUserAndDate = (ctx) => {
     return new Promise((resolve, reject) => {
         const query = `
-                   SELECT *
+                   SELECT apptID, DATE(dateTime) as date, TIME(dateTime) as time, user, type, notes
                     FROM 
                         appointments
                     WHERE 
@@ -114,7 +114,7 @@ const appointmentsWithUserAndDate = (ctx) => {
                     AND
                         DATE(dateTime) = ?
                     ORDER BY
-                        dateTime
+                        time
                     `;
         dbConnection.query({
             sql: query,
