@@ -17,16 +17,29 @@ export default function AddMedication(props) {
     const [typeInput, setTypeInput] = useState('');
     const [dosageInput, setDosageInput] = useState('');
     const [adminMethodInput, setAdminMethodInput] = useState('');
+    const [startDateFailed, setStartDateFailed] = useState(false);
+    const [nameFailed, setNameFailed] = useState(false);
+    const [typeFailed, setTypeFailed] = useState(false);
+    const [dosageFailed, setDosageFailed] = useState(false);
+    const [adminMethodFailed, setAdminMethodFailed] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const months = [31,28,31,30,31,30,31,31,30,31,30,31];
 
     const handleNameChange = event => {
         console.log("handleInputChange called.");
         setNameInput(event.target.value);
+        setNameFailed(false);
     };
+    const handleStartDateChange = event => {
+      console.log("handleInputChange called.");
+      setStartDateInput(event.target.value);
+      setStartDateFailed(false);
+  };
     const handleTypeChange = event => {
         console.log("handleInputChange called.");
         setTypeInput(event.target.value);
+        setTypeFailed(false);
     };
     const handleVetChange = event => {
         console.log("handleInputChange called.");
@@ -35,10 +48,12 @@ export default function AddMedication(props) {
     const handleDosageChange = event => {
         console.log("handleInputChange called.");
         setDosageInput(event.target.value);
+        setDosageFailed(false);
     };
     const handleMethodChange = event => {
         console.log("handleInputChange called.");
         setAdminMethodInput(event.target.value);
+        setAdminMethodFailed(false);
     };
 
     useEffect(() => {
@@ -46,11 +61,52 @@ export default function AddMedication(props) {
             || typeInput.length === 0 || dosageInput.length === 0 || adminMethodInput.length === 0 ){
             return;
         }
+        let failed = false;
+        if( nameInput.length === 0 ){
+            setNameFailed(true);
+            failed = true;
+        }
+        if( typeInput.length === 0 ){
+            setTypeFailed(true);
+            failed = true;
+        }
+        if( dosageInput.length === 0 ){
+            setDosageFailed(true);
+            failed = true;
+        }
+        if( adminMethodInput.length === 0 ){
+            setAdminMethodFailed(true);
+            failed = true;
+        }
+        //start date must be YYYY-MM-DD
+        if( startDateInput.length === 0 ){
+            setStartDateFailed(true);
+            failed = true;
+        }
+        else{
+            let year = startDateInput.slice(0,4);
+            let month = startDateInput.slice(5,7);
+            let day = startDateInput.slice(8,startDateInput.length);
+            if( startDateInput.length != 10 || startDateInput[4] != '-' || startDateInput[7] != '-' ||
+                year.isNaN() || month.isNaN() || day.isNaN() || year < 2000 || 
+                year > 2050 || month <= 0 || month > 12 || day <= 0 || day > months[month-1] ){
+                  setStartDateFailed(true);
+                  failed = true;
+            }
+        }
+        if( failed ){
+            setVerify(false);
+            return;
+        }
 
         const api = new API();
+        let vet = vetInput;
+        if( vet === '' ){
+          vet = null;
+        }
 
         async function postMedication() {
-            const medUpdateResults = api.addMedication({name: nameInput, startDate: startDateInput, pet: petID, veterinarian: vetInput, type: typeInput, dosage: dosageInput, admin_method: adminMethodInput});
+            const medUpdateResults = await api.addMedication({name: nameInput, startDate: startDateInput, pet: petID, veterinarian: vet, type: typeInput, dosage: dosageInput, admin_method: adminMethodInput});
             console.log(`adding to medications ${JSON.stringify(medUpdateResults)}`);
         }
 
@@ -83,17 +139,21 @@ export default function AddMedication(props) {
                         flexDirection: 'row'
                     }}>
                         <TextField
+                            error={nameFailed}
                             id="outlined-error-helper-text"
                             label="Name*"
                             placeholder=""
                             value={nameInput}
                             onChange={handleNameChange}
                         />
-                        {/* <DatePicker
-                            label="Start Date"
+                        <TextField
+                            error={startDateFailed}
+                            id="outlined-error-helper-text"
+                            label="Start Date*"
+                            placeholder="YYYY-MM-DD"
                             value={startDateInput}
-                            onChange={(newValue) => setStartDateInput(newValue)}
-                        /> */}
+                            onChange={handleStartDateChange}
+                        />
                     </Box>
                     <Box sx={{
                         width: '100%',
@@ -103,12 +163,13 @@ export default function AddMedication(props) {
                     }}>
                         <TextField
                             id="outlined-error-helper-text"
-                            label="Veterinarian*"
+                            label="Veterinarian"
                             placeholder=""
                             value={vetInput}
                             onChange={handleVetChange}
                         />
                         <TextField
+                            error={typeFailed}
                             id="outlined-error-helper-text"
                             label="Type*"
                             placeholder=""
@@ -123,6 +184,7 @@ export default function AddMedication(props) {
                         flexDirection: 'row'
                     }}>
                         <TextField
+                            error={dosageFailed}
                             id="outlined-error-helper-text"
                             label="Dosage*"
                             placeholder=""
@@ -130,6 +192,7 @@ export default function AddMedication(props) {
                             onChange={handleDosageChange}
                         />
                         <TextField
+                            error={adminMethodFailed}
                             id="outlined-error-helper-text"
                             label="Administration Method*"
                             placeholder=""
@@ -137,7 +200,7 @@ export default function AddMedication(props) {
                             onChange={handleMethodChange}
                         />
                     </Box>
-                    <Button onClick={setVerify(true)}>
+                    <Button onClick={()=>setVerify(true)}>
                         Add
                         <AddIcon />
                     </Button>

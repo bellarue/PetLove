@@ -3,7 +3,6 @@ import API from '../../API_Interface/API_Interface'
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { Box, TextField, Button } from '@mui/material'
-// import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { styled, css } from '@mui/system';
 import { Modal as BaseModal } from '@mui/base/Modal';
 import AddIcon from '@mui/icons-material/Add';
@@ -16,17 +15,28 @@ export default function AddMealtime(props) {
     const [typeInput, setTypeInput] = useState('');
     const [amountInput, setAmountInput] = useState('');
     const [notesInput, setNotesInput] = useState('');
+    const [timeFailed, setTimeFailed] = useState(false);
+    const [typeFailed, setTypeFailed] = useState(false);
+    const [amountFailed, setAmountFailed] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
     const handleTypeChange = event => {
         console.log("handleInputChange called.");
         setTypeInput(event.target.value);
+        setTypeFailed(false);
+    };
+
+    const handleTimeChange = event => {
+        console.log("handleInputChange called.");
+        setTimeInput(event.target.value);
+        setTimeFailed(false);
     };
 
     const handleAmountChange = event => {
         console.log("handleInputChange called.");
         setAmountInput(event.target.value);
+        setAmountFailed(false);
     };
 
     const handleNotesChange = event => {
@@ -35,7 +45,34 @@ export default function AddMealtime(props) {
     };
 
     useEffect(() => {
-        if( !verify || timeInput.length === 0 || typeInput.length === 0 || amountInput.length === 0 ){
+        if( !verify ){
+            return;
+        }
+        let failed = false;
+        if( timeInput.length === 0 ){
+            setTimeFailed(true);
+            failed = true;
+        }
+        else{
+            let hour = parseInt(timeInput.slice(0,2));
+            let minute = parseInt(timeInput.slice(3,timeInput.length));
+            if( timeInput.length !== 5 || timeInput[2] !== ':' ||
+                hour.isNaN() || minute.isNaN() ||
+                hour > 23 || hour < 0 || minute > 59 || minute < 0 ) {
+                setTimeFailed(true);
+                failed = true;
+            }
+        }
+        if( typeInput.length === 0 ){
+            setTypeFailed(true);
+            failed = true;
+        }
+        if( amountInput.length === 0 ){
+            setAmountFailed(true);
+            failed = true;
+        }
+        if( failed ){
+            setVerify(false);
             return;
         }
 
@@ -47,7 +84,7 @@ export default function AddMealtime(props) {
         }
 
         async function postMealtime() {
-            const mealtimeUpdateResults = api.addMealtime({time: timeInput, pet: petID, type: typeInput, amount: amountInput, notes: notes});
+            const mealtimeUpdateResults = await api.addMealtime({time: timeInput, pet: petID, type: typeInput, amount: amountInput, notes: notes});
             console.log(`adding to mealtimes ${JSON.stringify(mealtimeUpdateResults)}`);
         }
 
@@ -79,12 +116,16 @@ export default function AddMealtime(props) {
                         display: 'flex',
                         flexDirection: 'row'
                     }}>
-                        {/* <TimePicker
-                            label="Time*"
-                            value={timeInput}
-                            onChange={(newTime) => setTimeInput(newTime)}
-                        /> */}
                         <TextField
+                            error={timeFailed}
+                            id="outlined-error-helper-text"
+                            label="Time*"
+                            placeholder="HH:MM"
+                            value={timeInput}
+                            onChange={handleTimeChange}
+                        />
+                        <TextField
+                            error={typeFailed}
                             id="outlined-error-helper-text"
                             label="Type*"
                             placeholder=""
@@ -93,6 +134,7 @@ export default function AddMealtime(props) {
                         />
                     </Box>
                     <TextField
+                        error={amountFailed}
                         id="outlined-error-helper-text"
                         label="Amount*"
                         placeholder=""
@@ -111,7 +153,7 @@ export default function AddMealtime(props) {
                             onChange={handleNotesChange}
                         />
                     </Box>
-                    <Button onClick={setVerify(true)}>
+                    <Button onClick={()=>setVerify(true)}>
                         Add
                         <AddIcon />
                     </Button>

@@ -220,7 +220,13 @@ export default function Profile(props) {
     }
 
     const getVet = () => {
-        const vetEmail = pets[selectedIndex]['veterinarian'];
+        let vetEmail = '';
+        if( chosenList === 0 ){
+            vetEmail = pets[selectedIndex]['veterinarian'];
+        }
+        else{
+            vetEmail = sittingPets[selectedIndex]['veterinarian'];
+        }
         for( let vet of vets ){
             if( vet['email'] === vetEmail ){
                 return vet; //this pet has an assigned vet
@@ -247,7 +253,7 @@ export default function Profile(props) {
                 <Vets vets={vets} />
             </Box>
         }
-        return <PetProfile pet={getPetProfile()} vet={getVet()} friends={friends} chosenList={chosenList} />
+        return <PetProfile pet={getPetProfile()} vet={getVet()} friends={friends} chosenList={chosenList} email={email} />
     }
 
     const chooseList = () => {

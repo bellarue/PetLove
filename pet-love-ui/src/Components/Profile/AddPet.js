@@ -1,19 +1,52 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import API from '../../API_Interface/API_Interface'
-import Typography from '@mui/material/Typography';
-import {Box} from '@mui/material';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import { Box, Button, TextField } from '@mui/material'
+import { styled, css } from '@mui/system';
+import { Modal as BaseModal } from '@mui/base/Modal';
+import AddIcon from '@mui/icons-material/Add';
 import AddVet from './AddVet';
 
 export default function AddPet(props) {
     const {email} = props;
+    const [open, setOpen] = useState(false);
     const [nameInput, setNameInput] = useState('');
     const [typeInput, setTypeInput] = useState('');
     const [vetInput, setVetInput] = useState('');
     const [verifyVet, setVerifyVet] = useState(false);
     const [vets, setVets] = useState([]);
-    const [vetAvail, setVetAvail] = useState(true);
+    const [vetNotAvail, setVetNotAvail] = useState(false);
+    const [nameFailed, setNameFailed] = useState(false);
+    const [typeFailed, setTypeFailed] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    const onAddClick = () => {
+        setVerifyVet(true);
+        return;
+    }
+    
+    const handleNameChange = event => {
+        console.log("handleInputChange called.");
+        setNameInput(event.target.value);
+        setNameFailed(false);
+    };
+    const handleTypeChange = event => {
+        console.log("handleInputChange called.");
+        setTypeInput(event.target.value);
+        setTypeFailed(false);
+    };
+
+    const handleVetChange = event => {
+        console.log("handleInputChange called.");
+        setVetInput(event.target.value);
+        setVetNotAvail(false);
+    };
+    const display = () => {
+        if( vetNotAvail ){
+            return <AddVet email={email} />
+        }
+        return;
+    }
 
     useEffect(() => {
         const api = new API();
@@ -25,84 +58,138 @@ export default function AddPet(props) {
         }
 
         getVets();
-    }, []);
+    }, [verifyVet]);
 
     useEffect(() => {
         if( !verifyVet ){
             return;
         }
         if( vetInput.length > 0 && !vets.includes(vetInput) ){ //vet can be left empty
-            setVetAvail(false);
+            setVetNotAvail(true);
+            return;
         }
         const api = new API();
+        let vet = vetInput;
+        if( vet.length === 0 ){
+            vet = null;
+        }
 
         async function postPet() {
-            const petUpdateResults = api.addPet({name: nameInput, type: typeInput, veterinarian: vetInput});
+            const petUpdateResults = await api.addPet({name: nameInput, type: typeInput, veterinarian: vet});
             console.log(`adding to pets ${JSON.stringify(petUpdateResults)}`);
         }
 
         postPet();
+        handleClose();
     }, [verifyVet]);
 
-    const handleNameChange = event => {
-        console.log("handleInputChange called.");
-        setNameInput(event.target.value);
-    };
-    const handleTypeChange = event => {
-        console.log("handleInputChange called.");
-        setTypeInput(event.target.value);
-    };
+    return (
+        <div>
+        <Button onClick={handleOpen}>
+            <AddIcon />
+        </Button>
+        <Modal
+            aria-labelledby="unstyled-modal-title"
+            aria-describedby="unstyled-modal-description"
+            open={open}
+            onClose={handleClose}
+        >
+            <ModalContent sx={{ width: 400 }}>
+                <Fragment>
+                    <Box display="flex" flexDirection="column" alignItems="center" width='100%' >
+                        <Box display="flex" flexDirection="row" justifyContent="space-around" alignItems="center" width="100%" mb={0.75}>
+                            <TextField
+                                error={nameFailed}
+                                id="outlined-error-helper-text"
+                                label="Pet Name*"
+                                placeholder=""
+                                value={nameInput}
+                                onChange={handleNameChange}
+                            />
+                            <TextField
+                                error={typeFailed}
+                                id="outlined-error-helper-text"
+                                label="Type*"
+                                placeholder=""
+                                value={typeInput}
+                                onChange={handleTypeChange}
+                            />
+                        </Box>
+                        <Box display="flex" flexDirection="row" justifyContent="space-around" alignItems="center" width="100%" mb={0.75}>
+                            <TextField
+                                error={vetNotAvail}
+                                id="outlined-error-helper-text"
+                                label="Veterinarian's Email"
+                                placeholder=""
+                                value={vetInput}
+                                onChange={handleVetChange}
+                            />
+                            {display()}
+                        </Box>
+                    </Box>
+                    <Button onClick={onAddClick}>
+                        Create
+                        <AddIcon/>
+                    </Button>
+                </Fragment>
+            </ModalContent>
+        </Modal>
+        </div>
+    );
+}
 
-    const handleVetChange = event => {
-        console.log("handleInputChange called.");
-        setVetInput(event.target.value);
-    };
+const grey = {
+  50: '#F3F6F9',
+  100: '#E5EAF2',
+  200: '#DAE2ED',
+  300: '#C7D0DD',
+  400: '#B0B8C4',
+  500: '#9DA8B7',
+  600: '#6B7A90',
+  700: '#434D5B',
+  800: '#303740',
+  900: '#1C2025',
+};
 
-    const display = () => {
-        if( !vetAvail ){
-            return <Fragment>
-                <Typography>
-                    New Vet, please add information
-                </Typography>
-                <AddVet email={email} />
-            </Fragment>
-        }
-        return;
+const Modal = styled(BaseModal)`
+  position: fixed;
+  z-index: 1300;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ModalContent = styled('div')(
+  ({ theme }) => css`
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 500;
+    text-align: start;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+    background-color: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
+    border-radius: 8px;
+    border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[200]};
+    box-shadow: 0 4px 12px
+      ${theme.palette.mode === 'dark' ? 'rgb(0 0 0 / 0.5)' : 'rgb(0 0 0 / 0.2)'};
+    padding: 24px;
+    color: ${theme.palette.mode === 'dark' ? grey[50] : grey[900]};
+
+    & .modal-title {
+      margin: 0;
+      line-height: 1.5rem;
+      margin-bottom: 8px;
     }
 
-    return <Fragment>
-        <Box display="flex" flexDirection="column" alignItems="center" width={400} >
-            <Box display="flex" flexDirection="row" justifyContent="space-around" alignItems="center" width="100%" mb={0.75}>
-                <TextField
-                    id="outlined-error-helper-text"
-                    label="Pet Name"
-                    placeholder=""
-                    value={nameInput}
-                    onChange={handleNameChange}
-                />
-                <TextField
-                    id="outlined-error-helper-text"
-                    label="Type"
-                    placeholder=""
-                    value={typeInput}
-                    onChange={handleTypeChange}
-                />
-            </Box>
-            <Box display="flex" flexDirection="row" justifyContent="space-around" alignItems="center" width="100%" mb={0.75}>
-                <TextField
-                    id="outlined-error-helper-text"
-                    label="Veterinarian's Email"
-                    placeholder=""
-                    value={vetInput}
-                    onChange={handleVetChange}
-                />
-            </Box>
-            <Button
-                variant="outlined"
-                size="medium"
-                onClick={() => {setVerifyVet(true)}}
-            >Create</Button>
-            {display()}
-        </Box>
-    </Fragment>
-}
+    & .modal-description {
+      margin: 0;
+      line-height: 1.5rem;
+      font-weight: 400;
+      color: ${theme.palette.mode === 'dark' ? grey[400] : grey[800]};
+      margin-bottom: 4px;
+    }
+  `,
+);

@@ -107,13 +107,21 @@ export default function AddAppt(props) {
             return;
         }
         let failed = false;
-        let hour = parseInt(timeInput.slice(0,2));
-        let minute = parseInt(timeInput.slice(3,timeInput.length));
-        if( timeInput.length !== 5 || timeInput[2] !== ':' ||
-            hour > 23 || hour < 0 || minute > 59 || minute < 0 ) {
+        if( timeInput.length === 0 ){
             setTimeFailed(true);
             failed = true;
         }
+        else{
+            let hour = parseInt(timeInput.slice(0,2));
+            let minute = parseInt(timeInput.slice(3,timeInput.length));
+            if( timeInput.length !== 5 || timeInput[2] !== ':' ||
+                hour.isNaN() || minute.isNaN() ||
+                hour > 23 || hour < 0 || minute > 59 || minute < 0 ) {
+                setTimeFailed(true);
+                failed = true;
+            }
+        }
+        
         if( typeInput.length === 0 ){
             setTypeFailed(true);
             failed = true;
