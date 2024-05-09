@@ -1,13 +1,19 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import API from '../../API_Interface/API_Interface'
 import Typography from '@mui/material/Typography';
-import {Box, Grid} from '@mui/material'
+import {Box, Button} from '@mui/material'
 
 import Search from './Search';
+import ChatApp from "../Chat/ChatApp";
 
 export default function Social(props) {
     const {username} = props;
-    const [email, setEmail] = useState('')
+    const [email, setEmail] = useState('');
+    const [showChatApp, setShowChatApp] = useState(false);
+
+    const handleClick = () => {
+        setShowChatApp(true);
+    };
 
     useEffect(() => {
         const api = new API();
@@ -48,6 +54,30 @@ export default function Social(props) {
                 </Typography>
             </Box>
             <Search email={email} />
+            <Box
+                sx={{
+                    position: "absolute",
+                    bottom: 5,
+                    right: 5,
+                    display: "flex",
+                    flexDirection: "column",
+                    // justifyContent: "center",
+                    gap: "2px",
+                }}
+            >
+                {!showChatApp && (
+                    <Box>
+                        <Button
+                            variant="contained"
+                            color="success"
+                            onClick={handleClick}
+                        >
+                            Chat Rooms!
+                        </Button>
+                    </Box>
+                )}
+                {showChatApp && <ChatApp />}
+            </Box>
         </Box>
         
     </Fragment>
